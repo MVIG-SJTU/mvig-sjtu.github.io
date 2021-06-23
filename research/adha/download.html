@@ -1,0 +1,171 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="/js/script.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    
+    <title>ADHA | SJTU Machine Vision and Intelligence Group</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="CS348 Computer Vision">
+    <meta property="og:url" content="http://yoursite.com/teaching/index.html">
+    <meta property="og:site_name" content="SJTU Machine Vision and Intelligence Group">
+    <meta property="og:updated_time" content="2017-10-08T15:42:37.720Z">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="CS348 Computer Vision">
+    
+    <link rel="alternate" href="../../atom.xml" title="SJTU Machine Vision and Intelligence Group" type="application/atom+xml">
+    
+    
+    
+    <link href="./css/css" rel="stylesheet" type="text/css">
+    
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/font-awesome.min.css">
+    <link rel="stylesheet" href="./css/styles.css">
+
+    <style type="text/css">
+      /*img{
+        width:150px; 
+        border-radius:50%; 
+        align-content: center;
+      }*/
+      tr,th,td{
+        align-content: center;
+        text-align: center;
+      }
+      table.member>tbody>tr>td{
+        border: none;
+      }
+      table.member>tbody>tr>th{
+        border: none;
+      }
+    </style>
+	<style type="text/css">
+    div.instructorphoto>img{
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    align-content: center;
+    margin: 50px 50px;
+    }
+    tr,th,td{
+    align-content: center;
+    text-align: center;
+    }
+    table.member>tbody>tr>td{
+    border: none;
+    }
+    table.member>tbody>tr>th{
+    border: none;
+    }
+    </style>
+	
+
+    
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu-navbar" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          </button>
+          
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="main-menu-navbar">
+          <!-- <h4 style="font-family:verdana;">Machine Vision and Intelligence Group</h4> -->
+          <ul class="nav navbar-nav navbar-header">
+            <li><a class="navbar_brand" href="../../index.html"><strong>Machine Vision and Intelligence Group &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</strong></a></li>
+          </ul>
+		  <ul class="nav navbar-nav navbar-right">
+            <li><a class="" href="./adha.html">Home</a></li>
+            
+            <li><a class="" href="./download.html">Download</a></li>
+            
+            <li><a class="" href="./about.html">About Us</a></li>
+			
+			
+          </ul>
+        </div>
+      </div>
+    </nav>
+		
+		
+        <div class="container ">
+          <div class="blog-header">
+            <strong>
+			  <h1>ADHA: A Benchmark for Recognizing Adverbs describing Human Actions in Videos</h1>
+            </strong>
+            
+          </div>
+		</div>
+		<div style="background-color:#ededed ; padding-bottom: 45px ;">
+		  <div class="container">
+            <h2>Download</h2>
+			<ul>
+			  <li>Click <a href="https://drive.google.com/drive/folders/1b7DYlljbFsHZeqSJZzOsxdaYWqSrsZIp?usp=sharing" target="_blank" rel="external">here</a> to download the ADHA dataset.
+              <!--<li>Click <a href="https://pan.baidu.com/s/1pMVolTL" target="_blank" rel="external">here</a> to download the ADHA dataset. The password is <pre style="display:inline">755w</pre>.
+			  <li>Click <a href="./dataset/ADHA/Labels.zip" target="_blank" rel="external">here</a> to download the ADHA labels.
+			  <li>Click <a href="./dataset/ADHA/boundingboxes.zip" target="_blank" rel="external">here</a> to download the ADHA Bounding-box.
+			  <li>Click <a href="./dataset/ADHA/trackings.zip" target="_blank" rel="external">here</a> to download the ADHA tracking result of the target person.
+			  <li>Click <a href="./dataset/ADHA/train_test_split.zip" target="_blank" rel="external">here</a> to download the ADHA train-test split files.-->
+            </li></ul>
+	      </div>
+		</div>
+		<div style="padding-bottom: 45px ;">
+		  <div class="container">
+            <h2>Framework of the dataset</h2>
+			<div class="container" style="padding-bottom: 25px ;">
+			  <h4> Videos </h4>
+			  ADHA videos are splited into 32 folders. One folder corresponds to one action. So that we do not give out an alone labels on the action.
+			  
+			  <pre style="font-size:12px;width:30%">
+./videos
+    /brush_hair
+    /chew
+    /clap
+    ...
+    /wave
+    /walk
+              </pre>
+			</div>
+			<div class="container" style="padding-bottom: 25px ;">
+			  <h4> Bounding-box </h4>
+			  One video may have more than one target person. We use bounding box to point out them. One bounding-box contains two point coordinates, in total 4 numbers: x1, y1, x2, y2. The structure of the bounding-file is like this:
+			  <pre style="font-size:12px;width:60%">
+videoname frame_number p1_x1 p1_y1 p1_x2 p1_y2 ... pN_x1 pN_y1 pN_x2 pN_y2
+              </pre>
+			  where "p1_x1" means the x coordinate of the first bounding-box point of the first person. "frame_number" index the bounding-box is at which frame. For example <font> <strong>1.avi 3 10 15 50 50</strong></font> means the video 1.avi only have one target person the bounding-box
+              is <font> <strong>(x1,y1,x2,y2)=(10,15,50,50)</strong></font> and this boundingbox is at frame 3.			  
+			</div>
+			<div class="container" style="padding-bottom:25px ;">
+			  <h4> Labels </h4>
+			  Labels are also splited into 32 action folders. Each video is annotated by 3 annotators. So that there are three group of labels for one action. Labels are in the form of pickle.
+			  The pickle structure is like this:
+			  <pre style="font-size:12px;width:100%">
+[[videoName_1,[adv_labels for person1],...,[adv_labels for personN]],...,[videoName_N,[adv_labels for person1],...,[adv_labels for personN]]]
+              </pre>
+			  If the adverb for one target person is None or -1, this means that none of the adverbs are appropriate. The order of the person in one video is the same with the bounding-box.
+			</div>
+			<div class="container" style="padding-bottom:25px ;">
+			  <h4> Tracking Result </h4>
+			  We provide tracking result for the target person. Tracking uses bounding-box. We also save the tracking result in pickle file. The structure of it is:
+			  <pre style="font-size:12px;width:50%">
+{'fps':val, 'type':'rect', 'res':[[x1,y1,x2,y2],...,[x1,y1,x2,y2]]]
+              </pre>
+			  The length of the res is the same as the video. The tracking is started with the bounding-box, which means that it may not start at frame 0. We use 0 to padding it.
+			</div>
+	      </div>
+		</div>
+	</body>
+</html>
+		

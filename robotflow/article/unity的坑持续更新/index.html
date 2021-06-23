@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%974%E9%80%8F%E6%98%8E%E6%9D%90%E8%B4%A8%E6%8A%98%E5%B0%84%E4%B8%8E%E5%8F%8D%E5%B0%84/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/robotflow%E5%B7%A5%E7%A8%8Btrack%E5%8D%8A%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%932020.7~2021.1/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/unity%E7%9A%84%E5%9D%91%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           unity踩坑指南（持续更新） | RobotFlow
+       
+  </title>
+  <meta name="title" content="unity踩坑指南（持续更新） | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "unity踩坑指南（持续更新）",
+    "headline" : "unity踩坑指南（持续更新）",
+    "description" : "Unity踩坑指南  universal render pipeline  URP和部分自定义shader有冲突，目前原因未名 URP和flex插件有冲突，会导致其显示不正常 igibson内置的纹理目前需要在URP下才能成功渲染，原因未名 URP和3D模式下的step时长有区别   unity中不含有运动规划器，因此需要另外写，关于这部分请参看这篇文章  另一个solution是官方的Unity Robotics Hub，这个项目野心很大，基本来说是想让unity接入ROS生态，目前刚开始，bug还比较多。而且Unity当前自带的PhysX的版本不是非常给力（参见下面PhysX的条目）。   Flex插件  Flex插件目前在ubuntu版本的unity下有bug，具体原因未知，在windows环境下正常   PhysX  这个不能怪unity，但是physx其实早有5.0版本，而且有比较完善的粒子系统（可以替代Flex），但是Nvidia出于某种目的没有开放（估计是先在Issac Sim里爽爽）。    ",
+    "inLanguage" : "en-us",
+    "author" : "徐文强",
+    "creator" : "徐文强",
+    "publisher": "徐文强",
+    "accountablePerson" : "徐文强",
+    "copyrightHolder" : "徐文强",
+    "copyrightYear" : "2021",
+    "datePublished": "2021-01-06 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2021-01-06 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/unity%E7%9A%84%E5%9D%91%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0\/",
+    "wordCount" : "17",
+    "keywords" : [ "simulation","unity", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">unity踩坑指南（持续更新）</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">徐文强</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2021-01-06 itemprop="datePublished">January 6, 2021</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="unity踩坑指南">Unity踩坑指南</h1>
+<ol>
+<li>universal render pipeline
+<ul>
+<li>URP和部分自定义shader有冲突，目前原因未名</li>
+<li>URP和flex插件有冲突，会导致其显示不正常</li>
+<li>igibson内置的纹理目前需要在URP下才能成功渲染，原因未名</li>
+<li>URP和3D模式下的step时长有区别</li>
+</ul>
+</li>
+<li>unity中不含有运动规划器，因此需要另外写，关于这部分请参看<a href="">这篇文章</a>
+<ul>
+<li>另一个solution是官方的<a href="https://github.com/Unity-Technologies/Unity-Robotics-Hub">Unity Robotics Hub</a>，这个项目野心很大，基本来说是想让unity接入ROS生态，目前刚开始，bug还比较多。而且Unity当前自带的PhysX的版本不是非常给力（参见下面PhysX的条目）。</li>
+</ul>
+</li>
+<li>Flex插件
+<ul>
+<li>Flex插件目前在ubuntu版本的unity下有bug，具体原因未知，在windows环境下正常</li>
+</ul>
+</li>
+<li>PhysX
+<ul>
+<li>这个不能怪unity，但是physx其实早有5.0版本，而且有比较完善的粒子系统（可以替代Flex），但是Nvidia出于某种目的没有开放（估计是先在Issac Sim里爽爽）。</li>
+</ul>
+</li>
+</ol>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/unity%E7%9A%84%E5%9D%91%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/>http://mvig.sjtu.edu.cn/robotflow/article/unity%E7%9A%84%E5%9D%91%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/simulation/">
+                    #simulation</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/unity/">
+                    #unity</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%974%E9%80%8F%E6%98%8E%E6%9D%90%E8%B4%A8%E6%8A%98%E5%B0%84%E4%B8%8E%E5%8F%8D%E5%B0%84/" class="prev" rel="prev" title="C Sharp玩unity系列4——透明材质、折射与反射"><i class="iconfont icon-left"></i>&nbsp;C Sharp玩unity系列4——透明材质、折射与反射</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/robotflow%E5%B7%A5%E7%A8%8Btrack%E5%8D%8A%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%932020.7~2021.1/" class="next" rel="next" title="RobotFlow工程track半年度总结（2020.7~2021.1）">RobotFlow工程track半年度总结（2020.7~2021.1）&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>planning on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/planning/</link>
+    <description>Recent content in planning on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 06 Jul 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/planning/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>一文看懂PDDL</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E4%B8%80%E6%96%87%E7%9C%8B%E6%87%82pddl/</link>
+      <pubDate>Mon, 06 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E4%B8%80%E6%96%87%E7%9C%8B%E6%87%82pddl/</guid>
+      <description>一文看懂PDDL 背景 Planning是机器人运动的重要指导，为了看看各家planning算法在实际中的作用，学术界就搞了个International Planning Competition (IPC)比赛，这个比赛从1998年第一届开始，每两年一届，中间偶尔跳票，延续至今。
+那么搞比赛，就希望能标准化task（benchmark问题）的描述，因此，开发出了PDDL（“Planning Domain Definition Language”）这个语言。随着比赛的进行，PDDL也在不断的改版，从1.0到3.1，中间也有很多变体。
+PDDL有点类似SQL，它在语言里定义了很多规范，但很多实现并不是都支持所有的规范。大家主要支持的是STRIPS。但和SQL不同的是，这个语言因为暂时没有那么大的商业价值，所以几乎没有一个实现能保证它是完全按照规范来的，所以偶尔会有一些奇怪的语法要求（这也和部分语法规范含糊有关）。
+如果我们之后要写自己的实现，那么就有必要了解一下这门语言发展到现在规范里包含了哪些内容，以及常见的语法。简单来说，就是看看它究竟能做什么？
+PDDL简介 PDDL把一个任务规划问题拆解成两个部分，domain和problem。
+Domain描述  domain-name requirements object-type hierarchy constant objects predicates actions  parameters preconditions effects  conditional (when-effects)      Problem描述  problem-name objects initial conditions goal-states  各版本的演进  1.0和2.0 (Wiki上也说是1.2)：确定了基本框架 2.1：  引入了数值表达，可以建模non-binary的资源，比如time，weight等。 引入了plan metric用来度量plan，用于支持utility-driven（换句话说就是plan的目标实现是一回事，达成这个目标的路径经不经济是另一回事） action从符号，变成可以持续的，连续的action。换句话说就是有连续的变量来描述它了。   2.2：  引入了derived predicates：如果A，则B；如果B，则C -&amp;gt; 如果A，则C 引入了timed initial literal：用于记录一些提前知道的，在某个时间点会发生的facts，比如 at 9 (shop-open)   3.</description>
+    </item>
+    
+  </channel>
+</rss>

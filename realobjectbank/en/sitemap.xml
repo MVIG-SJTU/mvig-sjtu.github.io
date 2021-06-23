@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/manipulation_task/concept/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/object/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/perception_task/6dof/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/object/real/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/scene/real/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/object/cad/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/perception_task/6dof_part/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/manipulation_task/primitive/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/scene/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/scene/sim/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/perception_task/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/perception_task/point_match/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/manipulation_task/task/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/object/tools/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/scene/tools/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/manipulation_task/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/manipulation_task/primitivenet/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/object/real/cup/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/scene/real/office_1/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/posts/object/real/cup1/</loc>
+    <lastmod>2020-08-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/</loc>
+    <lastmod>2020-08-31T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://mvig.sjtu.edu.cn/realobjectbank/zh/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://mvig.sjtu.edu.cn/realobjectbank/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/posts/</loc>
+    <lastmod>2020-08-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/categories/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://mvig.sjtu.edu.cn/realobjectbank/zh/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://mvig.sjtu.edu.cn/realobjectbank/categories/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/docs/</loc>
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/tags/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://mvig.sjtu.edu.cn/realobjectbank/zh/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://mvig.sjtu.edu.cn/realobjectbank/tags/"
+                />
+  </url>
+  
+</urlset>

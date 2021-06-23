@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>robot on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/robot/</link>
+    <description>Recent content in robot on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 07 Jul 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/robot/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>EinScan Pro 2X 2020版白平衡校准失败原因与方案</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/einscan-pro-2x-2020%E7%89%88%E7%99%BD%E5%B9%B3%E8%A1%A1%E6%A0%A1%E5%87%86%E5%A4%B1%E8%B4%A5%E5%8E%9F%E5%9B%A0%E4%B8%8E%E6%96%B9%E6%A1%88/</link>
+      <pubDate>Tue, 07 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/einscan-pro-2x-2020%E7%89%88%E7%99%BD%E5%B9%B3%E8%A1%A1%E6%A0%A1%E5%87%86%E5%A4%B1%E8%B4%A5%E5%8E%9F%E5%9B%A0%E4%B8%8E%E6%96%B9%E6%A1%88/</guid>
+      <description>问题描述：  问题设备：EinScan-Pro 2X 2020 问题版本：ExScanPro-V3.5.0.5 问题现象：相机标定正常；白平衡标定一直失败 问题分析：白平衡采集的图像过亮 临时解决方案：降低白平衡时候纹理相机增益（配置文件cameraGain_tex_cali修改为55）  具体操作步骤  到ExScanPro软件的安装目录下面，\path\to\ExScanPro\res(最后这个res是实际路径) 打开Config.xml，搜索cameraGain_tex_cali，将这个地方对应的参数改为55（默认64）  </description>
+    </item>
+    
+    <item>
+      <title>Franka Emika Panda电脑安装配置指南</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/franka-emika-panda%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/</link>
+      <pubDate>Sun, 05 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/franka-emika-panda%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/</guid>
+      <description>本文主要参考该指南。
+Requirements  一台用不上CUDA的电脑 Ubuntu 18.04 + ROS Melodic  系统装完请优先装real-time kernel，确定安装成功后再安装别的    安装real-time kernel 这个跟系统调度有关系，简单来说，需要把操作系统变成“实时响应”操作系统，franka对一个control流程的响应时间要求很高（&amp;lt;1ms）。因此，需要打上real-time priority的补丁。
+这个补丁不是给正在运行的kernel打，而是在kernel还没安装上之前打。所以流程是这样的，首先到这个列表看看哪些版本的kernel有rt补丁，然后到这个地方下载对应版本的kernel。有人说这里rt补丁和kernel版本不一定对应，但我觉得对应是比较稳妥的。以5.6.17为例。
+下载kernel并打好补丁  首先安装一些必要的程序  sudo apt-get install build-essential bc curl ca-certificates fakeroot gnupg2 libssl-dev lsb-release libelf-dev bison flex liblz4-tool  下载补丁  curl -SLO https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.6.17.tar.xz curl -SLO https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.6.17.tar.sign curl -SLO https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/5.6/patch-5.6.17-rt10.patch.xz curl -SLO https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/5.6/patch-5.6.17-rt10.patch.sign sign文件是用来检查文件完整性的，keyserver经常连不上，所以不检查也行。
+ 解压缩  xz -d linux-5.6.17.tar.xzxz -d patch-5.6.17-rt10.patch.xz 编译kernel  tar xf linux-5.6.17.tarcd linux-5.</description>
+    </item>
+    
+  </channel>
+</rss>

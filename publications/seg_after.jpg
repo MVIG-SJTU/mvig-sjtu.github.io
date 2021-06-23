@@ -1,0 +1,11 @@
+--2018-07-13 02:21:57--  http://jiaxuma.com/img/seg_after.jpg
+Resolving jiaxuma.com (jiaxuma.com)... 192.30.252.154, 192.30.252.153
+Connecting to jiaxuma.com (jiaxuma.com)|192.30.252.154|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 9642 (9.4K) [image/jpeg]
+Saving to: ‘seg_after.jpg’
+
+     0K .........                                             100% 27.7M=0s
+
+2018-07-13 02:21:59 (27.7 MB/s) - ‘seg_after.jpg’ saved [9642/9642]
+

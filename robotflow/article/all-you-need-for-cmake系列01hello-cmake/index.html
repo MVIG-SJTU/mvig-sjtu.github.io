@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9702hello-headers/" />
+  
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9701hello-cmake/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           All You Need for CMake系列01——Hello CMake! | RobotFlow
+       
+  </title>
+  <meta name="title" content="All You Need for CMake系列01——Hello CMake! | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "All You Need for CMake系列01——Hello CMake!",
+    "headline" : "All You Need for CMake系列01——Hello CMake!",
+    "description" : "All You Need for CMake系列01——Hello CMake! 安装CMake  对于版本的几个tips  据说3.11后速度获得了极大的提升 Ubuntu 18.04默认的版本是3.10, 所以如果是Ubuntu 18.04及更低版本的同学请自行安装CMake   自行安装的过程比较简单，在官网根据OS版本选一个新的下载安装即可 安装完后cmake -version确认一下版本  一个Hello CMake的例子 准备一个目录，假如是hello-cmake，其文件结构如下:\n.\r├── CMakeLists.txt\r├── main.cpp\rmain.cpp下面的写如下内容：\n#include \u0026lt;iostream\u0026gt; int main(int argc, char *argv[]) { std::cout \u0026lt;\u0026lt; \u0026#34;Hello CMake!\u0026#34; \u0026lt;\u0026lt; std::endl; return 0; } CMakeLists.txt下面的内容如下：\n# Set the minimum version of CMake that can be used # To find the cmake version run # $ cmake --version cmake_minimum_required(VERSION 3.",
+    "inLanguage" : "en-us",
+    "author" : "徐文强",
+    "creator" : "徐文强",
+    "publisher": "徐文强",
+    "accountablePerson" : "徐文强",
+    "copyrightHolder" : "徐文强",
+    "copyrightYear" : "2021",
+    "datePublished": "2021-02-26 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2021-02-26 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/all-you-need-for-cmake%E7%B3%BB%E5%88%9701hello-cmake\/",
+    "wordCount" : "101",
+    "keywords" : [ "cmake","cpp", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">All You Need for CMake系列01——Hello CMake!</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">徐文强</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2021-02-26 itemprop="datePublished">February 26, 2021</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="all-you-need-for-cmake系列01hello-cmake">All You Need for CMake系列01——Hello CMake!</h1>
+<h2 id="安装cmake">安装CMake</h2>
+<ol>
+<li>对于版本的几个tips
+<ul>
+<li>据说3.11后速度获得了极大的提升</li>
+<li>Ubuntu 18.04默认的版本是3.10, 所以如果是Ubuntu 18.04及更低版本的同学请自行安装CMake</li>
+</ul>
+</li>
+<li>自行安装的过程比较简单，在<a href="https://cmake.org/download/">官网</a>根据OS版本选一个新的下载安装即可</li>
+<li>安装完后<code>cmake -version</code>确认一下版本</li>
+</ol>
+<h2 id="一个hello-cmake的例子">一个Hello CMake的例子</h2>
+<p>准备一个目录，假如是<code>hello-cmake</code>，其文件结构如下:</p>
+<pre><code>.
+├── CMakeLists.txt
+├── main.cpp
+</code></pre><p>main.cpp下面的写如下内容：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>argv[])
+{
+   std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Hello CMake!&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+   <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><p>CMakeLists.txt下面的内容如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake"><span style="color:#75715e"># Set the minimum version of CMake that can be used
+</span><span style="color:#75715e"># To find the cmake version run
+</span><span style="color:#75715e"># $ cmake --version
+</span><span style="color:#75715e"></span>cmake_minimum_required(<span style="color:#e6db74">VERSION</span> <span style="color:#e6db74">3.5</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Set the project name
+</span><span style="color:#75715e"></span>project (<span style="color:#e6db74">hello_cmake</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Add an executable
+</span><span style="color:#75715e"></span>add_executable(<span style="color:#e6db74">hello_cmake</span> <span style="color:#e6db74">main.cpp</span>)<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>这个文件里定义了一些规定动作，即：</p>
+<ul>
+<li>cmake_minimum_required(VERSION xx): 规定了cmake的最低版本，通常如果写了modern cmake语法，至少要写3以上的版本。但也有一些要兼容以前的历史包袱，2.x的版本也很常见。我们全系列教程都按照modern cmake的语法定义，并且所有的开发都会按照这些标准进行。</li>
+<li>project()：声明了项目名，同时会定义<code>${PROJECT_NAME}</code>变量。CMakeLists.txt经常不好读，就是因为很多有经验的作者会大量写一些这种默认的变量名。我们会在之后的教程里继续介绍一些常见的变量名。</li>
+<li>add_executable()：这个函数有两个input变量，第一个是生成的可执行文件的名字，第二个是源代码的路径。如果有多个源代码参与生成，只需要在后面继续写即可。比如<code>add_executable(target main1.cpp main2.cpp src/main3.cpp)</code>
+<ul>
+<li>结合<code>${PROJECT_NAME}</code>，我们可以把上面这个CMakeLists.txt写成新手看不懂的样子<code>add_executable(${PROJECT_NAME} main.cpp)</code>和原来文件里那句是同样的意思。</li>
+</ul>
+</li>
+</ul>
+<h2 id="编译流程">编译流程</h2>
+<p>在CMakeLists.txt的同级目录下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">mkdir build
+cd build
+cmake ..
+make
+</code></pre></div><p>以上就是标准的流程，最多就是添加一些arguments，这个之后会慢慢介绍。
+cmake生成的是配置文件，如果源代码有bug，只要CMakeLists.txt没有修改过，build里的东西就不用删，改了源代码后直接make即可。</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9701hello-cmake/>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9701hello-cmake/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/cmake/">
+                    #cmake</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/cpp/">
+                    #cpp</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9702hello-headers/" class="prev" rel="prev" title="All You Need for CMake系列02——Hello Headers"><i class="iconfont icon-left"></i>&nbsp;All You Need for CMake系列02——Hello Headers</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

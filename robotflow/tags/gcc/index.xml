@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gcc on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/gcc/</link>
+    <description>Recent content in gcc on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 19 Feb 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/gcc/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>修改默认gcc版本</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4gcc%E7%89%88%E6%9C%AC/</link>
+      <pubDate>Wed, 19 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4gcc%E7%89%88%E6%9C%AC/</guid>
+      <description>网上有一些switch的方案，但配置起来比较麻烦，有可能不同步。 我们还是直接改路径，这样在编译的时候会稳定一点。 sudo apt install gcc-6 g++-6
+sudo ln -s /usr/bin/gcc-6 /usr/local/bin/gcc
+sudo ln -s /usr/bin/g++-6 /usr/local/bin/g++</description>
+    </item>
+    
+  </channel>
+</rss>

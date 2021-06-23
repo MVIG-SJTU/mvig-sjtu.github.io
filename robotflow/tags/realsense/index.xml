@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>RealSense on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/realsense/</link>
+    <description>Recent content in RealSense on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 06 Jun 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/realsense/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>手眼标定介绍与使用</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E6%89%8B%E7%9C%BC%E6%A0%87%E5%AE%9A%E4%BB%8B%E7%BB%8D%E4%B8%8E%E4%BD%BF%E7%94%A8/</link>
+      <pubDate>Sat, 06 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E6%89%8B%E7%9C%BC%E6%A0%87%E5%AE%9A%E4%BB%8B%E7%BB%8D%E4%B8%8E%E4%BD%BF%E7%94%A8/</guid>
+      <description>Robotic Hand-eye Calibration Workspace | Ubuntu 1804 &amp;amp; ROS Melodic Morenia |
+This repo contains a eye-in-hand calibration tool (Cplusplus &amp;amp; ROS) in JD京东 GRASPING ROBOT CHALLENGE (News),
+and the implements of my paper: Robotic hand-eye calibration with depth camera: A sphere model approach (PDF)
+Inside /src there are 5 ROS packages:
+  rgbd_srv
+used by camera_driver.
+  camera_driver
+drive Intel® RealSense™ RGBD cameras in ROS.
+(convert raw stream to ros sensor_msgs::Image)</description>
+    </item>
+    
+  </channel>
+</rss>

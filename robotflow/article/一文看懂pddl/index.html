@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/franka-emika-panda%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/open-mmlab-contribute-%E7%9A%84-workflow/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/%E4%B8%80%E6%96%87%E7%9C%8B%E6%87%82pddl/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           一文看懂PDDL | RobotFlow
+       
+  </title>
+  <meta name="title" content="一文看懂PDDL | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "一文看懂PDDL",
+    "headline" : "一文看懂PDDL",
+    "description" : "一文看懂PDDL 背景 Planning是机器人运动的重要指导，为了看看各家planning算法在实际中的作用，学术界就搞了个International Planning Competition (IPC)比赛，这个比赛从1998年第一届开始，每两年一届，中间偶尔跳票，延续至今。\n那么搞比赛，就希望能标准化task（benchmark问题）的描述，因此，开发出了PDDL（“Planning Domain Definition Language”）这个语言。随着比赛的进行，PDDL也在不断的改版，从1.0到3.1，中间也有很多变体。\nPDDL有点类似SQL，它在语言里定义了很多规范，但很多实现并不是都支持所有的规范。大家主要支持的是STRIPS。但和SQL不同的是，这个语言因为暂时没有那么大的商业价值，所以几乎没有一个实现能保证它是完全按照规范来的，所以偶尔会有一些奇怪的语法要求（这也和部分语法规范含糊有关）。\n如果我们之后要写自己的实现，那么就有必要了解一下这门语言发展到现在规范里包含了哪些内容，以及常见的语法。简单来说，就是看看它究竟能做什么？\nPDDL简介 PDDL把一个任务规划问题拆解成两个部分，domain和problem。\nDomain描述  domain-name requirements object-type hierarchy constant objects predicates actions  parameters preconditions effects  conditional (when-effects)      Problem描述  problem-name objects initial conditions goal-states  各版本的演进  1.0和2.0 (Wiki上也说是1.2)：确定了基本框架 2.1：  引入了数值表达，可以建模non-binary的资源，比如time，weight等。 引入了plan metric用来度量plan，用于支持utility-driven（换句话说就是plan的目标实现是一回事，达成这个目标的路径经不经济是另一回事） action从符号，变成可以持续的，连续的action。换句话说就是有连续的变量来描述它了。   2.2：  引入了derived predicates：如果A，则B；如果B，则C -\u0026gt; 如果A，则C 引入了timed initial literal：用于记录一些提前知道的，在某个时间点会发生的facts，比如 at 9 (shop-open)   3.",
+    "inLanguage" : "en-us",
+    "author" : "徐文强",
+    "creator" : "徐文强",
+    "publisher": "徐文强",
+    "accountablePerson" : "徐文强",
+    "copyrightHolder" : "徐文强",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-07-06 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2020-07-06 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/%E4%B8%80%E6%96%87%E7%9C%8B%E6%87%82pddl\/",
+    "wordCount" : "447",
+    "keywords" : [ "planning", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">一文看懂PDDL</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">徐文强</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-07-06 itemprop="datePublished">July 6, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="一文看懂pddl">一文看懂PDDL</h1>
+<h2 id="背景">背景</h2>
+<p>Planning是机器人运动的重要指导，为了看看各家planning算法在实际中的作用，学术界就搞了个<a href="http://www.icaps-conference.org/index.php/Main/Competitions">International Planning Competition (IPC)比赛</a>，这个比赛从1998年第一届开始，每两年一届，中间偶尔跳票，延续至今。</p>
+<p>那么搞比赛，就希望能标准化task（benchmark问题）的描述，因此，开发出了PDDL（“Planning Domain Definition Language”）这个语言。随着比赛的进行，PDDL也在不断的改版，从1.0到3.1，中间也有很多变体。</p>
+<p>PDDL有点类似SQL，它在语言里定义了很多规范，但很多实现并不是都支持所有的规范。大家主要支持的是<a href="https://en.wikipedia.org/wiki/Stanford_Research_Institute_Problem_Solver">STRIPS</a>。但和SQL不同的是，这个语言因为暂时没有那么大的商业价值，所以<strong>几乎没有</strong>一个实现能保证它是完全按照规范来的，所以偶尔会有一些奇怪的语法要求（这也和部分语法规范含糊有关）。</p>
+<p>如果我们之后要写自己的实现，那么就有必要了解一下这门语言发展到现在规范里包含了哪些内容，以及常见的语法。简单来说，就是看看它究竟能做什么？</p>
+<h2 id="pddl简介">PDDL简介</h2>
+<p>PDDL把一个任务规划问题拆解成两个部分，domain和problem。</p>
+<h3 id="domain描述">Domain描述</h3>
+<ul>
+<li>domain-name</li>
+<li>requirements</li>
+<li>object-type hierarchy</li>
+<li>constant objects</li>
+<li>predicates</li>
+<li>actions
+<ul>
+<li>parameters</li>
+<li>preconditions</li>
+<li>effects
+<ul>
+<li>conditional (when-effects)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="problem描述">Problem描述</h3>
+<ul>
+<li>problem-name</li>
+<li>objects</li>
+<li>initial conditions</li>
+<li>goal-states</li>
+</ul>
+<h3 id="各版本的演进">各版本的演进</h3>
+<ul>
+<li>1.0和2.0 (Wiki上也说是1.2)：确定了基本框架</li>
+<li>2.1：
+<ul>
+<li>引入了数值表达，可以建模non-binary的资源，比如time，weight等。</li>
+<li>引入了plan metric用来度量plan，用于支持utility-driven（换句话说就是plan的目标实现是一回事，达成这个目标的路径经不经济是另一回事）</li>
+<li>action从符号，变成可以持续的，连续的action。换句话说就是有连续的变量来描述它了。</li>
+</ul>
+</li>
+<li>2.2：
+<ul>
+<li>引入了derived predicates：如果A，则B；如果B，则C -&gt; 如果A，则C</li>
+<li>引入了timed initial literal：用于记录一些提前知道的，在某个时间点会发生的facts，比如 at 9 (shop-open)</li>
+</ul>
+</li>
+<li>3.0：
+<ul>
+<li>引入了state-trajectory constraints: plan执行期间需遵守的hard-constraint</li>
+<li>引入了preference：soft-constraint</li>
+</ul>
+</li>
+<li>3.1：
+<ul>
+<li>引入了object表达，函数范围从数值，扩展到任意。</li>
+</ul>
+</li>
+<li>其他方言变体中的特性
+<ul>
+<li>PDDL+：扩展自2.1
+<ul>
+<li>引入processes和events的概念：用start-process-stop三部分建模一个process</li>
+</ul>
+</li>
+<li>MAPL：扩展自2.1，针对多agent
+<ul>
+<li>引入non-propositional state-variable：比如该状态变量可以赋值为true, false, unknown或其他任何内容。</li>
+<li>引入时序建模model operators: before, after。这个特征在PDDL 3.0里被更完整的时序建模方式取代。</li>
+<li>action可以在运行时决定，显式地为多agent之间做plan同步</li>
+<li>引入events概念（和PDDL+中的events不同），用于处理多actions的并发。</li>
+</ul>
+</li>
+<li>OPT：扩展自2.1，PDDL和语义网的结合
+<ul>
+<li>支持本体（ontology）概念网络</li>
+<li>详细的类型系统</li>
+<li>支持$\lambda$表达式</li>
+<li>数据结构</li>
+<li>action的返回值和actions之间的links</li>
+<li>hierarchical的action扩展</li>
+<li>hierarchical的domain定义</li>
+</ul>
+</li>
+<li>PPDDL：扩展自2.1
+<ul>
+<li>通过加入probabilistic effects，reward fluents，goal rewards，goal-achieved fluents等特性，可以<strong>支持MDP过程</strong>的plan</li>
+</ul>
+</li>
+<li>RDDL: 扩展自PDDL3.0和PPDDL1.0
+<ul>
+<li><strong>同时支持MDP和POMDP</strong>的描述</li>
+</ul>
+</li>
+<li>MA-PDDL：扩展自PDDL3.1和MAPL，后续增加了对probabilistic-effects和partial-observability的支持
+<ul>
+<li>支持所有PDDL3.1中的特性</li>
+<li>解决了MAPL中的主要问题（比如多agent之间的同步）</li>
+<li>支持区分不同agent的不同的action，不同的goal，metrics</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="如果我们真要开发自己的版本">如果我们真要开发自己的版本</h3>
+<p>我的建议是结合MA-PDDL和OPT。MA-PDDL已经给大量的特性打下了基础，包括用于全知环境的PDDL3.1，针对多agent的MAPL，用于不确定情况的PPDDL。它对于MDP和POMDP的支持应该是不太全面的，此外，对于语义网（至少是concept net的一种形式）的支持也并没有。</p>
+<p>因此我们可以在MA-PDDL和OPT的基础上开发一个版本，并把PDDLStream改来支持这个版本。</p>
+<p>MA-PDDL的语法见<a href="http://home.mit.bme.hu/~dkovacs/pubs/d.l.kovacs_2012_ICAPS-WIPC.pdf">这篇文章</a>。</p>
+<p>OPT的语法见<a href="http://cs-www.cs.yale.edu/homes/dvm/papers/opt-manual.pdf">这篇文章</a></p>
+<p>RDDL的语法见<a href="http://users.cecs.anu.edu.au/~ssanner/IPPC_2011/RDDL.pdf">这篇文章</a></p>
+<p>这部分细节见开发文档，暂不公开。</p>
+<h2 id="pddl基本语法使用例子">PDDL基本语法使用例子</h2>
+<h3 id="the-domain-definition">The Domain Definition</h3>
+<ol>
+<li>基本模板</li>
+</ol>
+<pre><code>(define (domain DOMAIN_NAME)
+  (:requirements [:strips] [:equality] [:typing]    [:adl])
+  (:predicates (PREDICATE_1_NAME ?A1 ?A2 ... ?AN)
+             (PREDICATE_2_NAME ?A1 ?A2 ... ?AN)
+             ...
+  )
+  (:action ACTION_1_NAME
+    [:parameters (?P1 ?P2 ... ?PN)]
+    [:precondition PRECOND_FORMULA]
+    [:effect EFFECT_FORMULA]
+  )
+
+  (:action ACTION_2_NAME
+  ...)
+...)
+</code></pre><ul>
+<li>[]里的内容表示是可选的</li>
+<li>?开头的是参数，predicates可以没有参数。如果requirements里使用了typing，可以在声明参数的同时声明它的数据类型。</li>
+<li>action中
+<ul>
+<li>parameters可以是空的，但不同的解释器对怎么个空法要求不一样，比如()或者直接空着</li>
+<li>precondition的PRECOND_FORMULA在不同的domain里格式不一样，STRIPS和ADL的格式就不太一样。</li>
+<li>effect同理，具体的格式要看用的是什么planner</li>
+</ul>
+</li>
+</ul>
+<h3 id="the-problem-definition">The Problem Definition</h3>
+<ol>
+<li>基本模板
+<pre><code>(define (problem PROBLEM_NAME))
+ (:domain DOMAIN_NAME)
+ (:objects OBJ1 OBJ2 ... OBJ_N)
+ (:init ATOM1 ATOM2 ... ATOM_N)
+ (:goal CONDITION_FORMULA)
+</code></pre><p>请注意，这里面很多地方看上去该有?的，都没有，表示这是常量。</p>
+</li>
+</ol>
+<h3 id="堆叠block一个strips的例子">堆叠block，一个STRIPS的例子</h3>
+<p>domain定义</p>
+<pre><code>(define (domain blocksworld) ; domain名字是blocksworld
+  (:requirements :strips) ; 需要strips，以下遵循strips格式
+(:predicates (clear ?x)  ; block x上是否没有block
+             (on-table ?x) ; block x是否在table上
+             (arm-empty) ; 机械臂的手是否没有抓别的东西
+             (holding ?x) ; 机械臂的手是否拿着x
+             (on ?x ?y)) ; block x是否在y上
+
+(:action pickup ; 定义一个action pickup
+  :parameters (?ob) ; 参数是object id
+  :precondition (and (clear ?ob) (on-table ?ob) (arm-empty)) ; 执行该动作的前提条件是，该物体上没有别的物体，在桌上，arm的手上没有别的东西
+  :effect (and (holding ?ob) (not (clear ?ob)) (not (on-table ?ob)) (not (arm-empty)))) ; 手拿着obj，obj不再是clear的状态，obj不再在桌上，arm不再empty
+
+(:action putdown ; 定义一个action putdown
+  :parameters  (?ob) ; 参数是object id
+  :precondition (holding ?ob) ; 执行该动作的前提条件是holding obj为true
+  :effect (and (clear ?ob) (arm-empty) (on-table ?ob) 
+               (not (holding ?ob)))) ; 执行该动作后物体应该是clear并放于桌上的状态，手会empty，不再holding
+
+(:action stack ; 定义一个action stack
+  :parameters  (?ob ?underob) ; 参数是要放的物体id和待被stack的物体id
+  :precondition (and (clear ?underob) (holding ?ob)) ; 前提条件是下面那个物体需要clear的状态，要放的物体是holding的状态
+  :effect (and (arm-empty) (clear ?ob) (on ?ob ?underob)
+               (not (clear ?underob)) (not (holding ?ob))))
+
+(:action unstack ; 定义一个action unstack
+  :parameters  (?ob ?underob) ; 参数是上面的物体和下面的物体id
+  :precondition (and (on ?ob ?underob) (clear ?ob)  (arm-empty)) ; 执行这个动作的前提是，ob在underob上，ob是clear的，手是空的。
+  :effect (and (holding ?ob) (clear ?underob)
+               (not (on ?ob ?underob)) (not (clear ?ob)) (not (arm-empty))))) ; 这个动作完成后ob在手上，underob处于clear的状态，ob不再处于underob上，ob不再处于clear状态，arm不再empty
+</code></pre><p>problem定义：</p>
+<pre><code>(define (problem BW-rand-6)
+  (:domain blocksworld)
+  (:objects b1 b2 b3 b4 b5 b6 )
+  (:init
+    (arm-empty)     ; initial block configuration
+    (on b1 b2)      ;  4  1
+    (on b2 b6)      ;  3  2
+    (on b3 b5)      ;  5  6
+    (on b4 b3)      ;  ----- table
+    (on-table b5)
+    (on-table b6)
+    (clear b1)
+    (clear b4)
+  )
+(:goal
+  (and              ;  goal block configuration
+    (on b3 b4)      ;  5
+    (on b5 b6)      ;  6 3
+    (on b6 b1))     ;  1 4
+  )                 ; arm, 2, table are not restricted.
+)
+</code></pre><h3 id="strips是如何推理的">STRIPS是如何推理的？</h3>
+<p>给出了domain和问题定义后，我们要搞清楚怎么在这上面做planning。首先根据predicates确定各个物体的状态，比如上面这个blocksworld的问题，属于block的状态有2个（clear, on-table），属于机械臂的状态有1个(empty/holding是一个状态的两面)，属于block之间的状态有1个(on)。那么给定N个block，M个机械臂，整个问题空间中的状态为N*2+(N-1)*N/2+M。具体来说，我们上面给出的problem里N=6，M=1，所以问题空间的状态为28。</p>
+<p>在task domain中，只有action能修改状态，一次状态转换为：$ trans: 2^{28} \times Action \to 2^{28} $。然后我们要找出这样一条path出来。具体的做法，就是搜索，因此如果状态数多了，要求解就很困难。</p>
+<h3 id="简评">简评</h3>
+<p>本文只给出了最简单的STRIPS的一个实例版本，它的简化体现在如下几个方面：</p>
+<ol>
+<li>因为STRIPS是完全基于binary状态判断的，所以它对空间位置，物体等都没有抽象能力，比如stack这个action，只能定义成block-block的关系，这就太死板了。以及所有action中没有move。</li>
+<li>如果物体的状态空间无限（连续），那么predicates要怎么写？precondition要怎么写？effect要怎么写？plan的搜索要怎么进行？</li>
+</ol>
+<p>启示：</p>
+<ol>
+<li>task planning的核心在于task domain上的定义，problem是给出适用于该task domain上的某个具体domain的定义。具体来说，我们看到<a href="http://mvig.sjtu.edu.cn/robotflow/article/robotflow-task-zoo/">task zoo这篇文章</a>，可以把那些task用一个domain文件描述完，因为action都是差不多的。只不过不同的task需要用不同的problem文件来定义需要的物体，初始的configuration。</li>
+<li>我们需要理出最新的PDDL的版本，看看它们对上述两个问题address到什么程度了。</li>
+</ol>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/%E4%B8%80%E6%96%87%E7%9C%8B%E6%87%82pddl/>http://mvig.sjtu.edu.cn/robotflow/article/%E4%B8%80%E6%96%87%E7%9C%8B%E6%87%82pddl/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/planning/">
+                    #planning</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/franka-emika-panda%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/" class="prev" rel="prev" title="Franka Emika Panda电脑安装配置指南"><i class="iconfont icon-left"></i>&nbsp;Franka Emika Panda电脑安装配置指南</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/open-mmlab-contribute-%E7%9A%84-workflow/" class="next" rel="next" title="open-mmlab contribute 的 workflow">open-mmlab contribute 的 workflow&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VR on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/vr/</link>
+    <description>Recent content in VR on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 03 Jul 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/vr/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>HTC vive安装&#43;Noitom手套完整配置流程</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/htc-vive%E5%AE%89%E8%A3%85&#43;noitom%E6%89%8B%E5%A5%97%E5%AE%8C%E6%95%B4%E9%85%8D%E7%BD%AE%E6%B5%81%E7%A8%8B/</link>
+      <pubDate>Fri, 03 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/htc-vive%E5%AE%89%E8%A3%85&#43;noitom%E6%89%8B%E5%A5%97%E5%AE%8C%E6%95%B4%E9%85%8D%E7%BD%AE%E6%B5%81%E7%A8%8B/</guid>
+      <description>Requirements  支持Windows系统（Win10）的电脑，笔记本，台式均可  笔记本需要4个USB口，1个HDMI口，所以至少需要一个扩展USB口 SteamVR对显卡有一定的要求，请至少准备1060或同算力以上的显卡 安装steam  在steam上安装SteamVR   安装Unity 2017.1.0f3+   HTC vive VR设备一套（零件太多不一一例举） Noitom Hi5标准版手套一副 5号电池一对  HTC VIVE 安装流程   定位场
+ 本环节需要：  两根支架 两个定位器 两个定位器各自的电源 插排（optional）   安装流程：  支架上一共有四个旋钮，顶端有一个螺丝，新拆的情况下，螺丝有螺帽，拆掉即可。熟悉一下四个旋钮，旋转后哪些部位可动。接下来对这四个旋钮将按照自上而下，命名为1号，2号，3号和4号。 把支架腿往外掰，支架底部三角架张开合适的角度，拧紧4号旋钮 把定位器旋紧在顶部螺丝处，定位器的接口如图，不要拧错了口。  定位器屏幕那一面朝下30°或45°，拧紧1号旋钮 依次拧松2号，3号旋钮，把对应的杆拉出到最大 两根支架对角线放置，如图  插上定位器的电源线      头盔连接电脑
+ 本环节需要：  串流器 HTC vive头盔 HDMI线 USB线 串流器电源线 插排（optional）   安装流程  串流器上有一端是PC端，一端是VR端，根据提示把各个线接好即可。如图  如果是台式机，要注意电脑这边的接口最好是在独显附近。 电脑开机（如果已开机可以继续），关掉所有杀毒软件，包括但不限于360，鲁大师，腾讯管家，火绒等等   安装Steam 安装SteamVR    头盔和手柄校准</description>
+    </item>
+    
+  </channel>
+</rss>

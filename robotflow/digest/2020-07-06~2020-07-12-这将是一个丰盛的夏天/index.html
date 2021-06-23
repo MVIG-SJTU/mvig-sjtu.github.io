@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/digest/2020-06-29~2020-07-05-%E5%85%B6%E5%AE%9E%E6%88%91%E4%BB%AC%E6%98%AF%E4%B8%80%E4%B8%AArobotics-lab/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/digest/2020-07-13~2020-07-19-%E5%9D%91%E5%A4%9A%E4%B8%8D%E8%A6%81%E6%80%95/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/digest/2020-07-06~2020-07-12-%E8%BF%99%E5%B0%86%E6%98%AF%E4%B8%80%E4%B8%AA%E4%B8%B0%E7%9B%9B%E7%9A%84%E5%A4%8F%E5%A4%A9/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           2020-07-06~2020-07-12 这将是一个丰盛的夏天 | RobotFlow
+       
+  </title>
+  <meta name="title" content="2020-07-06~2020-07-12 这将是一个丰盛的夏天 | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "digest",
+    "name" : "2020-07-06~2020-07-12 这将是一个丰盛的夏天",
+    "headline" : "2020-07-06~2020-07-12 这将是一个丰盛的夏天",
+    "description" : "本周简评 本周每个人手上的事情都分配下去，并进行了评估，定下了CVPR的时间表。\n目前需要的硬件陆陆续续都配齐了，franka还差一个平台架子，在等着定做到位。因此franka相关的调试和配置暂时还不能展开，UR5相关的基本上都已完成。\nObject\/Scene Modeling小组  近期目标：  刘浏：part level 6d pose 詹欣宇：尽快结束手上instance reconstruction的topic 唐屠天：准备two-stream mask guided grasping 叶若琳：帮助完成PAMI，instance reconstruction的topic 付昊源：尽快结束手上mesh2vector2mesh的topic 向谨溢：重启individual instance segmentation的topic 刘意（远程实习）：尝试优化单图片3D Reconstruction算法   本周进展：  刘浏：在整理出来的基础数据集上用baseline方法跑分。 詹欣宇：实现了matching \u002b loss；接手了hand-object相关工作 唐屠天：完成YOLOv3入库，准备two-stream mask guided grasping（调研，实验设计） 叶若琳：改amodal实验的bug；熟悉instance reconstruction的数据集 付昊源：尝试mesh上的graph embedding，搞定PDDLStream上的环境建模 刘意： 向谨溢：熟悉unity，准备渲染数据集   遇到问题： 下周计划：  刘浏：1. 考虑build一个real object数据集（物体数量1000个左右），结合扫描和逆向；2. 继续part-level 6d pose 詹欣宇：验证matching \u002b loss是可以行的，一旦验证，可以准备写文章了。 唐屠天：推进YOLOv4入库；two-stream mask guided grasping 叶若琳：跑一个baseline出来 刘意（远程实习）: 完整的训练代码实现 付昊源：搞定densefusion \u002b tracking的入库。    Skill Learning小组  近期目标：搭建起记录人手dynamics的平台，打通hand-object manipulation到gripper-object manipulation 本周进展：  杨理欣  写hand-object代码，验证一些non-linear optimization方案   詹欣宇：  刚接手hand-object的topic   张行（远程）  刚接手hand-object的topic     遇到问题：  就当前的设备，有三种记录hand-object dynamic的方式，两种是纯synthetic的，一种是不那么real的real   下周计划：  准备3D打印材料 搞定第三视角标定 探索先建模再渲染覆盖手套以实现markerless标注的思路。 RGB2Hand-Object代码实现    Planning小组  近期目标：PDDLStream熟悉，扩展。打通流程 本周进展：  杜文昕：PDDLStream和Mujoco的结合。   遇到问题： 下周计划：  杜文昕：开始基于pddlstream的研究    Control小组  近期目标：复现一篇基于meta-RL的插拔 本周进展：  徐文强：初步复现meta-RL。   遇到问题： 下周计划：  徐文强：考虑迁移到机器人上。    ",
+    "inLanguage" : "en-us",
+    "author" : "MVIG - Robot AI Team",
+    "creator" : "MVIG - Robot AI Team",
+    "publisher": "MVIG - Robot AI Team",
+    "accountablePerson" : "MVIG - Robot AI Team",
+    "copyrightHolder" : "MVIG - Robot AI Team",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-07-12 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2020-07-12 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/digest\/2020-07-06~2020-07-12-%E8%BF%99%E5%B0%86%E6%98%AF%E4%B8%80%E4%B8%AA%E4%B8%B0%E7%9B%9B%E7%9A%84%E5%A4%8F%E5%A4%A9\/",
+    "wordCount" : "95",
+    "keywords" : [ "digest", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">2020-07-06~2020-07-12 这将是一个丰盛的夏天</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">MVIG - Robot AI Team</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-07-12 itemprop="datePublished">July 12, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/digest/"> digest </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h2 id="本周简评">本周简评</h2>
+<p>本周每个人手上的事情都分配下去，并进行了评估，定下了CVPR的时间表。</p>
+<p>目前需要的硬件陆陆续续都配齐了，franka还差一个平台架子，在等着定做到位。因此franka相关的调试和配置暂时还不能展开，UR5相关的基本上都已完成。</p>
+<h2 id="objectscene-modeling小组">Object/Scene Modeling小组</h2>
+<ul>
+<li>近期目标：
+<ul>
+<li>刘浏：part level 6d pose</li>
+<li>詹欣宇：尽快结束手上instance reconstruction的topic</li>
+<li>唐屠天：准备two-stream mask guided grasping</li>
+<li>叶若琳：帮助完成PAMI，instance reconstruction的topic</li>
+<li>付昊源：尽快结束手上mesh2vector2mesh的topic</li>
+<li>向谨溢：重启individual instance segmentation的topic</li>
+<li>刘意（远程实习）：尝试优化单图片3D Reconstruction算法</li>
+</ul>
+</li>
+<li>本周进展：
+<ul>
+<li>刘浏：在整理出来的基础数据集上用baseline方法跑分。</li>
+<li>詹欣宇：实现了matching + loss；接手了hand-object相关工作</li>
+<li>唐屠天：完成YOLOv3入库，准备two-stream mask guided grasping（调研，实验设计）</li>
+<li>叶若琳：改amodal实验的bug；熟悉instance reconstruction的数据集</li>
+<li>付昊源：尝试mesh上的graph embedding，搞定PDDLStream上的环境建模</li>
+<li>刘意：</li>
+<li>向谨溢：熟悉unity，准备渲染数据集</li>
+</ul>
+</li>
+<li>遇到问题：</li>
+<li>下周计划：
+<ul>
+<li>刘浏：1. 考虑build一个real object数据集（物体数量1000个左右），结合扫描和逆向；2. 继续part-level 6d pose</li>
+<li>詹欣宇：验证matching + loss是可以行的，一旦验证，可以准备写文章了。</li>
+<li>唐屠天：推进YOLOv4入库；two-stream mask guided grasping</li>
+<li>叶若琳：跑一个baseline出来</li>
+<li>刘意（远程实习）: 完整的训练代码实现</li>
+<li>付昊源：搞定densefusion + tracking的入库。</li>
+</ul>
+</li>
+</ul>
+<h2 id="skill-learning小组">Skill Learning小组</h2>
+<ul>
+<li>近期目标：搭建起记录人手dynamics的平台，打通hand-object manipulation到gripper-object manipulation</li>
+<li>本周进展：
+<ul>
+<li>杨理欣
+<ul>
+<li>写hand-object代码，验证一些non-linear optimization方案</li>
+</ul>
+</li>
+<li>詹欣宇：
+<ul>
+<li>刚接手hand-object的topic</li>
+</ul>
+</li>
+<li>张行（远程）
+<ul>
+<li>刚接手hand-object的topic</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>遇到问题：
+<ul>
+<li>就当前的设备，有三种记录hand-object dynamic的方式，两种是纯synthetic的，一种是不那么real的real</li>
+</ul>
+</li>
+<li>下周计划：
+<ul>
+<li>准备3D打印材料</li>
+<li>搞定第三视角标定</li>
+<li>探索先建模再渲染覆盖手套以实现markerless标注的思路。</li>
+<li>RGB2Hand-Object代码实现</li>
+</ul>
+</li>
+</ul>
+<h2 id="planning小组">Planning小组</h2>
+<ul>
+<li>近期目标：PDDLStream熟悉，扩展。打通流程</li>
+<li>本周进展：
+<ul>
+<li>杜文昕：PDDLStream和Mujoco的结合。</li>
+</ul>
+</li>
+<li>遇到问题：</li>
+<li>下周计划：
+<ul>
+<li>杜文昕：开始基于pddlstream的研究</li>
+</ul>
+</li>
+</ul>
+<h2 id="control小组">Control小组</h2>
+<ul>
+<li>近期目标：复现一篇基于meta-RL的插拔</li>
+<li>本周进展：
+<ul>
+<li>徐文强：初步复现meta-RL。</li>
+</ul>
+</li>
+<li>遇到问题：</li>
+<li>下周计划：
+<ul>
+<li>徐文强：考虑迁移到机器人上。</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/digest/2020-07-06~2020-07-12-%E8%BF%99%E5%B0%86%E6%98%AF%E4%B8%80%E4%B8%AA%E4%B8%B0%E7%9B%9B%E7%9A%84%E5%A4%8F%E5%A4%A9/>http://mvig.sjtu.edu.cn/robotflow/digest/2020-07-06~2020-07-12-%E8%BF%99%E5%B0%86%E6%98%AF%E4%B8%80%E4%B8%AA%E4%B8%B0%E7%9B%9B%E7%9A%84%E5%A4%8F%E5%A4%A9/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/digest/">
+                    #digest</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/digest/2020-06-29~2020-07-05-%E5%85%B6%E5%AE%9E%E6%88%91%E4%BB%AC%E6%98%AF%E4%B8%80%E4%B8%AArobotics-lab/" class="prev" rel="prev" title="2020-06-29~2020-07-05 其实，我们是一个Robotics Lab"><i class="iconfont icon-left"></i>&nbsp;2020-06-29~2020-07-05 其实，我们是一个Robotics Lab</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/digest/2020-07-13~2020-07-19-%E5%9D%91%E5%A4%9A%E4%B8%8D%E8%A6%81%E6%80%95/" class="next" rel="next" title="2020-07-13~2020-07-19 坑多不要怕">2020-07-13~2020-07-19 坑多不要怕&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

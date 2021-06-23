@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/%E5%A6%82%E4%BD%95%E6%89%B9%E9%87%8F%E4%BB%8Eieee%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AB%A0/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/%E4%BD%BF%E7%94%A8moveit%E6%8E%A7%E5%88%B6ur5/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/ros%E5%92%8Cur5%E9%85%8D%E7%BD%AE%E6%96%87%E6%A1%A3%E5%8F%8A%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           ROS和UR5配置文档及踩坑经验 | RobotFlow
+       
+  </title>
+  <meta name="title" content="ROS和UR5配置文档及踩坑经验 | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "ROS和UR5配置文档及踩坑经验",
+    "headline" : "ROS和UR5配置文档及踩坑经验",
+    "description" : "ROS和UR5配置文档 如有遗漏及错误，欢迎补充指正。\nROS配置 ROS仅支持Linux系统。最新版本为ROS Melodic Morenia。直接按照 http:\/\/wiki.ros.org\/cn\/melodic\/Installation\/Ubuntu 进行安装。\n若在下面这条命令时报错：\nsudo rosdep init ERROR: cannot download default sources list from: https:\/\/raw.githubusercontent.com\/ros\/rosdistro\/master\/rosdep\/sources.list.d\/20-default.list Website may be down. 则可尝试 https:\/\/blog.csdn.net\/weixin_43288910\/article\/details\/105627358 的方法修改host文件解决。\n安装完成后可根据 http:\/\/wiki.ros.org\/cn\/ROS\/Tutorials\/InstallingandConfiguringROSEnvironment 创建一个新的工作空间用于学习ROS的基础用法。每次启动新终端时需要使用source ~\/catkin_ws\/devel\/setup.bash命令将工作空间加入ROS工作环境，或者使用echo \u0026quot;source ~\/catkin_ws\/devel\/setup.bash\u0026quot; \u0026gt;\u0026gt; ~\/.bashrc命令，每次启动新终端时就默认将工作空间加入ROS工作环境了。\n教程中如果命令中遇到kinectic或groovy等字段，说明是老版本ROS的命令，将其替换为melodic即可。UR5机器人安装与配置\n机器人硬件安装 机器人本体安装 机器人主要分为机械臂、示教盒、控制箱等部分。将基座放于空旷处以避免机械臂运动时打到墙壁等障碍物。将扇形铁片装在基座上，再将圆形铁片装在扇形铁片上，最后将机械臂装在圆形铁片上即可。若由于机械臂阻挡，某些位置螺丝不好拧，可将控制箱上的电源线插好，启动机器，操纵机械臂转动，再拧螺丝。\n夹爪安装及使用 如果要安装夹爪等工具，将其用螺丝固定在机械臂末端并将夹爪上的带有五根针的数据线与控制箱上的带有五个孔数据线插在一起旋紧即可。开机后在面板上选择为机器人编程-安装设置-Gripper-Scan即可使用。如果Scan无反应，检查控制箱，确保红线插24v，黑线插0v，（任意24v，0v皆可）若脱落，则将所需黄色块拔出，将线插进相应孔并用螺丝刀拧紧，将黄色块装回，再测试。\n机器人包安装及连接电脑 UR包安装教程 http:\/\/wiki.ros.org\/universal_robots\nUR5连接电脑及使用 UR5使用教程:\n[http:\/\/wiki.ros.org\/universal_robot\/Tutorials\/Getting%20Started%20with%20a%20Universal%20Robot%20and%20ROS-Industrial](http:\/\/wiki.ros.org\/universal_robot\/Tutorials\/Getting Started with a Universal Robot and ROS-Industrial)\n其中，连接电脑是通过以太网（简称网线）。用网线将电脑及控制箱连接起来，在机器人示教盒面板上选择设置机器人-网络-静态地址，并设置相关信息及电脑有线连接里的相关信息。电脑与机器人的IP地址前三个字段一样（代表处于一个网络中），最后一个字段不同即可（代表不同主机）。个人设置的机器人IP为192.168.1.102，电脑有线连接IP为192.168.1.103。子网掩码均为255.255.255.0。（如果是输位数则为24）网关为192.168.1.1。设置好后可尝试使用ping IP_OF_THE_ROBOT命令来测试连接状态。若能显示延迟则连接成功。\n连接成功后，需启动UR的驱动。这里一共有三个版本。最老版的就是UR包自带的ur_driver，接着是要单独安装的ur_modern_driver，最新的是Universal_Robots_ROS_Driver，支持3.7以上版本的PolyScope。由于我们的UR5装的polyscope为3.4版本，因此使用ur_modern_driver https:\/\/github.com\/ros-industrial\/ur_modern_driver 。若根据教程启动驱动时报错，可根据报错信息及 在Ubuntu16.04下使用ur_modern_driver无法编译成功的解决方法 进行相应修改即可。\n最后根据UR5使用教程，即可使用MoveIt及RViz可视化地操控机器人。",
+    "inLanguage" : "en-us",
+    "author" : "薛震东",
+    "creator" : "薛震东",
+    "publisher": "薛震东",
+    "accountablePerson" : "薛震东",
+    "copyrightHolder" : "薛震东",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-05-27 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2020-05-27 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/ros%E5%92%8Cur5%E9%85%8D%E7%BD%AE%E6%96%87%E6%A1%A3%E5%8F%8A%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C\/",
+    "wordCount" : "62",
+    "keywords" : [ "ROS","UR5", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">ROS和UR5配置文档及踩坑经验</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">薛震东</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-05-27 itemprop="datePublished">May 27, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="ros和ur5配置文档">ROS和UR5配置文档</h1>
+<p>如有遗漏及错误，欢迎补充指正。</p>
+<h2 id="ros配置">ROS配置</h2>
+<p>ROS仅支持Linux系统。最新版本为ROS Melodic Morenia。直接按照 <a href="http://wiki.ros.org/cn/melodic/Installation/Ubuntu">http://wiki.ros.org/cn/melodic/Installation/Ubuntu</a> 进行安装。</p>
+<p>若在下面这条命令时报错：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo rosdep init
+ERROR: cannot download default sources list from: https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/sources.list.d/20-default.list Website may be down.
+</code></pre></div><p>则可尝试 <a href="https://blog.csdn.net/weixin_43288910/article/details/105627358">https://blog.csdn.net/weixin_43288910/article/details/105627358</a> 的方法修改host文件解决。</p>
+<p>安装完成后可根据 <a href="http://wiki.ros.org/cn/ROS/Tutorials/InstallingandConfiguringROSEnvironment">http://wiki.ros.org/cn/ROS/Tutorials/InstallingandConfiguringROSEnvironment</a> 创建一个新的工作空间用于学习ROS的基础用法。每次启动新终端时需要使用<code>source ~/catkin_ws/devel/setup.bash</code>命令将工作空间加入ROS工作环境，或者使用<code>echo &quot;source ~/catkin_ws/devel/setup.bash&quot; &gt;&gt; ~/.bashrc</code>命令，每次启动新终端时就默认将工作空间加入ROS工作环境了。</p>
+<p>教程中如果命令中遇到<code>kinectic</code>或<code>groovy</code>等字段，说明是老版本ROS的命令，将其替换为<code>melodic</code>即可。UR5机器人安装与配置</p>
+<h3 id="机器人硬件安装">机器人硬件安装</h3>
+<h4 id="机器人本体安装">机器人本体安装</h4>
+<p>机器人主要分为机械臂、示教盒、控制箱等部分。将基座放于空旷处以避免机械臂运动时打到墙壁等障碍物。将扇形铁片装在基座上，再将圆形铁片装在扇形铁片上，最后将机械臂装在圆形铁片上即可。若由于机械臂阻挡，某些位置螺丝不好拧，可将控制箱上的电源线插好，启动机器，操纵机械臂转动，再拧螺丝。</p>
+<h4 id="夹爪安装及使用">夹爪安装及使用</h4>
+<p>如果要安装夹爪等工具，将其用螺丝固定在机械臂末端并将夹爪上的带有五根针的数据线与控制箱上的带有五个孔数据线插在一起旋紧即可。开机后在面板上选择为机器人编程-安装设置-Gripper-Scan即可使用。如果Scan无反应，检查控制箱，确保红线插24v，黑线插0v，（任意24v，0v皆可）若脱落，则将所需黄色块拔出，将线插进相应孔并用螺丝刀拧紧，将黄色块装回，再测试。</p>
+<h3 id="机器人包安装及连接电脑">机器人包安装及连接电脑</h3>
+<h4 id="ur包安装教程">UR包安装教程</h4>
+<p><a href="http://wiki.ros.org/universal_robots">http://wiki.ros.org/universal_robots</a></p>
+<h4 id="ur5连接电脑及使用">UR5连接电脑及使用</h4>
+<p>UR5使用教程:</p>
+<p>[http://wiki.ros.org/universal_robot/Tutorials/Getting%20Started%20with%20a%20Universal%20Robot%20and%20ROS-Industrial](<a href="http://wiki.ros.org/universal_robot/Tutorials/Getting">http://wiki.ros.org/universal_robot/Tutorials/Getting</a> Started with a Universal Robot and ROS-Industrial)</p>
+<p>其中，连接电脑是通过以太网（简称网线）。用网线将电脑及控制箱连接起来，在机器人示教盒面板上选择设置机器人-网络-静态地址，并设置相关信息及电脑有线连接里的相关信息。电脑与机器人的IP地址前三个字段一样（代表处于一个网络中），最后一个字段不同即可（代表不同主机）。个人设置的机器人IP为192.168.1.102，电脑有线连接IP为192.168.1.103。子网掩码均为255.255.255.0。（如果是输位数则为24）网关为192.168.1.1。设置好后可尝试使用<code>ping IP_OF_THE_ROBOT</code>命令来测试连接状态。若能显示延迟则连接成功。</p>
+<p>连接成功后，需启动UR的驱动。这里一共有三个版本。最老版的就是UR包自带的ur_driver，接着是要单独安装的ur_modern_driver，最新的是Universal_Robots_ROS_Driver，支持3.7以上版本的PolyScope。由于我们的UR5装的polyscope为3.4版本，因此使用ur_modern_driver <a href="https://github.com/ros-industrial/ur_modern_driver">https://github.com/ros-industrial/ur_modern_driver</a> 。若根据教程启动驱动时报错，可根据报错信息及 <a href="https://blog.csdn.net/weixin_39585934/article/details/81014816">在Ubuntu16.04下使用ur_modern_driver无法编译成功的解决方法</a> 进行相应修改即可。</p>
+<p>最后根据UR5使用教程，即可使用MoveIt及RViz可视化地操控机器人。</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/ros%E5%92%8Cur5%E9%85%8D%E7%BD%AE%E6%96%87%E6%A1%A3%E5%8F%8A%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C/>http://mvig.sjtu.edu.cn/robotflow/article/ros%E5%92%8Cur5%E9%85%8D%E7%BD%AE%E6%96%87%E6%A1%A3%E5%8F%8A%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/ros/">
+                    #ROS</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/ur5/">
+                    #UR5</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/%E5%A6%82%E4%BD%95%E6%89%B9%E9%87%8F%E4%BB%8Eieee%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AB%A0/" class="prev" rel="prev" title="如何批量从IEEE上下文章"><i class="iconfont icon-left"></i>&nbsp;如何批量从IEEE上下文章</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/%E4%BD%BF%E7%94%A8moveit%E6%8E%A7%E5%88%B6ur5/" class="next" rel="next" title="使用MoveIt控制UR5">使用MoveIt控制UR5&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

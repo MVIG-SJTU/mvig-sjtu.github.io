@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cmake on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/cmake/</link>
+    <description>Recent content in cmake on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 26 Feb 2021 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/cmake/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>All You Need for CMake系列01——Hello CMake!</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9701hello-cmake/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9701hello-cmake/</guid>
+      <description>All You Need for CMake系列01——Hello CMake! 安装CMake  对于版本的几个tips  据说3.11后速度获得了极大的提升 Ubuntu 18.04默认的版本是3.10, 所以如果是Ubuntu 18.04及更低版本的同学请自行安装CMake   自行安装的过程比较简单，在官网根据OS版本选一个新的下载安装即可 安装完后cmake -version确认一下版本  一个Hello CMake的例子 准备一个目录，假如是hello-cmake，其文件结构如下:
+.├── CMakeLists.txt├── main.cppmain.cpp下面的写如下内容：
+#include &amp;lt;iostream&amp;gt; int main(int argc, char *argv[]) { std::cout &amp;lt;&amp;lt; &amp;#34;Hello CMake!&amp;#34; &amp;lt;&amp;lt; std::endl; return 0; } CMakeLists.txt下面的内容如下：
+# Set the minimum version of CMake that can be used # To find the cmake version run # $ cmake --version cmake_minimum_required(VERSION 3.</description>
+    </item>
+    
+    <item>
+      <title>All You Need for CMake系列02——Hello Headers</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9702hello-headers/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9702hello-headers/</guid>
+      <description>All You Need for CMake系列02——Hello Headers 准备代码 代码结构如下：
+.├── CMakeLists.txt├── include│ └── Hello.h└── src├── Hello.cpp└── main.cpp这是一个经典结构，moveit里面单独的包都是用这种方式写的。
+Hello.h里内容如下：
+#ifndef __HELLO_H__ #define __HELLO_H__  class Hello { public: void print(); }; #endif Hello.cpp里内容如下：
+#include &amp;lt;iostream&amp;gt; #include &amp;#34;Hello.h&amp;#34; void Hello::print() { std::cout &amp;lt;&amp;lt; &amp;#34;Hello Headers!&amp;#34; &amp;lt;&amp;lt; std::endl; } main.cpp
+#include &amp;#34;Hello.h&amp;#34; int main(int argc, char *argv[]) { Hello hi; hi.print(); return 0; } CMakeLists.txt
+cmake_minimum_required(VERSION 3.5)project (hello_headers)# Create a sources variable with a link to all cpp files to compile set(SOURCES src/Hello.</description>
+    </item>
+    
+    <item>
+      <title>All You Need for CMake系列03——Static Library</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9703static-library/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9703static-library/</guid>
+      <description>All You Need for CMake系列03——Static Library 准备代码 代码结构如下：
+.├── CMakeLists.txt├── include│ └── static│ └── Hello.h└── src├── Hello.cpp└── main.cpp这是一个经典结构，moveit里面单独的包都是用这种方式写的。
+Hello.h里内容如下：
+#ifndef __HELLO_H__ #define __HELLO_H__  class Hello { public: void print(); }; #endif Hello.cpp里内容如下：
+#include &amp;lt;iostream&amp;gt; #include &amp;#34;static/Hello.h&amp;#34; void Hello::print() { std::cout &amp;lt;&amp;lt; &amp;#34;Hello Static Library!&amp;#34; &amp;lt;&amp;lt; std::endl; } main.cpp
+#include &amp;#34;static/Hello.h&amp;#34; int main(int argc, char *argv[]) { Hello hi; hi.print(); return 0; } CMakeLists.</description>
+    </item>
+    
+    <item>
+      <title>All You Need for CMake系列04——Shared Library</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9704shared-library/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9704shared-library/</guid>
+      <description>All You Need for CMake系列04——Shared Library 准备代码 代码结构如下：
+.├── CMakeLists.txt├── include│ └── shared│ └── Hello.h└── src├── Hello.cpp└── main.cpp这是一个经典结构，moveit里面单独的包都是用这种方式写的。
+Hello.h里内容如下：
+#ifndef __HELLO_H__ #define __HELLO_H__  class Hello { public: void print(); }; #endif Hello.cpp里内容如下：
+#include &amp;lt;iostream&amp;gt; #include &amp;#34;shared/Hello.h&amp;#34; void Hello::print() { std::cout &amp;lt;&amp;lt; &amp;#34;Hello Shared Library!&amp;#34; &amp;lt;&amp;lt; std::endl; } main.cpp
+#include &amp;#34;shared/Hello.h&amp;#34; int main(int argc, char *argv[]) { Hello hi; hi.print(); return 0; } CMakeLists.</description>
+    </item>
+    
+    <item>
+      <title>All You Need for CMake系列05——Installing</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9705installing/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9705installing/</guid>
+      <description>All You Need for CMake系列05——Installing 准备代码 代码结构如下：
+.├── cmake-examples.conf├── CMakeLists.txt├── include│ └── installing│ └── Hello.h└── src├── Hello.cpp└── main.cpp相较于之前，多了一个cmake-examples.conf文件，这个是用来配置一些cmake选项的。之前的shared/static改成了installing，这是强调一下是不是动态/静态lib跟目录结构没关系，只跟下面的CMakeLists文件的写法有关。
+Hello.h里内容如下：
+#ifndef __HELLO_H__ #define __HELLO_H__  class Hello { public: void print(); }; #endif Hello.cpp里内容如下：
+#include &amp;lt;iostream&amp;gt; #include &amp;#34;installing/Hello.h&amp;#34; void Hello::print() { std::cout &amp;lt;&amp;lt; &amp;#34;Hello Install!&amp;#34; &amp;lt;&amp;lt; std::endl; } main.cpp
+#include &amp;#34;installing/Hello.h&amp;#34; int main(int argc, char *argv[]) { Hello hi; hi.print(); return 0; } CMakeLists.</description>
+    </item>
+    
+    <item>
+      <title>All You Need for CMake系列06——Build Type</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9706build-type/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9706build-type/</guid>
+      <description>All You Need for CMake系列06——Build Type 准备代码 代码结构如下：
+.├── CMakeLists.txt├── main.cppmain.cpp:
+#include &amp;lt;iostream&amp;gt; int main(int argc, char *argv[]) { std::cout &amp;lt;&amp;lt; &amp;#34;Hello Build Type!&amp;#34; &amp;lt;&amp;lt; std::endl; return 0; } CMakeLists.txt下面的内容如下：
+cmake_minimum_required(VERSION 3.5)# Set a default build type if none was specified if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES) message(&amp;#34;Setting build type to &amp;#39;RelWithDebInfo&amp;#39; as none was specified.&amp;#34;) set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING &amp;#34;Choose the type of build.&amp;#34; FORCE) # Set the possible values of build type for cmake-gui  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS &amp;#34;Debug&amp;#34; &amp;#34;Release&amp;#34; &amp;#34;MinSizeRel&amp;#34; &amp;#34;RelWithDebInfo&amp;#34;)endif()# Set the project name project (build_type)# Add an executable add_executable(cmake_examples_build_type main.</description>
+    </item>
+    
+    <item>
+      <title>All You Need for CMake系列07——Compile Flags</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9707compile-flags/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9707compile-flags/</guid>
+      <description>All You Need for CMake系列07——Compile Flags 准备代码 代码结构如下：
+.├── CMakeLists.txt├── main.cppmain.cpp:
+#include &amp;lt;iostream&amp;gt; int main(int argc, char *argv[]) { std::cout &amp;lt;&amp;lt; &amp;#34;Hello Compile Flags!&amp;#34; &amp;lt;&amp;lt; std::endl; // only print if compile flag set #ifdef EX2  std::cout &amp;lt;&amp;lt; &amp;#34;Hello Compile Flag EX2!&amp;#34; &amp;lt;&amp;lt; std::endl; #endif  #ifdef EX3  std::cout &amp;lt;&amp;lt; &amp;#34;Hello Compile Flag EX3!&amp;#34; &amp;lt;&amp;lt; std::endl; #endif  return 0; } CMakeLists.txt下面的内容如下：
+cmake_minimum_required(VERSION 3.5)# Set a default C++ compile flag set (CMAKE_CXX_FLAGS &amp;#34;${CMAKE_CXX_FLAGS} -DEX2&amp;#34; CACHE STRING &amp;#34;Set C++ Compiler Flags&amp;#34; FORCE)# Set the project name project (compile_flags)# Add an executable add_executable(cmake_examples_compile_flags main.</description>
+    </item>
+    
+    <item>
+      <title>All You Need for CMake系列08——Third-Party Library.md</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9708third-party-library/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9708third-party-library/</guid>
+      <description>All You Need for CMake系列08——Third-Party Library.md 准备代码 代码结构如下：
+.├── CMakeLists.txt├── main.cppmain.cpp:
+#include &amp;lt;iostream&amp;gt;#include &amp;lt;boost/shared_ptr.hpp&amp;gt;#include &amp;lt;boost/filesystem.hpp&amp;gt; int main(int argc, char *argv[]) { std::cout &amp;lt;&amp;lt; &amp;#34;Hello Third Party Include!&amp;#34; &amp;lt;&amp;lt; std::endl; // use a shared ptr  boost::shared_ptr&amp;lt;int&amp;gt; isp(new int(4)); // trivial use of boost filesystem  boost::filesystem::path path = &amp;#34;/usr/share/cmake/modules&amp;#34;; if(path.is_relative()) { std::cout &amp;lt;&amp;lt; &amp;#34;Path is relative&amp;#34; &amp;lt;&amp;lt; std::endl; } else { std::cout &amp;lt;&amp;lt; &amp;#34;Path is not relative&amp;#34; &amp;lt;&amp;lt; std::endl; } return 0; } CMakeLists.</description>
+    </item>
+    
+    <item>
+      <title>All You Need for CMake系列09——Sub-Projects</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9709sub-projects/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9709sub-projects/</guid>
+      <description>All You Need for CMake系列09——Sub-Projects 准备代码 代码结构如下：
+.├── CMakeLists.txt├── subbinary│ ├── CMakeLists.txt│ └── main.cpp├── sublibrary1│ ├── CMakeLists.txt│ ├── include│ │ └── sublib1│ │ └── sublib1.h│ └── src│ └── sublib1.cpp└── sublibrary2├── CMakeLists.txt└── include└── sublib2└── sublib2.hCMakeLists.txt:
+cmake_minimum_required (VERSION 3.5)project(subprojects)# Add sub directories add_subdirectory(sublibrary1)add_subdirectory(sublibrary2)add_subdirectory(subbinary)subbinary/CMakeLists.txt:
+project(subbinary)# Create the executable add_executable(${PROJECT_NAME} main.cpp)# Link the static library from subproject1 using it&amp;#39;s alias sub::lib1 # Link the header only library from subproject2 using it&amp;#39;s alias sub::lib2 # This will cause the include directories for that target to be added to this project target_link_libraries(${PROJECT_NAME} sub::lib1 sub::lib2 )subbinary/main.</description>
+    </item>
+    
+    <item>
+      <title>All You Need for CMake系列10——Installer</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9710installer/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9710installer/</guid>
+      <description>All You Need for CMake系列10——Installer 生成的可执行程序距离发布出去给大众使用，只剩下最后一步，就是打包installer。 CMake中使用CPack来打包RPM，deb，gzip等格式的安装包。本文将以Deb包为例。
+准备代码 代码结构如下：
+.├── cmake-examples.conf├── CMakeLists.txt├── include│ └── Hello.h└── src├── Hello.cpp└── main.cppcmake-examples.conf：这里创建一个空文件即可
+Hello.h:
+#ifndef __HELLO_H__ #define __HELLO_H__  class Hello { public: void print(); }; #endif Hello.cpp:
+#include &amp;lt;iostream&amp;gt; #include &amp;#34;Hello.h&amp;#34; void Hello::print() { std::cout &amp;lt;&amp;lt; &amp;#34;Hello Install!&amp;#34; &amp;lt;&amp;lt; std::endl; } main.cpp:
+#include &amp;#34;Hello.h&amp;#34; int main(int argc, char *argv[]) { Hello hi; hi.print(); return 0; } } CMakeLists.</description>
+    </item>
+    
+    <item>
+      <title>All You Need for CMake系列11——Pybind11</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9711pybind11/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9711pybind11/</guid>
+      <description>All You Need for CMake系列11——Pybind11 有时我们需要给c++的底层代码套上一个python的wrapper，此时就需要用pybind11了，当然还有一些别的工具可以做这个事情，这里就不多说了。
+安装pybind11 pybind11有两种常用的安装方式，一种是用pip install pybind，一种是git clone https://github.com/pybind/pybind11.git
+准备代码 代码结构如下：
+.├── CMakeLists.txt└── src└── main.cpp如果是用git clone的方式下载，代码结构如下：
+.├── CMakeLists.txt└── src└── main.cpp└── pybind11main.cpp:
+#include &amp;lt;pybind11/pybind11.h&amp;gt; int add(int i, int j) { return i + j; } namespace py = pybind11; PYBIND11_MODULE(cmake_example, m) { m.doc() = R&amp;#34;pbdoc( Pybind11 example plugin )pbdoc&amp;#34;; m.def(&amp;#34;add&amp;#34;, &amp;amp;add, R&amp;#34;pbdoc( Add two numbers )pbdoc&amp;#34;); m.def(&amp;#34;substract&amp;#34;, [](int i, int j) { return i - j }, R&amp;#34;pbdoc( Substract two numbers )pbdoc&amp;#34;); } CMakeLists.</description>
+    </item>
+    
+    <item>
+      <title>All You Need for Pybind11系列01——编译包到python库</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-pybind11%E7%B3%BB%E5%88%971%E7%BC%96%E8%AF%91%E5%8C%85%E5%88%B0python%E5%BA%93/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-pybind11%E7%B3%BB%E5%88%971%E7%BC%96%E8%AF%91%E5%8C%85%E5%88%B0python%E5%BA%93/</guid>
+      <description>All You Need for Pybind11系列01——编译包到python库 本系列Pybind11的安装方式默认为pip install pybind11
+CMake安装包到python库 详情请见这篇文章，注意这样生成的python库的so文件在build下，而不在当前环境的site-packages下面
+g++安装包到python库 考虑到我们搞的是相对大型的系统，这种安装方式对包管理很不友好，因此不在这里多说。如果感兴趣，可以看看pybind11的官方文档。
+setuptools安装包到python库 准备代码 代码结构如下：
+.├── CMakeLists.txt└── src└── main.cpp└── setup.py└── pyproject.toml就是在CMake安装方式之外要多准备一个setup.py文件。其中CMakeLists.txt和main.cpp中的内容和CMake教程中一致。
+# -*- coding: utf-8 -*- import os import sys import subprocess from setuptools import setup, Extension from setuptools.command.build_ext import build_ext # Convert distutils Windows platform specifiers to CMake -A arguments PLAT_TO_CMAKE = { &amp;#34;win32&amp;#34;: &amp;#34;Win32&amp;#34;, &amp;#34;win-amd64&amp;#34;: &amp;#34;x64&amp;#34;, &amp;#34;win-arm32&amp;#34;: &amp;#34;ARM&amp;#34;, &amp;#34;win-arm64&amp;#34;: &amp;#34;ARM64&amp;#34;, } # A CMakeExtension needs a sourcedir instead of a file list.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/htc-vive%E5%AE%89%E8%A3%85&#43;noitom%E6%89%8B%E5%A5%97%E5%AE%8C%E6%95%B4%E9%85%8D%E7%BD%AE%E6%B5%81%E7%A8%8B/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/%E4%B8%80%E6%96%87%E7%9C%8B%E6%87%82pddl/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/franka-emika-panda%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Franka Emika Panda电脑安装配置指南 | RobotFlow
+       
+  </title>
+  <meta name="title" content="Franka Emika Panda电脑安装配置指南 | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "Franka Emika Panda电脑安装配置指南",
+    "headline" : "Franka Emika Panda电脑安装配置指南",
+    "description" : "本文主要参考该指南。\nRequirements  一台用不上CUDA的电脑 Ubuntu 18.04 \u002b ROS Melodic  系统装完请优先装real-time kernel，确定安装成功后再安装别的    安装real-time kernel 这个跟系统调度有关系，简单来说，需要把操作系统变成“实时响应”操作系统，franka对一个control流程的响应时间要求很高（\u0026lt;1ms）。因此，需要打上real-time priority的补丁。\n这个补丁不是给正在运行的kernel打，而是在kernel还没安装上之前打。所以流程是这样的，首先到这个列表看看哪些版本的kernel有rt补丁，然后到这个地方下载对应版本的kernel。有人说这里rt补丁和kernel版本不一定对应，但我觉得对应是比较稳妥的。以5.6.17为例。\n下载kernel并打好补丁  首先安装一些必要的程序  sudo apt-get install build-essential bc curl ca-certificates fakeroot gnupg2 libssl-dev lsb-release libelf-dev bison flex liblz4-tool  下载补丁  curl -SLO https:\/\/mirrors.edge.kernel.org\/pub\/linux\/kernel\/v5.x\/linux-5.6.17.tar.xz curl -SLO https:\/\/mirrors.edge.kernel.org\/pub\/linux\/kernel\/v5.x\/linux-5.6.17.tar.sign curl -SLO https:\/\/mirrors.edge.kernel.org\/pub\/linux\/kernel\/projects\/rt\/5.6\/patch-5.6.17-rt10.patch.xz curl -SLO https:\/\/mirrors.edge.kernel.org\/pub\/linux\/kernel\/projects\/rt\/5.6\/patch-5.6.17-rt10.patch.sign sign文件是用来检查文件完整性的，keyserver经常连不上，所以不检查也行。\n 解压缩  xz -d linux-5.6.17.tar.xz\rxz -d patch-5.6.17-rt10.patch.xz\r 编译kernel  tar xf linux-5.6.17.tar\rcd linux-5.",
+    "inLanguage" : "en-us",
+    "author" : "徐文强",
+    "creator" : "徐文强",
+    "publisher": "徐文强",
+    "accountablePerson" : "徐文强",
+    "copyrightHolder" : "徐文强",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-07-05 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2020-07-05 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/franka-emika-panda%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97\/",
+    "wordCount" : "138",
+    "keywords" : [ "robot", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Franka Emika Panda电脑安装配置指南</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">徐文强</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-07-05 itemprop="datePublished">July 5, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>本文主要参考该<a href="https://frankaemika.github.io/docs/installation_linux.html">指南</a>。</p>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li>一台用不上CUDA的电脑</li>
+<li>Ubuntu 18.04 + ROS Melodic
+<ul>
+<li>系统装完请优先装real-time kernel，确定安装成功后再安装别的</li>
+</ul>
+</li>
+</ul>
+<h2 id="安装real-time-kernel">安装real-time kernel</h2>
+<p>这个跟系统调度有关系，简单来说，需要把操作系统变成“实时响应”操作系统，franka对一个control流程的响应时间要求很高（&lt;1ms）。因此，需要打上real-time priority的补丁。</p>
+<p>这个补丁不是给正在运行的kernel打，而是在kernel还没安装上之前打。所以流程是这样的，首先到<a href="https://www.kernel.org/pub/linux/kernel/projects/rt/">这个列表</a>看看哪些版本的kernel有rt补丁，然后到<a href="https://www.kernel.org/pub/linux/kernel">这个地方</a>下载对应版本的kernel。有人说这里rt补丁和kernel版本不一定对应，但我觉得对应是比较稳妥的。以5.6.17为例。</p>
+<h3 id="下载kernel并打好补丁">下载kernel并打好补丁</h3>
+<ul>
+<li>首先安装一些必要的程序</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo apt-get install build-essential bc curl ca-certificates fakeroot gnupg2 libssl-dev lsb-release libelf-dev bison flex liblz4-tool
+</code></pre></div><ul>
+<li>下载补丁</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl -SLO https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.6.17.tar.xz
+curl -SLO https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.6.17.tar.sign
+curl -SLO https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/5.6/patch-5.6.17-rt10.patch.xz
+curl -SLO https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/5.6/patch-5.6.17-rt10.patch.sign
+</code></pre></div><p>sign文件是用来检查文件完整性的，keyserver经常连不上，所以不检查也行。</p>
+<ul>
+<li>解压缩</li>
+</ul>
+<pre><code>xz -d linux-5.6.17.tar.xz
+xz -d patch-5.6.17-rt10.patch.xz
+</code></pre><ul>
+<li>编译kernel</li>
+</ul>
+<pre><code>tar xf linux-5.6.17.tar
+cd linux-5.6.17
+patch -p1 &lt; ../patch-5.6.17-rt10.patch
+make oldconfig
+</code></pre><p>在出现的界面里选择Fully Preemptible Kernel (RT) (PREEMPT_RT_FULL) (NEW)，其他的一路保持默认，要按很久。</p>
+<p>接着开始编译</p>
+<pre><code>make -j8
+sudo make modules_install -j8
+sudo make install -j8
+</code></pre><ul>
+<li>重启，如果默认进的kernel还是原来的kernel，可以到boot menu，advanced options里面去看是否有带rt的kernel。此时<code>uname -a</code>里面也会包含<code>PREEMPT RT</code>的字样。<code>/sys/kernel/realtime</code>也会存在，并且包含数字1。</li>
+<li>给用户设置real-time的权限</li>
+</ul>
+<pre><code>sudo addgroup realtime
+sudo usermod -a -G realtime $(whoami)
+</code></pre><p>之后在<code>/etc/security/limits.conf</code>中：</p>
+<pre><code>@realtime soft rtprio 99
+@realtime soft priority 99
+@realtime soft memlock 102400
+@realtime hard rtprio 99
+@realtime hard priority 99
+@realtime hard memlock 102400
+</code></pre><h2 id="安装libfranka和franka-ros">安装libfranka和franka-ros</h2>
+<p>需先安装ROS Melodic，参考这篇<a href="http://wiki.ros.org/melodic/Installation/Ubuntu">指南</a>。</p>
+<p>ROS安装没有什么坑，唯一需要注意的是rosdep init可能因为网络原因搞不定。在host里修改一下raw.githubusercontent.com的ip。</p>
+<ol>
+<li>在<a href="https://www.ipaddress.com">IPAddress</a>里输入raw.githubusercontent.com，查询ip</li>
+<li>sudo vim /etc/hosts</li>
+<li>写入(1.中查到的ip) raw.githubusercontent.com</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo apt install ros-melodic-libfranka ros-melodic-franka-ros
+</code></pre></div>
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/franka-emika-panda%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/>http://mvig.sjtu.edu.cn/robotflow/article/franka-emika-panda%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/robot/">
+                    #robot</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/htc-vive%E5%AE%89%E8%A3%85&#43;noitom%E6%89%8B%E5%A5%97%E5%AE%8C%E6%95%B4%E9%85%8D%E7%BD%AE%E6%B5%81%E7%A8%8B/" class="prev" rel="prev" title="HTC vive安装&#43;Noitom手套完整配置流程"><i class="iconfont icon-left"></i>&nbsp;HTC vive安装&#43;Noitom手套完整配置流程</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/%E4%B8%80%E6%96%87%E7%9C%8B%E6%87%82pddl/" class="next" rel="next" title="一文看懂PDDL">一文看懂PDDL&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

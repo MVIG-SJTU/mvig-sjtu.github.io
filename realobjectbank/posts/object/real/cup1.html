@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>object viewer cup1</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="/realobjectbank/viewer/main.css">
+		<style>
+			a {
+				color: blue;
+			}
+			.ac {  /* prevent dat-gui from being selected */
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+			}
+			.control-inactive {
+				color: #888;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container"></div>
+		<div id="info">
+			<a href="https://mvig.sjtu.edu.cn/realobjectbank" target="_blank" rel="noopener">Real Object Bank</a> -> cup -> bar cup<br/>
+		</div>
+
+		<script type="module">
+
+			import * as THREE from '/realobjectbank/viewer/build/three.module.js';
+
+			import Stats from '/realobjectbank/viewer/jsm/libs/stats.module.js';
+			import { GUI } from '/realobjectbank/viewer/jsm/libs/dat.gui.module.js';
+			import { OrbitControls } from '/realobjectbank/viewer/jsm/controls/OrbitControls.js';
+			import { GLTFLoader } from '/realobjectbank/viewer/jsm/loaders/GLTFLoader.js';
+
+			var scene, renderer, camera, stats, annos;
+			var model, skeleton, wireframe, normal;
+			var sparse_keypoints, dense_keypoints, clock;
+
+			var panelGeneralSettings = {
+					'show mesh': true,
+					'show texture': true,
+					'show normal': false,
+				};
+			var panelMaskSettings = {
+					'show semantic': false,
+					'show instance': false,
+				}; 
+			var panelKeypointSettings = {
+					'show sparse': false,
+					'show dense': false,
+				};
+			var panelArticulationSettings = {
+					'default animation': false, // articulation only
+					'show skeleton': false, // articulation only
+					'prismatic': 0,
+					'revolute': 0,
+					'angle_ratio': 0.2,
+					'R': 0,
+					'P': 0,
+					'Y': 0
+				};
+			var panelFlexibilitySettings = {
+					'default animation': false, // flexible only
+				};
+				
+
+			init();
+
+			function init() {
+
+				var container = document.getElementById( 'container' );
+	
+				clock = new THREE.Clock();
+
+				scene = new THREE.Scene();
+				scene.background = new THREE.Color( 0xa0a0a0 );
+				scene.fog = new THREE.Fog( 0xa0a0a0, 10, 50 );
+
+				var hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444 );
+				hemiLight.position.set( 0, 20, 0 );
+				scene.add( hemiLight );
+
+				var dirLight = new THREE.DirectionalLight( 0xffffff );
+				dirLight.position.set( 3, 10, 10 );
+				dirLight.castShadow = true;
+				dirLight.shadow.camera.top = 2;
+				dirLight.shadow.camera.bottom = - 2;
+				dirLight.shadow.camera.left = - 2;
+				dirLight.shadow.camera.right = 2;
+				dirLight.shadow.camera.near = 0.1;
+				dirLight.shadow.camera.far = 40;
+				scene.add( dirLight );
+
+				// ground
+				var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 100, 100 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
+				mesh.rotation.x = - Math.PI / 2;
+				mesh.receiveShadow = true;
+				scene.add( mesh );
+				
+				// object
+				
+				var wireframeMaterial = new THREE.MeshBasicMaterial( {color: 0xe0e0ff, wireframe: true} );
+				var normalMaterial = new THREE.MeshNormalMaterial();
+
+				var obj_loader = new GLTFLoader();
+				var anno_loader = new THREE.FileLoader();
+				anno_loader.load(
+					"/realobjectbank/viewer/models/annotations/cup1_articulation.json",
+					function(data){
+						annos = JSON.parse(data);
+						//console.log(annos)
+					},
+					
+					obj_loader.load( '/realobjectbank/viewer/models/gltf/Xbot.glb', function ( gltf ) {
+						model = gltf.scene;
+						scene.add( model );
+
+						console.log(model)
+						model.traverse( function ( object ) {
+							if ( object.isMesh ) object.castShadow = true;
+						} );
+
+						skeleton = new THREE.SkeletonHelper( model );
+						skeleton.visible = false;
+						scene.add( skeleton );
+
+						var positions = new Float32Array(annos['sparse_keypoint'].length * 3);
+						var sizes = new Float32Array(annos['sparse_keypoint'].length * 1);
+						for (var i = 0; i < annos['sparse_keypoint'].length; i++) {
+							for (var j = 0; j < 3; j ++) {
+								positions[i * 3 + j] = annos['sparse_keypoint'][i][j];
+							}
+							sizes[i] = 1
+						}
+						//console.log(positions)
+
+						var geometry = new THREE.BufferGeometry();
+						geometry.setAttribute( 'position', new THREE.BufferAttribute(positions, 3));
+						geometry.setAttribute( 'size', new THREE.BufferAttribute(sizes, 1));
+						var material = new THREE.ShaderMaterial({
+							uniforms: {
+								color: {value : new THREE.Color( 0xffffff )}
+							}
+						});
+						sparse_keypoints = new THREE.Points(geometry, material);
+						//console.log(sparse_keypoints)
+						//sparse_keypoints.visible = false;
+						scene.add(sparse_keypoints)
+
+						createPanel(annos);
+						animate();
+
+					} )
+					
+				);
+				
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.outputEncoding = THREE.sRGBEncoding;
+				renderer.shadowMap.enabled = true;
+				container.appendChild( renderer.domElement );
+
+				// camera
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 100 );
+				camera.position.set( - 1, 2, 3 );
+				
+
+				// 360 deg rotate to view
+				var controls = new OrbitControls( camera, renderer.domElement );
+				controls.enablePan = false;
+				controls.enableZoom = false;
+				controls.target.set( 0, 1, 0 );
+				controls.update();
+
+				stats = new Stats();
+				container.appendChild( stats.dom );
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function createPanel(annos) {
+
+				var panel = new GUI( { width: 310 } );
+
+				var folder1 = panel.addFolder( 'General Option');
+				var folder2 = panel.addFolder( 'Segmentation Option');
+				var folder3 = panel.addFolder( 'Keypoint Option');
+				
+
+				folder1.add( panelGeneralSettings, 'show mesh').name( 'Show Mesh' ).onChange( onMeshShow );
+				folder1.add( panelGeneralSettings, 'show texture').name( 'Show Texture' ).onChange( onTextureShow );
+				folder1.add( panelGeneralSettings, 'show normal').name( 'Show Normal' ).onChange( onNormalShow );
+				
+				folder2.add( panelMaskSettings, 'show semantic').name( 'Show Semantic' ).onChange( onSemanticShow );
+				folder2.add( panelMaskSettings, 'show instance').name( 'Show Instance' ).onChange( onInstanceShow );
+
+				folder3.add( panelKeypointSettings, 'show sparse').name( 'Show Sparse' ).onChange( onSparseShow );
+				folder3.add( panelKeypointSettings, 'show dense').name( 'Show Dense' ).onChange( onDenseShow );
+
+				folder1.open();
+				folder2.open();
+				folder3.open();
+
+				if (annos["type"] == "articulation") {
+					var folder4 = panel.addFolder( 'Articulation Option')
+					folder4.add( panelArticulationSettings, 'default animation').name( 'Default Animation' ).onChange( animateArticulation );
+					folder4.add( panelArticulationSettings, 'show skeleton').name( 'Show Skeleton' ).onChange( onSkeletonShow )
+
+					var part_num = annos["part_num"]
+					for (var i=0; i < part_num; i++) {
+						if (annos["joint"][i]['link_type'] == "prismatic"){
+							var range = annos["joint"][i]['range'];
+							
+							folder4.add( panelArticulationSettings, 'prismatic', range[0], range[1]).name( "part "+(i+1).toString()+"(Prism)")
+
+						} else if (annos["joint"][i]['link_type'] == "revolute") {
+							var angle_range = annos["joint"][i]['angle_range'];
+							folder4.add( panelArticulationSettings,'revolute', angle_range[0], angle_range[1]).name( "part "+(i+1).toString()+"(Rev)")
+							
+						} else if (annos["joint"][i]["link_type"] == "screw") {
+							var range = annos["joint"][i]['range'];
+							var angle_ratio = annos["joint"][i]['angle_ratio']
+							folder4.add( panelArticulationSettings,'prismatic', range[0], range[1]).name( "part "+(i+1).toString()+"(Screw)")
+						} else {
+							var angle_1 = annos["joint"][i]["angle_range"][0][0]
+							var angle_2 = annos["joint"][i]["angle_range"][0][1]
+							var angle_3 = annos["joint"][i]["angle_range"][0][2]
+							folder4.add( panelArticulationSettings,'R', range[0], range[1]).name( "part "+(i+1).toString()+"(Rev_R)")
+							folder4.add( panelArticulationSettings,'R', range[0], range[1]).name( "part "+(i+1).toString()+"(Rev_P)")
+							folder4.add( panelArticulationSettings,'R', range[0], range[1]).name( "part "+(i+1).toString()+"(Rev_Y)")
+						}
+						//folder4.add( panelArticulationSettings, '')
+					}
+
+					folder4.open();
+				}
+
+				if (annos["type"] == "flexible") {
+					var folder5 = panel.addFolder( 'Flexibility Option');
+					folder5.add( panelFlexibilitySettings, 'default animation').name( 'Default Animation' ).onChange( animateFlexible );
+					folder5.open();
+				}
+				
+
+				
+
+			}
+
+			function onMeshShow() {
+				if ( panelGeneralSettings['show mesh']) {
+					//model.visible = false;
+					wireframe.visible = true;
+				} else {
+					//model.visible = true;
+					wireframe.visible = false;
+				}
+			}
+
+			function onTextureShow() {}
+
+			function onNormalShow() {}
+
+			function onSemanticShow() {}
+
+			function onInstanceShow() {}
+
+			function onSparseShow() {
+				
+			}
+
+			function onDenseShow() {}
+
+			function onSkeletonShow() {
+				if (panelArticulationSettings['show skeleton']) {
+					skeleton.visible = true;
+				} else {
+					skeleton.visible = false;
+				}
+			}
+
+			function animateArticulation() {}
+
+			function animateFlexible() {}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function animate() {
+
+				// Render loop
+
+				requestAnimationFrame( animate );
+
+				// Get the time elapsed since the last frame, used for mixer update
+
+
+				stats.update();
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+
+	</body>
+</html>

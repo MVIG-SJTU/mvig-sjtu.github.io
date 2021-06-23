@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9703static-library/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9701hello-cmake/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9702hello-headers/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           All You Need for CMake系列02——Hello Headers | RobotFlow
+       
+  </title>
+  <meta name="title" content="All You Need for CMake系列02——Hello Headers | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "All You Need for CMake系列02——Hello Headers",
+    "headline" : "All You Need for CMake系列02——Hello Headers",
+    "description" : "All You Need for CMake系列02——Hello Headers 准备代码 代码结构如下：\n.\r├── CMakeLists.txt\r├── include\r│ └── Hello.h\r└── src\r├── Hello.cpp\r└── main.cpp\r这是一个经典结构，moveit里面单独的包都是用这种方式写的。\nHello.h里内容如下：\n#ifndef __HELLO_H__ #define __HELLO_H__  class Hello { public: void print(); }; #endif Hello.cpp里内容如下：\n#include \u0026lt;iostream\u0026gt; #include \u0026#34;Hello.h\u0026#34; void Hello::print() { std::cout \u0026lt;\u0026lt; \u0026#34;Hello Headers!\u0026#34; \u0026lt;\u0026lt; std::endl; } main.cpp\n#include \u0026#34;Hello.h\u0026#34; int main(int argc, char *argv[]) { Hello hi; hi.print(); return 0; } CMakeLists.txt\ncmake_minimum_required(VERSION 3.5)project (hello_headers)# Create a sources variable with a link to all cpp files to compile set(SOURCES src\/Hello.",
+    "inLanguage" : "en-us",
+    "author" : "徐文强",
+    "creator" : "徐文强",
+    "publisher": "徐文强",
+    "accountablePerson" : "徐文强",
+    "copyrightHolder" : "徐文强",
+    "copyrightYear" : "2021",
+    "datePublished": "2021-02-26 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2021-02-26 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/all-you-need-for-cmake%E7%B3%BB%E5%88%9702hello-headers\/",
+    "wordCount" : "148",
+    "keywords" : [ "cmake","cpp", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">All You Need for CMake系列02——Hello Headers</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">徐文强</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2021-02-26 itemprop="datePublished">February 26, 2021</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="all-you-need-for-cmake系列02hello-headers">All You Need for CMake系列02——Hello Headers</h1>
+<h2 id="准备代码">准备代码</h2>
+<p>代码结构如下：</p>
+<pre><code>.
+├── CMakeLists.txt
+├── include
+│   └── Hello.h
+└── src
+    ├── Hello.cpp
+    └── main.cpp
+</code></pre><p>这是一个经典结构，moveit里面单独的包都是用这种方式写的。</p>
+<p><code>Hello.h</code>里内容如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#ifndef __HELLO_H__
+</span><span style="color:#75715e">#define __HELLO_H__
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Hello</span>
+{
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">void</span> print();
+};
+
+<span style="color:#75715e">#endif
+</span></code></pre></div><p><code>Hello.cpp</code>里内容如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;Hello.h&#34;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">void</span> Hello<span style="color:#f92672">::</span>print()
+{
+    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Hello Headers!&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+}
+</code></pre></div><p><code>main.cpp</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;Hello.h&#34;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>argv[])
+{
+    Hello hi;
+    hi.print();
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><p><code>CMakeLists.txt</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake">cmake_minimum_required(<span style="color:#e6db74">VERSION</span> <span style="color:#e6db74">3.5</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>project (<span style="color:#e6db74">hello_headers</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Create a sources variable with a link to all cpp files to compile
+</span><span style="color:#75715e"></span>set(<span style="color:#e6db74">SOURCES</span>
+    <span style="color:#e6db74">src/Hello.cpp</span>
+    <span style="color:#e6db74">src/main.cpp</span>
+)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>add_executable(<span style="color:#e6db74">hello_headers</span> <span style="color:#f92672">${</span>SOURCES<span style="color:#f92672">}</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Set the directories that should be included in the build command for this target
+</span><span style="color:#75715e"># when running g++ these will be included as -I/directory/path/
+</span><span style="color:#75715e"></span>target_include_directories(<span style="color:#e6db74">hello_headers</span>
+    <span style="color:#e6db74">PRIVATE</span> 
+        <span style="color:#f92672">${</span>PROJECT_SOURCE_DIR<span style="color:#f92672">}</span><span style="color:#e6db74">/include</span>
+)<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><h2 id="要点">要点</h2>
+<ol>
+<li>在本教程中演示了如何在CMakeLists.txt中添加对header的引用。核心是target_include_directories()
+<ul>
+<li>这个函数的基本用法是<code>target_include_directories(target PRIVATE path/to/include)</code></li>
+<li>target名和add_executable的第一个input变量一样，这里是和PROJECT_NAME一致，但当然也可以不一样。</li>
+<li>PRIVATE在这里是限制了include的访问范围</li>
+<li>关于target_include_directories函数的全面解释可以看<a href="https://cmake.org/cmake/help/latest/command/target_include_directories.html">这里</a></li>
+</ul>
+</li>
+<li>set()是一个很有用的函数，作用就是定义变量。语法是set(NAME, content)，多个content还是像上一章那样依次写即可，不需要加括号，逗号，引号等
+<ul>
+<li>在这里，set函数定义了SOURCES，然后放到add_exeuctable。当然我们可以进一步地把add_executable的输入变量写成全引用的方式<code>add_executable($PROJECT_NAME$ ${SOURCES})</code>，注意这里第一个变量是默认的，第二个变量是我们自己定义的。</li>
+</ul>
+</li>
+<li>几个默认路径变量：
+<ul>
+<li>CMAKE_SOURCE_DIR：项目的source目录</li>
+<li>CMAKE_CURRENT_SOURCE_DIR：当前的source目录，用于多层cmake</li>
+<li>PROJECT_SOURCE_DIR：当前项目的source目录</li>
+<li>CMAKE_BINARY_DIR：build的路径（含build）</li>
+<li>CMAKE_CURRENT_BINARY_DIR：当前所在的build目录</li>
+<li>PROJECT_BINARY_DIR：对当前project的build目录，多层cmake的时候有用</li>
+</ul>
+</li>
+</ol>
+<h2 id="编译流程">编译流程</h2>
+<p>基本步骤和上述步骤一致</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">mkdir build
+cd build
+cmake ..
+make
+</code></pre></div><p>这里我们进一步学两个make的arguments</p>
+<ul>
+<li>make clean：清理之前make的结果</li>
+<li>make VERBOSE=1：make过程中显示的信息会比之前更详细一点。VERBOSE=1是我们比较经常看到的项目编译中使用的等级。</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9702hello-headers/>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9702hello-headers/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/cmake/">
+                    #cmake</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/cpp/">
+                    #cpp</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9703static-library/" class="prev" rel="prev" title="All You Need for CMake系列03——Static Library"><i class="iconfont icon-left"></i>&nbsp;All You Need for CMake系列03——Static Library</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9701hello-cmake/" class="next" rel="next" title="All You Need for CMake系列01——Hello CMake!">All You Need for CMake系列01——Hello CMake!&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

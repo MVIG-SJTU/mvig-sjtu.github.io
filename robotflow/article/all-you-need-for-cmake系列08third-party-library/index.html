@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9709sub-projects/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9707compile-flags/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9708third-party-library/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           All You Need for CMake系列08——Third-Party Library.md | RobotFlow
+       
+  </title>
+  <meta name="title" content="All You Need for CMake系列08——Third-Party Library.md | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "All You Need for CMake系列08——Third-Party Library.md",
+    "headline" : "All You Need for CMake系列08——Third-Party Library.md",
+    "description" : "All You Need for CMake系列08——Third-Party Library.md 准备代码 代码结构如下：\n.\r├── CMakeLists.txt\r├── main.cpp\rmain.cpp:\n#include \u0026lt;iostream\u0026gt;#include \u0026lt;boost\/shared_ptr.hpp\u0026gt;#include \u0026lt;boost\/filesystem.hpp\u0026gt; int main(int argc, char *argv[]) { std::cout \u0026lt;\u0026lt; \u0026#34;Hello Third Party Include!\u0026#34; \u0026lt;\u0026lt; std::endl; \/\/ use a shared ptr  boost::shared_ptr\u0026lt;int\u0026gt; isp(new int(4)); \/\/ trivial use of boost filesystem  boost::filesystem::path path = \u0026#34;\/usr\/share\/cmake\/modules\u0026#34;; if(path.is_relative()) { std::cout \u0026lt;\u0026lt; \u0026#34;Path is relative\u0026#34; \u0026lt;\u0026lt; std::endl; } else { std::cout \u0026lt;\u0026lt; \u0026#34;Path is not relative\u0026#34; \u0026lt;\u0026lt; std::endl; } return 0; } CMakeLists.",
+    "inLanguage" : "en-us",
+    "author" : "徐文强",
+    "creator" : "徐文强",
+    "publisher": "徐文强",
+    "accountablePerson" : "徐文强",
+    "copyrightHolder" : "徐文强",
+    "copyrightYear" : "2021",
+    "datePublished": "2021-02-26 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2021-02-26 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/all-you-need-for-cmake%E7%B3%BB%E5%88%9708third-party-library\/",
+    "wordCount" : "165",
+    "keywords" : [ "cmake","cpp", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">All You Need for CMake系列08——Third-Party Library.md</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">徐文强</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2021-02-26 itemprop="datePublished">February 26, 2021</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="all-you-need-for-cmake系列08third-party-librarymd">All You Need for CMake系列08——Third-Party Library.md</h1>
+<h2 id="准备代码">准备代码</h2>
+<p>代码结构如下：</p>
+<pre><code>.
+├── CMakeLists.txt
+├── main.cpp
+</code></pre><p><code>main.cpp</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;boost/shared_ptr.hpp&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;boost/filesystem.hpp&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>argv[])
+{
+    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Hello Third Party Include!&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+
+    <span style="color:#75715e">// use a shared ptr
+</span><span style="color:#75715e"></span>    boost<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> isp(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>(<span style="color:#ae81ff">4</span>));
+
+    <span style="color:#75715e">// trivial use of boost filesystem
+</span><span style="color:#75715e"></span>    boost<span style="color:#f92672">::</span>filesystem<span style="color:#f92672">::</span>path path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/usr/share/cmake/modules&#34;</span>;
+    <span style="color:#66d9ef">if</span>(path.is_relative())
+    {
+        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Path is relative&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+    }
+    <span style="color:#66d9ef">else</span>
+    {
+        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Path is not relative&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+    }
+
+   <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><p>CMakeLists.txt下面的内容如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake">cmake_minimum_required(<span style="color:#e6db74">VERSION</span> <span style="color:#e6db74">3.5</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Set the project name
+</span><span style="color:#75715e"></span>project (<span style="color:#e6db74">third_party_include</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># find a boost install with the libraries filesystem and system
+</span><span style="color:#75715e"></span>find_package(<span style="color:#e6db74">Boost</span> <span style="color:#e6db74">1.46.1</span> <span style="color:#e6db74">REQUIRED</span> <span style="color:#e6db74">COMPONENTS</span> <span style="color:#e6db74">filesystem</span> <span style="color:#e6db74">system</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># check if boost was found
+</span><span style="color:#75715e"></span>if(<span style="color:#e6db74">Boost_FOUND</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>    message (<span style="color:#e6db74">&#34;boost found&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>else()<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>    message (<span style="color:#e6db74">FATAL_ERROR</span> <span style="color:#e6db74">&#34;Cannot find Boost&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>endif()<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Add an executable
+</span><span style="color:#75715e"></span>add_executable(<span style="color:#e6db74">third_party_include</span> <span style="color:#e6db74">main.cpp</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># link against the boost libraries
+</span><span style="color:#75715e"></span>target_link_libraries( <span style="color:#e6db74">third_party_include</span>
+    <span style="color:#e6db74">PRIVATE</span>
+        <span style="color:#e6db74">Boost::filesystem</span>
+)<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><h2 id="编译流程">编译流程</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">mkdir build
+cd build
+cmake ..
+make
+</code></pre></div><h2 id="要点">要点</h2>
+<ol>
+<li>本章主要介绍find_package的使用，该函数会根据FindXXX.cmake中的路径进行搜索。其中有四个auguments
+<ul>
+<li>Boost是library的名字，对应的文件是FindBoost.cmake</li>
+<li>1.46.1是最低的版本需求</li>
+<li>REQUIRED的意思是如果找不到，就直接判断fail，如果没有的话，则会沉默，在最后报告里说没有找到</li>
+<li>COMPONENTS是需要在这个library中找到的库的列表</li>
+</ul>
+</li>
+<li>大部分找到的包都会生成一个默认变量xxx_FOUND，这里就是Boost_FOUND，类似的还有Boost_INCLUDE_DIRS等等，这些自动生成的默认变量都会在FindXXX.cmake中列出。</li>
+<li>例子中link lib用的是别名的方式，这个别名是boost在打包的时候就已经定义好的（不是通用行为）。如果是没有别名的对象，通常可以用如下方式来定义：</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake"><span style="color:#75715e"># Include the boost headers
+</span><span style="color:#75715e"></span>target_include_directories( <span style="color:#e6db74">third_party_include</span>
+    <span style="color:#e6db74">PRIVATE</span> <span style="color:#f92672">${</span>Boost_INCLUDE_DIRS<span style="color:#f92672">}</span>
+)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># link against the boost libraries
+</span><span style="color:#75715e"></span>target_link_libraries( <span style="color:#e6db74">third_party_include</span>
+    <span style="color:#e6db74">PRIVATE</span>
+    <span style="color:#f92672">${</span>Boost_SYSTEM_LIBRARY<span style="color:#f92672">}</span>
+    <span style="color:#f92672">${</span>Boost_FILESYSTEM_LIBRARY<span style="color:#f92672">}</span>
+)<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div>
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9708third-party-library/>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9708third-party-library/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/cmake/">
+                    #cmake</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/cpp/">
+                    #cpp</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9709sub-projects/" class="prev" rel="prev" title="All You Need for CMake系列09——Sub-Projects"><i class="iconfont icon-left"></i>&nbsp;All You Need for CMake系列09——Sub-Projects</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9707compile-flags/" class="next" rel="next" title="All You Need for CMake系列07——Compile Flags">All You Need for CMake系列07——Compile Flags&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

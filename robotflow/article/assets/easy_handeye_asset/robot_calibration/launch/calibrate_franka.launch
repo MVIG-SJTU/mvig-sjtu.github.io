@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- (Define parameters) -->
+  <arg name="robot_ip" />
+  <arg name="eye_on_hand" doc="eye-on-hand instead of eye-on-base" />
+  <arg if="$(arg eye_on_hand)" name="namespace" value="franka_eih_calib" />
+  <arg unless="$(arg eye_on_hand)" name="namespace" value="franka_eob_calib" />
+
+  <arg name="resWidth" default="640" />
+  <arg name="resHeight" default="480" />
+
+  <!-- (Start your robot's MoveIt! stack, e.g. include its moveit_planning_execution.launch) -->
+  <include file="$(find panda_moveit_config)/launch/panda_control_moveit_rviz.launch">
+    <arg name="load_gripper" value="true" />
+    <arg name="launch_rviz" value="false" />
+    <arg name="robot_ip" value="$(arg robot_ip)" />
+  </include>
+
+  <!-- (Start your tracking system's ROS driver, such as camera driver) -->
+  <node pkg="realsense_d435_server" name="realsense2_driver" type="realsense2_driver" output="screen">
+      <param name="resWidth" type="int" value="$(arg resWidth)" />
+      <param name="resHeight" type="int" value="$(arg resHeight)" />
+  </node>
+  <include file="$(find camera_transform_publisher)/launch/aruco_publisher_realsense.launch"/>
+
+  <!-- (Start calibrate process) -->
+  <include file="$(find easy_handeye)/launch/calibrate.launch">
+    <arg name="eye_on_hand" value="$(arg eye_on_hand)" />
+    <arg name="namespace_prefix" value="$(arg namespace)" />
+    <arg name="move_group" value="panda_arm" />
+    <arg name="freehand_robot_movement" value="false" />
+
+    <!-- fill in the following parameters according to your robot's published tf frames -->
+    <arg name="robot_base_frame" value="panda_link0" />
+    <arg name="robot_effector_frame" value="panda_link8" />
+
+    <!-- fill in the following parameters according to your tracking system's published tf frames -->
+    <arg name="tracking_base_frame" value="camera_link" />
+    <arg name="tracking_marker_frame" value="ar_marker" />
+  </include>
+</launch>

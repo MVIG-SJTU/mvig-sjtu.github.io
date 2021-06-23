@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>UR5 on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/ur5/</link>
+    <description>Recent content in UR5 on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 06 Jun 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/ur5/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>手眼标定介绍与使用</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E6%89%8B%E7%9C%BC%E6%A0%87%E5%AE%9A%E4%BB%8B%E7%BB%8D%E4%B8%8E%E4%BD%BF%E7%94%A8/</link>
+      <pubDate>Sat, 06 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E6%89%8B%E7%9C%BC%E6%A0%87%E5%AE%9A%E4%BB%8B%E7%BB%8D%E4%B8%8E%E4%BD%BF%E7%94%A8/</guid>
+      <description>Robotic Hand-eye Calibration Workspace | Ubuntu 1804 &amp;amp; ROS Melodic Morenia |
+This repo contains a eye-in-hand calibration tool (Cplusplus &amp;amp; ROS) in JD京东 GRASPING ROBOT CHALLENGE (News),
+and the implements of my paper: Robotic hand-eye calibration with depth camera: A sphere model approach (PDF)
+Inside /src there are 5 ROS packages:
+  rgbd_srv
+used by camera_driver.
+  camera_driver
+drive Intel® RealSense™ RGBD cameras in ROS.
+(convert raw stream to ros sensor_msgs::Image)</description>
+    </item>
+    
+    <item>
+      <title>使用MoveIt控制UR5</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E4%BD%BF%E7%94%A8moveit%E6%8E%A7%E5%88%B6ur5/</link>
+      <pubDate>Thu, 28 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E4%BD%BF%E7%94%A8moveit%E6%8E%A7%E5%88%B6ur5/</guid>
+      <description>使用MoveIt控制UR5 MoveIt简介  MOVEit！是目前针对移动操作最先进的软件。 它结合了运动规划，操纵，三维感知，运动学，控制和导航的最新进展 它提供了一个易于使用的平台，开发先进的机器人应用程序，评估新的机器人设计和建筑集成的机器人产品 它广泛应用于工业，商业，研发和其他领域。 MOVEit！是最广泛使用的开源软件的操作，并已被用于超过65个机器人  该简介引用自MoveIt!入门教程-简介，详情见官方主页https://moveit.ros.org/。
+预备知识 学习 http://wiki.ros.org/ROS/Tutorials 的Core ROS Tutorials &amp;ndash; 1.1 Beignner Level &amp;ndash; 5~8节，对ROS node, topic, service, roslaunch等基本概念有了解。
+在RViz中操控UR5机器人 在带有Universal Robot的包的工作空间下，启动UR5的驱动程序。
+roslaunch ur_modern_driver ur5_bringup.launch robot_ip:=IP_OF_THE_ROBOT [reverse_port:=REVERSE_PORT] 然后执行以下命令。该launch文件主要配置了对应于UR5的参数，并启动了MoveIt包中的程序节点。
+roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch 最后，执行如下命令来启动RViz，便可在图形界面RViz中可视化地操控机器人。
+roslaunch ur5_moveit_config moveit_rviz.launch config:=true 使用代码运行MoveIt MoveIt提供了名为MoveItGroupInterface的类，它简洁易用地封装了MoveIt的主要功能，如：设定某joints position或end effector的position为目标，为此规划一个path；控制机械臂的运动；在场景中添加、删除物体，为机械臂attach、detach物体等。MoveIt是基于C++实现的，而这个interface支持C++、python、命令行三种语言的调用。
+该教程以python为例来使用该MoveItGroupInterface，参考了官方文档 https://ros-planning.github.io/moveit_tutorials/doc/move_group_python_interface/move_group_python_interface_tutorial.html ，但由于官方文档中使用了panda机械手的仿真，而我们希望操控UR5，所以在代码中planning_group的名称应当从&amp;quot;panda_arm&amp;quot;改为&amp;quot;manipulator&amp;rdquo;；在设置joints position为goal时，要注意UR5的joint数目比panda的少一个。
+按照官方文档中的示例编写了如下Python脚本，使用MoveItGroupInterface来控制机器人。可将该脚本放置在任意ROS package的scripts目录中，使用
+chmod +x [python_script_name] 来将该脚本变为可执行程序，再通过rosrun来使用它。
+rosrun [package_name] [python_script_name] 该脚本只是简单示例，可参阅MoveIt官方文档了解细节。
+#!/usr/bin/env python import rospy import moveit_commander import sys import moveit_msgs.</description>
+    </item>
+    
+    <item>
+      <title>ROS和UR5配置文档及踩坑经验</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/ros%E5%92%8Cur5%E9%85%8D%E7%BD%AE%E6%96%87%E6%A1%A3%E5%8F%8A%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C/</link>
+      <pubDate>Wed, 27 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/ros%E5%92%8Cur5%E9%85%8D%E7%BD%AE%E6%96%87%E6%A1%A3%E5%8F%8A%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C/</guid>
+      <description>ROS和UR5配置文档 如有遗漏及错误，欢迎补充指正。
+ROS配置 ROS仅支持Linux系统。最新版本为ROS Melodic Morenia。直接按照 http://wiki.ros.org/cn/melodic/Installation/Ubuntu 进行安装。
+若在下面这条命令时报错：
+sudo rosdep init ERROR: cannot download default sources list from: https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/sources.list.d/20-default.list Website may be down. 则可尝试 https://blog.csdn.net/weixin_43288910/article/details/105627358 的方法修改host文件解决。
+安装完成后可根据 http://wiki.ros.org/cn/ROS/Tutorials/InstallingandConfiguringROSEnvironment 创建一个新的工作空间用于学习ROS的基础用法。每次启动新终端时需要使用source ~/catkin_ws/devel/setup.bash命令将工作空间加入ROS工作环境，或者使用echo &amp;quot;source ~/catkin_ws/devel/setup.bash&amp;quot; &amp;gt;&amp;gt; ~/.bashrc命令，每次启动新终端时就默认将工作空间加入ROS工作环境了。
+教程中如果命令中遇到kinectic或groovy等字段，说明是老版本ROS的命令，将其替换为melodic即可。UR5机器人安装与配置
+机器人硬件安装 机器人本体安装 机器人主要分为机械臂、示教盒、控制箱等部分。将基座放于空旷处以避免机械臂运动时打到墙壁等障碍物。将扇形铁片装在基座上，再将圆形铁片装在扇形铁片上，最后将机械臂装在圆形铁片上即可。若由于机械臂阻挡，某些位置螺丝不好拧，可将控制箱上的电源线插好，启动机器，操纵机械臂转动，再拧螺丝。
+夹爪安装及使用 如果要安装夹爪等工具，将其用螺丝固定在机械臂末端并将夹爪上的带有五根针的数据线与控制箱上的带有五个孔数据线插在一起旋紧即可。开机后在面板上选择为机器人编程-安装设置-Gripper-Scan即可使用。如果Scan无反应，检查控制箱，确保红线插24v，黑线插0v，（任意24v，0v皆可）若脱落，则将所需黄色块拔出，将线插进相应孔并用螺丝刀拧紧，将黄色块装回，再测试。
+机器人包安装及连接电脑 UR包安装教程 http://wiki.ros.org/universal_robots
+UR5连接电脑及使用 UR5使用教程:
+[http://wiki.ros.org/universal_robot/Tutorials/Getting%20Started%20with%20a%20Universal%20Robot%20and%20ROS-Industrial](http://wiki.ros.org/universal_robot/Tutorials/Getting Started with a Universal Robot and ROS-Industrial)
+其中，连接电脑是通过以太网（简称网线）。用网线将电脑及控制箱连接起来，在机器人示教盒面板上选择设置机器人-网络-静态地址，并设置相关信息及电脑有线连接里的相关信息。电脑与机器人的IP地址前三个字段一样（代表处于一个网络中），最后一个字段不同即可（代表不同主机）。个人设置的机器人IP为192.168.1.102，电脑有线连接IP为192.168.1.103。子网掩码均为255.255.255.0。（如果是输位数则为24）网关为192.168.1.1。设置好后可尝试使用ping IP_OF_THE_ROBOT命令来测试连接状态。若能显示延迟则连接成功。
+连接成功后，需启动UR的驱动。这里一共有三个版本。最老版的就是UR包自带的ur_driver，接着是要单独安装的ur_modern_driver，最新的是Universal_Robots_ROS_Driver，支持3.7以上版本的PolyScope。由于我们的UR5装的polyscope为3.4版本，因此使用ur_modern_driver https://github.com/ros-industrial/ur_modern_driver 。若根据教程启动驱动时报错，可根据报错信息及 在Ubuntu16.04下使用ur_modern_driver无法编译成功的解决方法 进行相应修改即可。
+最后根据UR5使用教程，即可使用MoveIt及RViz可视化地操控机器人。</description>
+    </item>
+    
+  </channel>
+</rss>

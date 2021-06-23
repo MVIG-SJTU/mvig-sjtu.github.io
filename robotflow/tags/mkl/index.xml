@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mkl on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/mkl/</link>
+    <description>Recent content in mkl on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 31 Jan 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/mkl/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>合理设置mkl，降低负载、提升性能</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E5%90%88%E7%90%86%E8%AE%BE%E7%BD%AEmkl%E9%99%8D%E4%BD%8E%E8%B4%9F%E8%BD%BD%E6%8F%90%E5%8D%87%E6%80%A7%E8%83%BD/</link>
+      <pubDate>Fri, 31 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E5%90%88%E7%90%86%E8%AE%BE%E7%BD%AEmkl%E9%99%8D%E4%BD%8E%E8%B4%9F%E8%BD%BD%E6%8F%90%E5%8D%87%E6%80%A7%E8%83%BD/</guid>
+      <description>背景 MKL 是英特尔提供的号称最快而且最多人使用的科学计算库。
+公元 2020 年，大家常用的 numpy, scikit-learn, scipy, 甚至 mxnet 等 Python package 都已经默认使用 mkl编译。mkl 带来给我们带来了性能提升，而且并不需要我们改动 Python 代码，这固然是一件好事。然而，在日常使用过程中，我们也发现了一些意外。
+MKL的缺点  Intel MKL 的默认策略其实比较复杂，可以简单地认为是尽可能使得全核心满载。
+ 这对于那些动辄好几小时的大矩阵运算来说当然非常好。然而，我们日常的 Work Load 可能就是几个小 numpy array 倒腾，不太需要 mkl 库来加速。特别是 dataloader 阶段，dataloader 本身就已经是多线程运行的了（num_workers 参数），如果每个线程在 mkl 的“帮助”下争抢全核心，很容易造成 Load Average 爆炸，算力被浪费在系统调度上，性能反而大大降低的现象。
+不健康的情况   单个 Python 程序占满了整个 CPU，但是实际“利用率”（绿色部分）并不高，大量算力被浪费在了系统调度上 （橙色部分）。（24000 是双路 CPU，因此 2000% 的占用对应一整个 CPU）   单个 Python 程序被分散到几个核心上运行，但总负荷约为 100%，且系统调度占用比较高。这可能是单个线程 由于种种原因被操作系统不断地切换到不同核心运行，一般认为会影响性能。   解决方案  详情请见 How to set good environment variables for the Intel MKL library 一文，这里只搬运解决方法。</description>
+    </item>
+    
+  </channel>
+</rss>

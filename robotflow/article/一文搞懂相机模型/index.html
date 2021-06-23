@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/einscan-pro-2x-2020%E7%89%88%E7%99%BD%E5%B9%B3%E8%A1%A1%E6%A0%A1%E5%87%86%E5%A4%B1%E8%B4%A5%E5%8E%9F%E5%9B%A0%E4%B8%8E%E6%96%B9%E6%A1%88/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/ros-melodic%E6%94%AF%E6%8C%81python3/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%9B%B8%E6%9C%BA%E6%A8%A1%E5%9E%8B/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           一文搞懂相机模型 | RobotFlow
+       
+  </title>
+  <meta name="title" content="一文搞懂相机模型 | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "一文搞懂相机模型",
+    "headline" : "一文搞懂相机模型",
+    "description" : "一文搞懂相机模型 背景 相机模型是2D和3D沟通的桥梁，在2D-\u0026gt;2.5D, 2.5D-\u0026gt;3D, 2D-\u0026gt;3D, 3D-\u0026gt;2D等场合中都会用到它。 虽然它道理比较简单，但随之衍生出了很多工程技巧，稍不注意还是很容易出问题。一旦出问题，不搞懂原理的情况下就很难debug了。\n基本概念 小孔成像和照相机成像 讲道理，小孔成像和照相机成像的原理是不一样的，小孔成像是基于光沿直线传播，成像条件很苛刻。现实中的照相机是采用透镜成像的原理，用凸透镜汇聚光，成像质量取决于孔径（aperture）和透镜质量。\n那么我们为什么拿小孔成像的原理来分析透镜成像的相机模型呢？简单来说，它是真实成像的一阶近似，一般我们知道高阶的分量在一定情况下可以忽略。我们稍后聊distortion的时候，会有一个更直观的认识。\n所以，不是小孔成像这个模型就很对了，只是它大概对了。\n真实的相机中它没办法描述的情况，包括但不限于：\n geometric distortion 失焦造成的blur 像素的离散性  尽管如此，在大部分的情况下我们不用考虑这些问题，所以用小孔成像的模型就挺好了。\n针孔相机（pinhole camera）建模 针孔相机模型如图所示：\n这里涉及三个转换，真实世界中的一个点 $(x^w, y^w, z^w)$ ，在相机中的坐标 $(x, y, z)$ ，从相机坐标系，投到像平面坐标系 $(x\u0026rsquo;, y\u0026rsquo;)$，从像平面坐标系到像素平面坐标系 $(u,v)$。\n那么具体来说，这是一个怎样的流程呢？\n  世界坐标系到相机坐标系\n世界坐标系可以说是这些坐标系里最不make sense的了，问题在于，这个坐标是谁定的？原点在哪里？ 这个问题很难用一个明确的词来回答，因为它就不是直接定义的，而是间接定义的。\n从世界坐标系到相机坐标系，其转移公式是通过相机外参矩阵$[R, t]$，这个转移是这样进行的：\n$$ \\begin{bmatrix} x \\\\ y \\\\ z \\\\ 1 \\end{bmatrix} = \\begin{bmatrix}R \u0026amp; t \\\\ 0 \u0026amp; 1\\end{bmatrix} \\begin{bmatrix} x^w \\\\ y^w \\\\ z^w \\\\ 1\\end{bmatrix} $$",
+    "inLanguage" : "en-us",
+    "author" : "徐文强",
+    "creator" : "徐文强",
+    "publisher": "徐文强",
+    "accountablePerson" : "徐文强",
+    "copyrightHolder" : "徐文强",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-07-17 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2020-07-17 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%9B%B8%E6%9C%BA%E6%A8%A1%E5%9E%8B\/",
+    "wordCount" : "172",
+    "keywords" : [ "3d", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">一文搞懂相机模型</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">徐文强</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-07-17 itemprop="datePublished">July 17, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="一文搞懂相机模型">一文搞懂相机模型</h1>
+<h2 id="背景">背景</h2>
+<p>相机模型是2D和3D沟通的桥梁，在2D-&gt;2.5D, 2.5D-&gt;3D, 2D-&gt;3D, 3D-&gt;2D等场合中都会用到它。
+虽然它道理比较简单，但随之衍生出了很多工程技巧，稍不注意还是很容易出问题。一旦出问题，不搞懂原理的情况下就很难debug了。</p>
+<h3 id="基本概念">基本概念</h3>
+<h4 id="小孔成像和照相机成像">小孔成像和照相机成像</h4>
+<p>讲道理，小孔成像和照相机成像的原理是不一样的，小孔成像是基于光沿直线传播，成像条件很苛刻。现实中的照相机是采用透镜成像的原理，用凸透镜汇聚光，成像质量取决于孔径（aperture）和透镜质量。</p>
+<p>那么我们为什么拿小孔成像的原理来分析透镜成像的相机模型呢？简单来说，它是真实成像的一阶近似，一般我们知道高阶的分量在一定情况下可以忽略。我们稍后聊distortion的时候，会有一个更直观的认识。</p>
+<p>所以，不是小孔成像这个模型就很对了，只是它大概对了。</p>
+<p>真实的相机中它没办法描述的情况，包括但不限于：</p>
+<ul>
+<li>geometric distortion</li>
+<li>失焦造成的blur</li>
+<li>像素的离散性</li>
+</ul>
+<p>尽管如此，在大部分的情况下我们不用考虑这些问题，所以用小孔成像的模型就挺好了。</p>
+<h4 id="针孔相机pinhole-camera建模">针孔相机（pinhole camera）建模</h4>
+<p>针孔相机模型如图所示：</p>
+<p>这里涉及三个转换，真实世界中的一个点 $(x^w, y^w, z^w)$ ，在相机中的坐标 $(x, y, z)$ ，从相机坐标系，投到像平面坐标系 $(x&rsquo;, y&rsquo;)$，从像平面坐标系到像素平面坐标系 $(u,v)$。</p>
+<p>那么具体来说，这是一个怎样的流程呢？</p>
+<ul>
+<li>
+<p>世界坐标系到相机坐标系</p>
+<p>世界坐标系可以说是这些坐标系里最不make sense的了，问题在于，这个坐标是谁定的？原点在哪里？
+这个问题很难用一个明确的词来回答，因为它就不是直接定义的，而是间接定义的。</p>
+<p>从世界坐标系到相机坐标系，其转移公式是通过相机外参矩阵$[R, t]$，这个转移是这样进行的：</p>
+<p>$$ \begin{bmatrix} x \\ y \\ z \\ 1 \end{bmatrix} = \begin{bmatrix}R &amp; t \\ 0 &amp; 1\end{bmatrix} \begin{bmatrix} x^w \\ y^w \\ z^w \\  1\end{bmatrix}
+$$</p>
+</li>
+</ul>
+<p>这个公式的意思是，从世界坐标系的一个点，经过平移和旋转的变化后，到了相机坐标系。那么世界坐标系的原点，自然也就转移到了相机坐标系的原点。</p>
+<p>相机坐标系的原点，就是相机的光心（两个相机内参），所以，我们要通过两个相机内参和相机外参才能知道当前环境的世界坐标系原点在哪里。相机内参通常出厂时会校正，假设没出问题，就是固定的好了。那么世界坐标系就只和相机外参有关。</p>
+<p>但是，因为相机外参的估计。基本是用<a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr98-71.pdf">张正友老师提出的标定法</a>，8个未知数，找四对（3D-2D的对应）点解出的（该方法可以同时解出内参和畸变系数）。</p>
+<p>所以它标定完后能确定世界坐标系原点，但如果你关掉相机重启，并且移动了它，这时候又要重新标定了。</p>
+<ul>
+<li>
+<p>相机坐标系到像平面坐标系</p>
+<p>这个过程，是从相机光心到成像平面，通过透视投影。</p>
+<p>$$ z \begin{bmatrix} x&rsquo;\\ y&rsquo;\\ 1 \end{bmatrix} =  \begin{bmatrix} f &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; f &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1 &amp; 0 \end{bmatrix}\begin{bmatrix}  x \\ y \\ z \\ 1 \end{bmatrix}$$
+其实这个过程就是透视投影的一个特殊情况，即投影到焦距f的位置。但其实这里的焦距并不是实际用的内参焦距，只是理论模型上的焦距，而实际中相机内参的fx,fy，还需要进一步考虑感光元件每个点在像平面上的物体尺寸$dx, dy$。$f_u=\frac{1}{dx}, f_v = \frac{1}{d_y}$。</p>
+</li>
+<li>
+<p>像平面坐标系到像素平面坐标系
+因此到像素平面坐标系，有：
+$$ \begin{bmatrix} u \\ v \\ 1 \end{bmatrix}=\begin{bmatrix} f_u &amp; 0 &amp; u_0\\ 0 &amp; f_v &amp; v_0\\ 0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix}  x&rsquo; \\ y&rsquo; \\ 1\end{bmatrix}$$
+同样是二维上的转换，但在这一步中，坐标原点从中心移到了左上角，也完成了像素的离散化。
+因为上一步中的f是一个不太make sense的指标，所以通常把这两步的矩阵合起来，得到内参。</p>
+</li>
+</ul>
+<h3 id="几个实例">几个实例</h3>
+<h4 id="深度图到点云">深度图到点云</h4>
+<p>从深度图到点云，就是一个完整的从像素平面坐标系到世界坐标系的过程。按照上面的公式一路逆回去即可。不过一般不是直接算矩阵的逆，而是用如下步骤：</p>
+<ol>
+<li>像素坐标 - 光心坐标（从左上角把坐标原点挪到中间）</li>
+<li>1中结果除以焦距（经过投影变换把二维坐标投到3维上去）</li>
+<li>2中结果乘以深度图上的数值（乘以z，实际的尺度）</li>
+</ol>
+<h4 id="虚拟相机中的内参和外参">虚拟相机中的内参和外参</h4>
+<p>在仿真环境中，外参是一个比较容易得到的参数，还没见过在哪个环境中得到外参这个事情是没有封装好的。关键是内参。</p>
+<p>因为openGL的历史原因，很多仿真引擎使用的是类似openGL的frustum建模。简单来说，就是定义好FOV，近平面，远平面。</p>
+<p>那么FOV是什么，FOV全称Field of View，这是由焦距定义出来的概念，因为凸透镜的成像是成在焦距处，过近或过远都不行。因此，如果焦距近，那么成像位置近，可视范围就比较窄。总的来说，FOV和焦距有如下关系：
+$$FOV = 2*tan^{-1}\frac{d/2}{f}$$
+d是传感器成像尺寸，具体来说就是图像的长度和宽度。</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%9B%B8%E6%9C%BA%E6%A8%A1%E5%9E%8B/>http://mvig.sjtu.edu.cn/robotflow/article/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%9B%B8%E6%9C%BA%E6%A8%A1%E5%9E%8B/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/3d/">
+                    #3d</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/einscan-pro-2x-2020%E7%89%88%E7%99%BD%E5%B9%B3%E8%A1%A1%E6%A0%A1%E5%87%86%E5%A4%B1%E8%B4%A5%E5%8E%9F%E5%9B%A0%E4%B8%8E%E6%96%B9%E6%A1%88/" class="prev" rel="prev" title="EinScan Pro 2X 2020版白平衡校准失败原因与方案"><i class="iconfont icon-left"></i>&nbsp;EinScan Pro 2X 2020版白平衡校准失败原因与方案</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/ros-melodic%E6%94%AF%E6%8C%81python3/" class="next" rel="next" title="ROS Melodic支持python3">ROS Melodic支持python3&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

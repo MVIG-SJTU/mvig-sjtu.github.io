@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/graspit%E5%AE%89%E8%A3%85%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/%E6%9C%BA%E5%99%A8%E6%90%AC%E5%88%B0%E6%96%B0%E5%9C%B0%E6%96%B9%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/abstraction-of-abstractions-of-icra-1984/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Abstraction of Abstractions of ICRA 1984 | RobotFlow
+       
+  </title>
+  <meta name="title" content="Abstraction of Abstractions of ICRA 1984 | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "Abstraction of Abstractions of ICRA 1984",
+    "headline" : "Abstraction of Abstractions of ICRA 1984",
+    "description" : "Abstraction of Abstractions of ICRA 1984 AOA系列把历年各大机器人相关会议（ICRA，IROS，RSS，CoRL）和manipulation有关的文章的abstract提取出来，并做一个简评。大家如果对原文感兴趣，可去网盘查阅。\n这个系列一方面是希望大家能尽快概览一遍过去的人都在做什么，一方面也是祛魅。\n本期关注文章：31\/74\n太长不看 ICRA第一届会议起源于1984年，尽管如此，机器人在此之前就已经发展起来了，机械臂的基本硬件设计，从第一版到现在没有根本性的区别。适用于机械臂的planning的经典算法，早在这届会议之前就被提出Lozano-Perez79,Lozano-Perez81。 因此这届会议，比IROS的第一届会议（88年）要早，但仍不是机器人research的开端。我没有刻意去考证溯源，就姑且还是从第一届ICRA开始回顾机器人这近40年的发展。更早的历史和基础信息大家可以通过机器人学的课程获知，推荐两门公开课国立交通大学, 斯坦福公开课。\n很有意思的是，尽管早期的系统相对比较简陋，各方面技术都不成熟。但机器人界要研究什么样的问题，基本上都已经出来了，可以说这么多年来，除了硬件软件更成熟，从思想层面很难说有什么本质上的变化。这会导致一个很直观的感觉就是，看着过去的文章，如果被标题唬住了，会觉得什么东西都没有做头了。\n所以对于Robotics相关的research，不要问“这个idea前人没想过吗？”，因为前人肯定想过，关键在于他们做得怎么样。\n 各track分类是我自己分的，难免有错漏。机器人的方向很多，我下面说一下哪些方向是我没有关注的：\n  关于如何造机器人的，这部分topic涉及基本机器人学，比如inverse kinematics，dynamics，以及它们在仿真中的计算；还有硬件上的，如何造传感器，消除延迟，震动等。尽管我们不造机器人或者机械手，但是我们应该意识到，机器人能做多大的事，归根结底还是要取决于硬件的能力的。 关于传感器，我们严格区分multi-modal的话题和造传感器的文章。前者可以拧出来看看，后者就算了。 关于locomotion的话题比较纠结，因为很多机械臂的motion planning是退化到点（小车）来思考的，而且manipulation里面有一个交叉方向是mobile manipulator（也包括humanoid），现在还是有人关注的。但出于珍惜生命考虑，我暂时还是先不管了，感兴趣的同学可以日后survey。无人车属于locomotion的分支。 Robot Vision方向是我们比较熟悉的，因此除非一些想法特别有意思，否则我也不提了。 Robot learning的概念很晚，所以早期是不会有我们现在所谓robot learning的东西。等到这个概念出现的时候，会单独讨论一下。 关于Simulation，以前的simulation的文章放到现在大多被集成在一个个的库里了，这个放现在可能就是机器人学的最终大作业，所以我对此类文章也不专门记录，而且做这一块的核心主力应该在CG圈子。simulation2real是一个直到现在都很重要的课题，不过一般是归属于robot learning的框架。 工业级大型系统。我感觉在robotflow的项目周期里能考虑到两手合作就不错了，再大型的系统没必要现阶段考虑。  Robotics System  NNS A Lisp-based environment for the integration and operating of complex robotics systems  用于flexible assembly cell上的机器人系统，flexible assembly cell是什么google图片一下就知道。   A robust natural language interface to a robot assembly system  一套用自然语言和机器人交互的系统，需要包含几个特点：1. 自然语言的命令和low-level操作的关系；2.",
+    "inLanguage" : "en-us",
+    "author" : "徐文强",
+    "creator" : "徐文强",
+    "publisher": "徐文强",
+    "accountablePerson" : "徐文强",
+    "copyrightHolder" : "徐文强",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-06-21 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2020-06-21 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/abstraction-of-abstractions-of-icra-1984\/",
+    "wordCount" : "376",
+    "keywords" : [ "aoa","icra", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Abstraction of Abstractions of ICRA 1984</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">徐文强</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-06-21 itemprop="datePublished">June 21, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/aoa/"> aoa </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h2 id="abstraction-of-abstractions-of-icra-1984">Abstraction of Abstractions of ICRA 1984</h2>
+<p>AOA系列把历年各大机器人相关会议（ICRA，IROS，RSS，CoRL）和manipulation有关的文章的abstract提取出来，并做一个简评。大家如果对原文感兴趣，可去网盘查阅。</p>
+<p>这个系列一方面是希望大家能尽快概览一遍过去的人都在做什么，一方面也是祛魅。</p>
+<p>本期关注文章：31/74</p>
+<h3 id="太长不看">太长不看</h3>
+<p>ICRA第一届会议起源于1984年，尽管如此，机器人在此之前就已经发展起来了，机械臂的基本硬件设计，从第一版到现在没有根本性的区别。适用于机械臂的planning的经典算法，早在这届会议之前就被提出<a href="https://dl.acm.org/doi/10.1145/359156.359164">Lozano-Perez79</a>,<a href="https://lis.csail.mit.edu/pubs/tlp/automatic-planning-transfer-motions.pdf">Lozano-Perez81</a>。
+因此这届会议，比IROS的第一届会议（88年）要早，但仍不是机器人research的开端。我没有刻意去考证溯源，就姑且还是从第一届ICRA开始回顾机器人这近40年的发展。更早的历史和基础信息大家可以通过机器人学的课程获知，推荐两门公开课<a href="https://www.bilibili.com/video/BV1ZW411v76H?from=search&amp;seid=1524000049111881102">国立交通大学</a>, <a href="https://www.bilibili.com/video/BV16s411q7o7?from=search&amp;seid=1524000049111881102">斯坦福公开课</a>。</p>
+<p>很有意思的是，尽管早期的系统相对比较简陋，各方面技术都不成熟。但机器人界要研究什么样的问题，基本上都已经出来了，可以说这么多年来，除了硬件软件更成熟，从思想层面很难说有什么本质上的变化。这会导致一个很直观的感觉就是，看着过去的文章，如果被标题唬住了，会觉得什么东西都没有做头了。</p>
+<p>所以对于Robotics相关的research，<strong>不要问“这个idea前人没想过吗？”</strong>，因为前人肯定想过，关键在于<strong>他们做得怎么样</strong>。</p>
+<blockquote>
+<p>各track分类是我自己分的，难免有错漏。机器人的方向很多，我下面说一下哪些方向是我没有关注的：</p>
+</blockquote>
+<ol>
+<li>关于如何造机器人的，这部分topic涉及基本机器人学，比如inverse kinematics，dynamics，以及它们在仿真中的计算；还有硬件上的，如何造传感器，消除延迟，震动等。<strong>尽管我们不造机器人或者机械手，但是我们应该意识到，机器人能做多大的事，归根结底还是要取决于硬件的能力的。</strong></li>
+<li>关于传感器，我们严格区分multi-modal的话题和造传感器的文章。前者可以拧出来看看，后者就算了。</li>
+<li>关于locomotion的话题比较纠结，因为很多机械臂的motion planning是退化到点（小车）来思考的，而且manipulation里面有一个交叉方向是mobile manipulator（也包括humanoid），现在还是有人关注的。但出于珍惜生命考虑，我暂时还是先不管了，感兴趣的同学可以日后survey。无人车属于locomotion的分支。</li>
+<li>Robot Vision方向是我们比较熟悉的，因此除非一些想法特别有意思，否则我也不提了。</li>
+<li>Robot learning的概念很晚，所以早期是不会有我们现在所谓robot learning的东西。等到这个概念出现的时候，会单独讨论一下。</li>
+<li>关于Simulation，以前的simulation的文章放到现在大多被集成在一个个的库里了，这个放现在可能就是机器人学的最终大作业，所以我对此类文章也不专门记录，而且做这一块的核心主力应该在CG圈子。simulation2real是一个直到现在都很重要的课题，不过一般是归属于robot learning的框架。</li>
+<li>工业级大型系统。我感觉在robotflow的项目周期里能考虑到两手合作就不错了，再大型的系统没必要现阶段考虑。</li>
+</ol>
+<h3 id="robotics-system">Robotics System</h3>
+<ul>
+<li>NNS A Lisp-based environment for the integration and operating of complex robotics systems
+<ul>
+<li>用于flexible assembly cell上的机器人系统，flexible assembly cell是什么google图片一下就知道。</li>
+</ul>
+</li>
+<li>A robust natural language interface to a robot assembly system
+<ul>
+<li>一套用自然语言和机器人交互的系统，需要包含几个特点：1. 自然语言的命令和low-level操作的关系；2. 对于一个一般性问题，它可以自底向上地归纳；3. 对于一个具体地问题，它可以自顶向下地解决；4. 它可以学习关于物体的新知识，并用新知识回答之前未回答的问题；5. 学习一个新的plan；6. 能处理自然语言在一些词语缺失，语法变化等情况下的意思。</li>
+<li>当年肯定是不可能把这些要求完全实现啦（现在可能都不行），但他通过一个比较简单的实验和系统，总结出了一些规律（未必是很一般的）。</li>
+</ul>
+</li>
+<li>A robot operating system
+<ul>
+<li>早期robot的操作系统，不是我们现在熟知的ROS的前身，可能当年斯坦福那俩博士生在写ROS的时候有看过这篇文章（吧？）</li>
+</ul>
+</li>
+<li>Adaptive path control of a manipulator with visual information
+<ul>
+<li>利用视觉信息定位，然后path planning，然后control。可以说是早年的robotflow了（误！）</li>
+</ul>
+</li>
+<li>Pipelined approach to inverse plant plus jacobian control of robot manipulators
+<ul>
+<li>怎么在多处理器系统中利用流水线来加速计算时间？</li>
+</ul>
+</li>
+<li>Introduction to RCCL A robot control -C- library
+<ul>
+<li>Yet another早年类RobotFlow项目</li>
+</ul>
+</li>
+<li>An efficient scheme for monitoring sensory conditions in robot systems
+<ul>
+<li>定点数加速处理raw sensor data，不接收图片</li>
+</ul>
+</li>
+<li>Controlling robots with an english-like high-level hierarchical command language -HIROB-
+<ul>
+<li>自然语言做输入，中间一个domain specific language来调和，底层是low-level的robot language。</li>
+</ul>
+</li>
+</ul>
+<h3 id="robot-vision-track">Robot Vision Track</h3>
+<p>这部分只记录我粗看一下觉得比较有意思的想法，可能看走眼。</p>
+<ul>
+<li>Representing shape
+<ul>
+<li>印象比较深刻的是讨论很多对称，curvature discontinuity的情况，现在大家比较多的是考虑smooth，或者怎么把这些极端情况近似smooth。但反过来考虑极端情况，可能也是一个不错的思路。</li>
+</ul>
+</li>
+</ul>
+<h3 id="activeinteractive-perception">Active/Interactive Perception</h3>
+<ul>
+<li>REPLICA&ndash;A reconfigurable partitionable highly parallel computer architecture for active multi-sensory perception of 3-dimensional objects</li>
+<li>Surface descriptions from vision and touch
+<ul>
+<li>通过vision定shape，通过touch定相对深度，恢复出所谓2.5D的sketch</li>
+</ul>
+</li>
+</ul>
+<h3 id="tactile-track">Tactile Track</h3>
+<p>tactile是active/interactive perception里很重要的一个modality，严格来说所有用tactile来做点什么事情的都可以归属到active/interactive perception的范畴。不过因为它尤其重要，而且我们近期多半用不到，所以还是单独拧出来。</p>
+<ul>
+<li>Automated touch sensing A brief perspective and several new approaches
+<ul>
+<li>tactile对小物体，精细操作的重要性（比如小物体拿在手上就看不见了，除非这个物体拿的时候一切都很对，否则一旦出问题，比如pose有点不好，就很难调整）。该文发表的时候，tactile这一块还刚刚起步，直到今天关于tactile的研究也很少，主要原因还是传感器太贵。</li>
+<li>这篇文章属于前沿展望，没太多技术内容在里面。</li>
+</ul>
+</li>
+<li>Interpretation of contact geometries from force measurements
+<ul>
+<li>获取接触的力的信息一个主要的功能就是可以做contact的建模</li>
+</ul>
+</li>
+<li>Model-based recognition and localization from tactile data</li>
+</ul>
+<h3 id="manipulation-related-planning-track">Manipulation Related Planning Track</h3>
+<ul>
+<li>Collision avoidance for robots in an experimental flexible assembly cell
+<ul>
+<li>这是特定场景下的collision avoidance问题。基本还是按照gross motion，fine motion，error recovery的路子在走。用的方法是Petri nets和图搜索。</li>
+</ul>
+</li>
+<li>Obstacle avoidance using an octree in the configuration space of a manipulator
+<ul>
+<li>把obstacle的坐标投到configuration space，再通过octree管理，这是一个很经典的做法，我不确定这是不是第一篇。</li>
+</ul>
+</li>
+<li>Automatic planning of fine motions Correctness and completeness
+<ul>
+<li>fine motion就是细微动作，比如插拔最后差了1~2mm，怎么不用重来，微调补救？</li>
+</ul>
+</li>
+</ul>
+<h3 id="task-planning-track">Task Planning Track</h3>
+<ul>
+<li>A user-friendly high-level robot teaching system
+<ul>
+<li>早期的task planning框架，现在都被pddlstream集大成了。</li>
+</ul>
+</li>
+<li>A representation of time for automatic planning
+<ul>
+<li>没有看正文，感觉上是考虑时间信息的reasoning，就是给每个时间段打一个时间戳，考虑时间上的联系，而不只是逻辑上的联系。</li>
+</ul>
+</li>
+</ul>
+<h3 id="control-track">Control Track</h3>
+<ul>
+<li>Control performance as an entropy An integrated theory for intelligent machines</li>
+<li>Flexibility control of elastic robotic arms and its application to contouring control
+<ul>
+<li>对elastic手臂的control</li>
+</ul>
+</li>
+<li>Motion control of industrial robots with closed loop trajectories
+<ul>
+<li>plan的时候没考虑动力学，那么现实执行的差要怎么弥补？</li>
+</ul>
+</li>
+<li>Adaptive self-tuning control of manipulators in task coordinate system
+<ul>
+<li>一套hybrid control方法</li>
+</ul>
+</li>
+<li>A hierarchical system structure for coordinated control of industrial manipulators
+<ul>
+<li>position control也能套个hierarchy，low-level的控制每个joint，high-level的控制每一个low-level的controller</li>
+</ul>
+</li>
+</ul>
+<h3 id="grasping-track">Grasping Track</h3>
+<ul>
+<li>Feeling by grasping
+<ul>
+<li>抓取时要考虑物体几何的约束，手的几何的约束，被约束的物体的动力学（杯口朝上）</li>
+</ul>
+</li>
+<li>Computer architecture for grasping
+<ul>
+<li>考虑了tactile的grasping系统</li>
+</ul>
+</li>
+</ul>
+<h3 id="assembly-track">Assembly Track</h3>
+<ul>
+<li>Parts entropy methods for robotic assembly system design
+<ul>
+<li>把assembly过程建模成part entropy减小的过程，part entropy通过parts的位姿在某一个assembly步骤中的概率分布来确定。</li>
+</ul>
+</li>
+</ul>
+<h3 id="calibration-track">Calibration Track</h3>
+<ul>
+<li>Improving the precision of a robot
+<ul>
+<li>对机器人本体做calibration，这个我们是不太可能做了，主要靠专门的工程师。以后这个track只关注hand-eye calibration相关的文章。</li>
+</ul>
+</li>
+</ul>
+<h3 id="dual-armrobots-track">Dual Arm/Robots Track</h3>
+<ul>
+<li>Coordinated control of two robot arms
+<ul>
+<li>一个有bug的双臂control方法</li>
+</ul>
+</li>
+<li>Coordinate transformations for two industrial robots
+<ul>
+<li>提出了两种解决坐标变换问题的方法</li>
+</ul>
+</li>
+<li>On the design of multi-robot systems
+<ul>
+<li>传送带，共享工作空间的两个机械臂的避障问题。</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/abstraction-of-abstractions-of-icra-1984/>http://mvig.sjtu.edu.cn/robotflow/article/abstraction-of-abstractions-of-icra-1984/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/aoa/">
+                    #aoa</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/icra/">
+                    #icra</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/graspit%E5%AE%89%E8%A3%85%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C/" class="prev" rel="prev" title="GraspIt安装踩坑经验"><i class="iconfont icon-left"></i>&nbsp;GraspIt安装踩坑经验</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/%E6%9C%BA%E5%99%A8%E6%90%AC%E5%88%B0%E6%96%B0%E5%9C%B0%E6%96%B9%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5/" class="next" rel="next" title="机器搬到新地方配置网络连接">机器搬到新地方配置网络连接&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

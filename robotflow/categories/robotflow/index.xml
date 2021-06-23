@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>robotflow on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/categories/robotflow/</link>
+    <description>Recent content in robotflow on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 06 Jan 2021 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/categories/robotflow/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>MoveIt ROS切除术1——核心planner</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/moveit-ros%E5%88%87%E9%99%A4%E6%9C%AF1%E6%A0%B8%E5%BF%83planner/</link>
+      <pubDate>Wed, 06 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/moveit-ros%E5%88%87%E9%99%A4%E6%9C%AF1%E6%A0%B8%E5%BF%83planner/</guid>
+      <description>MoveIt ROS切除术1——核心planner 目前的RobotFlow-rFUniverse战术体系中不需要ROS，或者说我们在尽可能地减少ROS的影响，在这种情况下，我们要尽可能把原来ROS中的一些核心部件去ROS化。
+如果去不了的，就考虑怎么在不影响RobotFlow体系的情况下共存。
+首先下刀的，就是ROS最重要的库（可能没有）之一MoveIt。根据MoveIt Concepts，整个MoveIt框架里有大量的外层封装与ROS体系适配。因此我们要对MoveIt做切除，一个比较简单的策略是先把里面的规划核心库搬出来。然后参考MoveIt对ROS的封装，自己写一套封装。
+截至2021年1月，MoveIt引入了5种外部规划器插件，其中最重要的是OMPL，别的有CHOMP，SBPL，trajopt，pilz_industrial_motion_planner。
+主要的规划库 —— OMPL OMPL全称是The Open Motion Planning Library，是一个包含了大量sampling-based算法的运动规划库，典型的如RRT，PRM及其变种在里面都有。 OMPL也有大量的实践是不依赖于ROS的，比如有现成的流程和V-REP，OpenRAVE，MORSE等整合。
+OMPL目标是打造一个standalone的规划库，自己不带任何前端和collision detection，但官方的偏好是FCL和PQP。考虑到MoveIt也是用的FCL，那么这一套pipeline就保留下来。
+次要的规划库 —— SBPL SBPL的全称是Search-Based Planning Library，顾名思义，里面有大量search-based的算法，类似A*这样。这个库本身也可以独立于ROS编译。
+特有的规划算法 —— CHOMP CHOMP的论文很容易找到，就不说了，但是它的代码比较难找，因为to the best of my knowledge，论文作者并没有其官方实现，只有在MoveIt里有一个和ROS集成得很紧密的CHOMP实现。因此要把CHOMP拉出来，需要进一步地剥离ROS的痕迹。 这个算法自带碰撞检测，能规避掉障碍物，不过貌似调参可能有坑，可以看看这个issue。
+新加的规划算法 —— trajopt trajopt也是一个基于论文出来的规划算法，论文作者放出了代码，可以独立编译。据说速度比OMPL和CHOMP快。
+面向工业场景的规划库 —— pilz industrial motion planner 这个motion planner是最近加入MoveIt的规划器，不过从它的文档来看，更多的像是一个轨迹生成器。
+围绕planner的接口  仿真环境分为visual environment，以及collision environment。送入planner的是collision environment，这也就要求仿真器能把所有collision的状态都返回回来。 仿真器的规划需要一个规划组，这个规划组的定义可以参考moveit_config，或者直接用（毕竟那个assistent还是比较好用的，而且assistent有了之后也可以暂时不考虑kinematics solver） 有了collision state，机器人的规划组，我们就能使用规划算法了。  </description>
+    </item>
+    
+    <item>
+      <title>RobotFlow工程track半年度总结（2020.7~2021.1）</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/robotflow%E5%B7%A5%E7%A8%8Btrack%E5%8D%8A%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%932020.7~2021.1/</link>
+      <pubDate>Wed, 06 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/robotflow%E5%B7%A5%E7%A8%8Btrack%E5%8D%8A%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%932020.7~2021.1/</guid>
+      <description>RobotFlow工程track半年度总结（2020.7~2021.1） RobotFlow项目从7月份正式启动到现在也有半年了，中间经历了招工程师，CVPR投稿等拖延进度的事情，还是完成了一些事情。 在大方向不变的情况下，现在的robotflow项目已经和最开始的想法有了不少结构性的调整。现对该方向做一个总结，并对未来做一个简单的规划。
+多级结构 rflib -&amp;gt; rflearner -&amp;gt; perception -&amp;gt; rfplanner -&amp;gt; task env controller
+以上用rf开头的库，之后都会考虑往独立的库发展。特别是rflib。
+ rflib：  放各种需编译的代码，其代码编译好后通过pybind被python调用。 放逻辑上偏底层的代码   rflearner：所有learning相关的代码，算法逻辑层 perception：  detector：含目标检测和实例分割 pose estimator：6DoF估计算法 human analyzer：人体/手检测，重建算法；intent modeling相关算法 action preprocessor：视觉驱动的robot learning算法的前端（这一部分的网络末尾通常是没有loss的，是通过RL的部分来优化的），这部分视具体任务会拆分，不会用这个名字总包所有的模型。   rfplanner  TAMP规划器Rogic MP规划器RFMove   task  分层结构，从单primitive到复合任务，都统归到task里 单primitive时，地位和perception相同 复合任务时，单primitive和perception算法可能都是其子任务   env  提供真实场景的可视化，模拟规划 提供仿真场景的可视化，模拟规划，交互   controller：  提供各种硬件控制器的上层封装：位置控制，速度控制，力控    举个例子：
+ 视觉的人视角：pytorch提供基本的conv2d实现；rflib提供注入roialign这样的ops的实现；rflearner提供resnet的实现；detector描述（config）怎么搭一个yolov3的pipeline Robot的人视角：rflib提供各种硬件接口，c++功能代码；env，controller，rfplanner等提供对应功能的上层封装；task描述一个完整的机器人任务（可以无视觉） Robot Learning的人视角：pytorch功能同上；rflib功能同上；rflearner提供ppo等算法逻辑；perception部分描述（config）robot learning的视觉前端，task部分描述（config）各机器人技能（primitive），并描述（config）视觉前端和各机器人技能该如何串联。模型保存的方式有两种，视觉前端和机器人操作后端分别保存/统一保持。  去ROS化进程 去ROS化是一直以来的大方针，ROS生态中有很多重要的软件都是基于ROS的通信机制来写的，而且往往是独占。那么在去ROS化的过程中，很重要的一步就是要对这些功能进行替换，这中间会涉及到大量的代码重写和重构。</description>
+    </item>
+    
+    <item>
+      <title>RobotFlow工程track一期</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/robotflow%E5%B7%A5%E7%A8%8Btrack%E4%B8%80%E6%9C%9F/</link>
+      <pubDate>Wed, 29 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/robotflow%E5%B7%A5%E7%A8%8Btrack%E4%B8%80%E6%9C%9F/</guid>
+      <description>RobotFlow工程track RobotFlow是封装在机器人通信系统之上的应用平台。它通过封装通用（ROS）或专用操作系统（FCI for Franka），让上层应用不用关心其输出的数据是怎么被其他模块使用，也不用担心当它需要数据时数据要怎么来的问题。
+我们不追求严格的实时性和稳定性，这种事情还是需要工业界自己努力，我们只为了提供这样一个符合现代Robot AI系统的统一接口，使得上层的functionality是与平台无关的（但比如说有一些算法在实时性通信时满足不了实时性需求，用不了那是另说）。
+当我们封装的通信接口足够多之后，结合实际需求（特别是服务业，家用场景），会定义一个通信标准（protocol），希望这套标准能使后来的机械臂生产厂商按照这个标准来开发通信程序（或者直接适配）。
+概念设计： 上图中，我只列出了几个核心的functionality，其他的例如动力学辨识，calibration等，就没有包含在内。
+目前我们围绕manipulator开发，但之后会拓展到mobile manipulator。
+ 因为实践中写着写着把原定于在第二期才做的部分内容也放到第一期里了，因此需要重新梳理一下接下来需要做的事情。
+ 一期计划（2020.6.22~2020.8.31）（07.29 update）  本体硬件平台的搭建和调试  在一期，我们将会引入两台机器人，包括UR5，和Franka。两台机器人都将分别完成其从硬件，到基本通信，到仿真环境的配置。   RobotFlow  Environment（08.09）：  兼容learning和descriptive task中的环境定义方式 支持从simulation，至少支持pybullet或mujoco中的一种 支持真实sensor中加载world的方式（需RFlib中第三视角标定完成）   Perception（08.02）：  MMDet的架构 YOLOv3 YOLOv4 YOLOv4-Tiny YOLOv3-USD YOLOv4-USD YOLOv4-Tiny-USD DenseFusion 6-Pack (08.09)   Robots（08.09）：  整理好格式，可以被加载入world中   Motion：  接入moveit，写好相关wrapper（08.09） 不依赖moveit的motion驱动（RFLib）, 写好相关wrapper（08.17）   Controller：  为UR5封装好基本的驱动（08.09） 为Franka封装好基本的驱动（08.17）   Message Pool Wrapper（08.31）：  不断迭代更新   Instruction：  加入对于goal描述的instruction（08.</description>
+    </item>
+    
+    <item>
+      <title>RobotFlow Task Zoo</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/robotflow-task-zoo/</link>
+      <pubDate>Sun, 21 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/robotflow-task-zoo/</guid>
+      <description>RobotFlow Task Zoo 本文主要收集主流实验中的manipulation task，并在最后试图让这些task从概念层面总结一下（某种意义上也是meta learning），由此分析出当前task定义的范围和下一步可能的发展。
+眼下的manipulation related benchmark tasks总结 主要参考的文章有meta-world, RLBench, surreal
+各任务具体的任务描述见文末。
+首先，我们先把各benchmark里的task统一地总结起来。
+关于各primitive primitive分两种，接触型primitve和运动型primitve。这里假定完成接触型primitive后手指和物体在一定程度上可以认为是相对静止的。
+ grasp：接触型，单指“夹”这个动作，grasp有三个参数，一个是approach pose，一个是物体上的抓点，一个是施加的力。仿真问题一般不考虑力，但为了描述完整还是放这儿。决定这三个参数的叫grasp planner。 push：接触型，有三个参数，一个是approach pose，一个是push type（有用指侧推，有用指尖推，也有两指并拢推），一个是力。决定这三个参数的叫push planner。 move：运动型，是指手臂上的运动，无论是带物体还是不带物体。move的轨迹主要来自plan，约束是planner综合当前的可运动空间（避障）和物体的knowledge，以及对task的理解（物体和物体之间的关系对task的作用）考虑的，随着任务越多需要考虑的越复杂，不过这个是planner的问题，对于move来说它只用接受关于trajectory的指令。  reach是所有任务第一步都要做的，所以在动作序列里，除了只做reach操作以外的，都去掉了reach 常见的特殊move轨迹有：  rotate slide hit pour 铲     insert：运动型，这个动作包含peg in hole和hole out peg。理论上如果一切都很准，那么直接move就完事了，但之所以把insert拧出来，是因为解决距离洞口的误差是这个primitive的精髓所在，有点后处理的意思。  单纯任务    动作序列 任务名称 考虑物-物/环境关系     move reach; reach with wall    grasp -&amp;gt; move turn on faucet; turn off faucet;turn dial; pull handle;turn on faucet; turn off faucet;turn dial; pull handle;get coffee; pull handle side;basketball; pull with stick; disassemble nut; hammer;slide plate side; retrieve plate side;pull mug; unplug peg; close window; open window; open door; open drawer;beat the buzz; change clock;hockey; open fridge;open microwave; open oven;open wine bottle; pick and lift;pick up cup; play jenga;pour from cup to cup; scoop with spatula;straghten rope; sweep to dustpan;take umbrella out of umbrella stand; take usb out of computer;turn oven on; turn tap; unplug charger;water plants; wipe desk √   grasp -&amp;gt; move -&amp;gt; release stack; unstack; place onto shelf;pick &amp;amp; place; open box; close box; pick bin; get ice from fridge; meat off grill; meat on grill;move hanger; phone on base;place hanger on rack; put books on bookshelf;put bottle in fridge; put groceries in cupboard;put item in drawer; put knife on chopping board;put money in safe; put plate in colored dish rack;put rubbish in bin; put umbrella in umbrella stand;remove cups; setup checkers;set the table; stack cups; stack wine; take frame off hanger;take lid off saucepan; take item out of drawer;take money out safe; take off weighing scales;take plate off colored dish rack; take toilet roll off stand;weighing scales √   grasp -&amp;gt; move -&amp;gt; insert insert peg side; hang frame on hanger;hannoi square; insert usb in computer;place cups; place shape in shape sorter;plug charger in power supply; put knife in knife block;put toilet roll on stand; √   push -&amp;gt; move sweep; push; push back; press handle side; press handle;press button top; press button;lock door; unlock door; press switch    push -&amp;gt; move push with stick; sweep into hole; push mug; slide plate;soccer; retrieve plate; close drawer; close door; close/open box2;close fridge; close/open grill;close laptop lid; close microwave;lamp off; lamp on;toilet seat down; toilet seat up √    复合任务    任务名称 组合     press button wall reach with wall + press botton   press button top w/ wall reach with wall + press botton top   push with wall push + reach with wall   pick &amp;amp; place w/ wall pick &amp;amp; place + reach with wall   block pyramid stack * N   change channel pick &amp;amp; place + press botton   TV off pick &amp;amp; place + press botton   TV on pick &amp;amp; place + press botton   close door2 close door + press handle side   close jar pick &amp;amp; place + change clock   empty container pick &amp;amp; place * N   empty dishwasher open door + press handle + push back + pick &amp;amp; place   hit ball with queue pull handle + reach   light bulb in pick &amp;amp; place + change clock   light buib out change clock + pick &amp;amp; place   open door2 press handle + open door   open jar change clock + pick &amp;amp; place   open window2 change clock + push   put shoes in box open box2 + pick &amp;amp; place   put tray in oven open oven + pick &amp;amp; place   screw nail insert peg side + change clock   slide cabinet open and place cups open window + pick &amp;amp; place   solve puzzle pick &amp;amp; place * N   take cup out from cabinet open window + pick &amp;amp; place   take shoes out of box open box2 + pick &amp;amp; place   take tray out of oven open oven + pick &amp;amp; place    双手任务    任务名称 左手 右手     bimanual lifting lift lift   bimanual peg-in-hole insert peg side grasp    简评当前设计的benchmark task 如上所述，我把目前的152种benchmark task根据primitive的序列分成6大类，涉及到的primitive只有4种。我们可以从中得到几点启示：</description>
+    </item>
+    
+  </channel>
+</rss>

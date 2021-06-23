@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>aoa on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/aoa/</link>
+    <description>Recent content in aoa on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 21 Jun 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/aoa/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Abstraction of Abstractions of ICRA 1984</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/abstraction-of-abstractions-of-icra-1984/</link>
+      <pubDate>Sun, 21 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/abstraction-of-abstractions-of-icra-1984/</guid>
+      <description>Abstraction of Abstractions of ICRA 1984 AOA系列把历年各大机器人相关会议（ICRA，IROS，RSS，CoRL）和manipulation有关的文章的abstract提取出来，并做一个简评。大家如果对原文感兴趣，可去网盘查阅。
+这个系列一方面是希望大家能尽快概览一遍过去的人都在做什么，一方面也是祛魅。
+本期关注文章：31/74
+太长不看 ICRA第一届会议起源于1984年，尽管如此，机器人在此之前就已经发展起来了，机械臂的基本硬件设计，从第一版到现在没有根本性的区别。适用于机械臂的planning的经典算法，早在这届会议之前就被提出Lozano-Perez79,Lozano-Perez81。 因此这届会议，比IROS的第一届会议（88年）要早，但仍不是机器人research的开端。我没有刻意去考证溯源，就姑且还是从第一届ICRA开始回顾机器人这近40年的发展。更早的历史和基础信息大家可以通过机器人学的课程获知，推荐两门公开课国立交通大学, 斯坦福公开课。
+很有意思的是，尽管早期的系统相对比较简陋，各方面技术都不成熟。但机器人界要研究什么样的问题，基本上都已经出来了，可以说这么多年来，除了硬件软件更成熟，从思想层面很难说有什么本质上的变化。这会导致一个很直观的感觉就是，看着过去的文章，如果被标题唬住了，会觉得什么东西都没有做头了。
+所以对于Robotics相关的research，不要问“这个idea前人没想过吗？”，因为前人肯定想过，关键在于他们做得怎么样。
+ 各track分类是我自己分的，难免有错漏。机器人的方向很多，我下面说一下哪些方向是我没有关注的：
+  关于如何造机器人的，这部分topic涉及基本机器人学，比如inverse kinematics，dynamics，以及它们在仿真中的计算；还有硬件上的，如何造传感器，消除延迟，震动等。尽管我们不造机器人或者机械手，但是我们应该意识到，机器人能做多大的事，归根结底还是要取决于硬件的能力的。 关于传感器，我们严格区分multi-modal的话题和造传感器的文章。前者可以拧出来看看，后者就算了。 关于locomotion的话题比较纠结，因为很多机械臂的motion planning是退化到点（小车）来思考的，而且manipulation里面有一个交叉方向是mobile manipulator（也包括humanoid），现在还是有人关注的。但出于珍惜生命考虑，我暂时还是先不管了，感兴趣的同学可以日后survey。无人车属于locomotion的分支。 Robot Vision方向是我们比较熟悉的，因此除非一些想法特别有意思，否则我也不提了。 Robot learning的概念很晚，所以早期是不会有我们现在所谓robot learning的东西。等到这个概念出现的时候，会单独讨论一下。 关于Simulation，以前的simulation的文章放到现在大多被集成在一个个的库里了，这个放现在可能就是机器人学的最终大作业，所以我对此类文章也不专门记录，而且做这一块的核心主力应该在CG圈子。simulation2real是一个直到现在都很重要的课题，不过一般是归属于robot learning的框架。 工业级大型系统。我感觉在robotflow的项目周期里能考虑到两手合作就不错了，再大型的系统没必要现阶段考虑。  Robotics System  NNS A Lisp-based environment for the integration and operating of complex robotics systems  用于flexible assembly cell上的机器人系统，flexible assembly cell是什么google图片一下就知道。   A robust natural language interface to a robot assembly system  一套用自然语言和机器人交互的系统，需要包含几个特点：1. 自然语言的命令和low-level操作的关系；2.</description>
+    </item>
+    
+  </channel>
+</rss>

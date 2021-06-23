@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>primitive on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/primitive/</link>
+    <description>Recent content in primitive on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 04 Aug 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/primitive/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>当我们在谈论Motion Primitive的时候究竟在谈论什么</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E5%BD%93%E6%88%91%E4%BB%AC%E5%9C%A8%E8%B0%88%E8%AE%BAmotion-primitive%E7%9A%84%E6%97%B6%E5%80%99%E7%A9%B6%E7%AB%9F%E5%9C%A8%E8%B0%88%E8%AE%BA%E4%BB%80%E4%B9%88/</link>
+      <pubDate>Tue, 04 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E5%BD%93%E6%88%91%E4%BB%AC%E5%9C%A8%E8%B0%88%E8%AE%BAmotion-primitive%E7%9A%84%E6%97%B6%E5%80%99%E7%A9%B6%E7%AB%9F%E5%9C%A8%E8%B0%88%E8%AE%BA%E4%BB%80%E4%B9%88/</guid>
+      <description>当我们在谈论Motion Primitive的时候究竟在谈论什么 当Author们没有claim自己在做Skill的时候他们在做什么？ 他们在做把skill当成一个个的具体的topic来做，比如grasp，throw，slide，pour water啥的。 以Grasp为例，有关它的可迁移性，有这么几个层次：
+  基于共性结构的抓取：不一定要求物体是同一类，可以是（较）deformable的物体，但还没见到能从rigid到highly flexible的物体。
+ 当共性结构是（相对dense的）几何特征：就是当物体的外形比较相似的时候，那么抓法也应该比较相似。这时给几个example demonstration，它就能抓很多这类的物体。这样的工作很多了。 当共性结构是稀疏的点：那么相似性主要看基于几个关键点连成的拓扑。如下图 此时迁移性取决于物体的结构，首先只能在同一套结构里迁移，一套结构当然不可能处理所有物体的。    基于语义的抓取：
+ 最coarse的语义是类别，当然这种情况下迁移能力是很弱的，而且就要求必须要先识别出物体来 稍微好一点的是有语义的part segmentation  总的说来，语义和抓取之间没有直接的联系，不过这是抓取这个task的问题，因为抓取本来也没必要有语义。在manipulation中，语义所蕴含（或者来自知识库attach）的功能性还是值得关注的。
+  基于抓型相似性的抓取：这个如下图， 因为人手和gripper之间的巨大差异，所以设计一种手持二指gripper，上面装载各种传感器。这样可以减轻human demonstration和机器人grasp之间的gap。从而可以直接处理grasp时的策略（而不是像以前要经过一些间接的表示，比如来自物体的，或者需要把五指的人手投影到二指）。
+  当然，还有单做其他的skill的，这里就不一一例举了。为什么有些skill能单独成为一个topic/task，有的只是在文章里顺带做做？ 比如stacking，push，pick-and-place这些通常都是顺带跟着grasping做做。像insert，pour water这些偶尔还会单独成篇。我个人认为，核心原因是背后的动力学不一样，比如insert，最关键的是靠近hole的时候的试探过程。
+当Author们claim自己在做Skill的时候他们在做什么？ 当然，也有把skill整个一起看的。这时候他们的论文标题就会带上skill这样的字眼。以一份CMU RI的老师，18年做的一个slide为例，可以看看这一派人对问题的思考。
+基本目标：学可复用的Skill  Skill要能反映manipulation task的结构：  把task分解成segments skill负责在segments之间转移 需要high-level的policy来组织这些skills来完成task     对于一个简单的grasp task来说： 我们可以把它分成3个segments，在ppt里叫mode。
+ Mode 1：准备阶段 Mode 2：Contact Mode 3：物体离开平面   因此，引入mode这个概念后，就可以定义motor primitive，上面那张图的范式就变成：
+ 把Demonstration分解成Modes 学motion primitive用于mode之间的转移 优化各个primitive的goal state：  Use learned forward model as simulator Use mode transition distribution to define reward    具体来说，可以用这样的技术来解：</description>
+    </item>
+    
+  </channel>
+</rss>

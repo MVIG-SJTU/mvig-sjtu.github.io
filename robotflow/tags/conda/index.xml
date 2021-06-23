@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>conda on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/conda/</link>
+    <description>Recent content in conda on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 22 Jul 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/conda/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Conda是怎么搞坏你的编译的</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/conda%E6%98%AF%E6%80%8E%E4%B9%88%E6%90%9E%E5%9D%8F%E4%BD%A0%E7%9A%84%E7%BC%96%E8%AF%91%E7%9A%84/</link>
+      <pubDate>Wed, 22 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/conda%E6%98%AF%E6%80%8E%E4%B9%88%E6%90%9E%E5%9D%8F%E4%BD%A0%E7%9A%84%E7%BC%96%E8%AF%91%E7%9A%84/</guid>
+      <description>Conda是怎么搞坏你的编译的 今天的文章主要讨论一下用conda影响系统路径的几种方式，以后编译一些库的时候大家可以注意一下。
+ 最简单能处理的情况，当编译需要的python指向了conda的python  把conda从环境变量中去掉，新版的conda通常deactivate掉conda env即可。 把/usr/bin下的python，也就是系统自带的python，export到环境变量，确认在bash里敲python或者python3是默认安装的python   稍微麻烦的情况，编译时某些库，引用了conda里的安装包，这里有两种情况：  一种是你可以用conda的；一种是你自己准备了这些库，不想用conda的，通常是因为它的库没有安装完整（比如cuda只有一个runtime，没有nvcc）  前者如果只涉及到一个conda环境的时候，没关系直接用。但如果有多个环境的时候就会有问题。 后者需要改路径，改路径要么直接改CMakelist文件，要么通过gui版的cmake来改。     最麻烦的情况，CMakelist没写好，导致使用的python或其他包的路径在conda和系统路径下反复横跳。  如果处理不了，老老实实删conda    简评 大部分情况下，conda还是挺好用的，不过如果遇到一些意料之外的问题，还是优先考虑一下是不是路径被污染了。</description>
+    </item>
+    
+  </channel>
+</rss>

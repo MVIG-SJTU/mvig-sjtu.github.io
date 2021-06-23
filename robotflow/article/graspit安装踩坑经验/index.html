@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/robotflow-task-zoo/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/abstraction-of-abstractions-of-icra-1984/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/graspit%E5%AE%89%E8%A3%85%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           GraspIt安装踩坑经验 | RobotFlow
+       
+  </title>
+  <meta name="title" content="GraspIt安装踩坑经验 | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "GraspIt安装踩坑经验",
+    "headline" : "GraspIt安装踩坑经验",
+    "description" : "GraspIt安装踩坑经验 基本流程 GraspIt安装的基本流程可以按照这里的指示依次安装相应的依赖项、克隆Github仓库后手动编译安装。\n错误提示 若cmake时出现\u0026rdquo; A required library with BLAS API not found. Please specify library location.\u0026quot;，或执行\u0026quot;make -j5\u0026quot;时出现\u0026quot;libgraspit.io: undefined reference to \u0026lsquo;daxpy_\u0027\u0026ldquo;等一系列\u0026quot;undefined reference to\u0026quot;的报错，可以尝试参考这里执行\u0026quot;sudo apt-get install libatlas-base-dev\u0026quot;后重新编译。\nQt版本问题 GraspIt是一个比较老的包，但暂时还没办法被替代，它只支持Qt4，而新的ROS已经支持到Qt5了，因此在安装过程中可能会有Qt版本的冲突。为了解决这个问题，我们常规的ROS版本设定是ROS1的kinetic，所以只能在ubuntu 16.04的机器上跑。",
+    "inLanguage" : "en-us",
+    "author" : "杜文昕",
+    "creator" : "杜文昕",
+    "publisher": "杜文昕",
+    "accountablePerson" : "杜文昕",
+    "copyrightHolder" : "杜文昕",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-06-21 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2020-06-21 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/graspit%E5%AE%89%E8%A3%85%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C\/",
+    "wordCount" : "30",
+    "keywords" : [ "graspit", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">GraspIt安装踩坑经验</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">杜文昕</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-06-21 itemprop="datePublished">June 21, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/tricks/"> tricks </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="graspit安装踩坑经验">GraspIt安装踩坑经验</h1>
+<h2 id="基本流程">基本流程</h2>
+<p>GraspIt安装的基本流程可以按照<a href="http://graspit-simulator.github.io/build/html/installation_linux.html">这里</a>的指示依次安装相应的依赖项、克隆<a href="https://github.com/graspit-simulator/graspit">Github仓库</a>后手动编译安装。</p>
+<h2 id="错误提示">错误提示</h2>
+<p>若cmake时出现&rdquo; A required library with BLAS API not found.  Please specify library location.&quot;，或执行&quot;make -j5&quot;时出现&quot;libgraspit.io: undefined reference to &lsquo;daxpy_'&ldquo;等一系列&quot;undefined reference to&quot;的报错，可以尝试参考<a href="https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=792051">这里</a>执行&quot;sudo apt-get install libatlas-base-dev&quot;后重新编译。</p>
+<h2 id="qt版本问题">Qt版本问题</h2>
+<p>GraspIt是一个比较老的包，但暂时还没办法被替代，它只支持Qt4，而新的ROS已经支持到Qt5了，因此在安装过程中可能会有Qt版本的冲突。为了解决这个问题，我们常规的ROS版本设定是ROS1的kinetic，所以只能在ubuntu 16.04的机器上跑。</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/graspit%E5%AE%89%E8%A3%85%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C/>http://mvig.sjtu.edu.cn/robotflow/article/graspit%E5%AE%89%E8%A3%85%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/graspit/">
+                    #graspit</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/robotflow-task-zoo/" class="prev" rel="prev" title="RobotFlow Task Zoo"><i class="iconfont icon-left"></i>&nbsp;RobotFlow Task Zoo</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/abstraction-of-abstractions-of-icra-1984/" class="next" rel="next" title="Abstraction of Abstractions of ICRA 1984">Abstraction of Abstractions of ICRA 1984&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

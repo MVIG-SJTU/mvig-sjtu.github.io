@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en" dir=>
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Manipulation Task Zoo#构建操作任务的task zoo，正常的思路是先brainstorm，把能想到的操作任务都写下来，再总结。然后，根据目前的硬件水平，控制水平决定哪些任务先做，哪些后做，哪些不做。
+我们考虑一个Task，是由primitive组成的序列，也就是Primitive Flow。Primitive说白了就是一些rules/priors，就是当你说机器人需要做这个primitive的时候，就不用多想了，直接按照这个prior来就行。指派机器人什么时候用什么primitive的功能，由人指定，或task planning完成。而对primitive本身而言，这些rules给的好不好，也很影响primitive的自适应性。
+这就是这个Manipulation Task Zoo用来support的两个问题，primitive/skill learning和task planning。
+Manipulation Primitives#显然，我们是用还原论的视角看这个问题，那么还原论自带hierarchy和atom元素。对于manipulation task而言，它的atom我们管它叫primitive。一个primitive用如下方式定义： $$Primitive=PreCondition \otimes Contact \otimes Constraints \otimes EndCondition$$
+这个定义很平凡，如果能找到反例麻烦联系我一下。 但里面意味还是有一些的，首先，它排除了in-hand manipulation的情况。四大组成部分，用的是$\otimes$连接，表示这是一个集合运算，而且各环节是允许耦合关系的（不允许的话就用$\oplus$了）。从工程的角度来讲，这是能写进数据库的。
+ 关于in-hand manipulation，因为其高度的灵活性，它很难被总结。我们会在task zoo里收录一些，看有没有机会总结出来，但现在主流还是case by case的做。而我们也主要作为防御性研究使用，就是大概看看按现在的硬件水平能做到什么程度。当然对应的app肯定也是最fancy的。
+ PreCondition &amp; EndEffect#PreCondition描述这个primitive发生的前置条件，如果不满足的话，需要通过monitor监控并传导到控制器调整。PreCondition必然包含一堆可证伪的命题。如果我们暂时只考虑一阶逻辑，那么这里只用准备一堆的concept二分类器即可。这里最大的问题是concept可能是environment/task-dependent的，从而导致很难单纯的用logic来把它描述完备。其实EndEffect是同样的道理，所以我就一并放这儿了。
+Contact#Contact的定义还是相对比较容易的，我们可以用point-based的思路来定义。这样的话可以兼容各种末端。当然那些柔性末端呈现包裹状态的，可能不能直接用这个定义来考虑，不过可能稍微转化一下形式，也就一回事了。 在contact阶段，最难的是考虑如何从target上选择contact点。这里可能需要一些object understanding的介入（物体的affordance，有些时候只有操纵某些地方才是make sense的（特别是对于tool来说）。）。
+当contact选点完成后，此时物体和手被认为相对静止。
+Constraint#Constraint是primitive定义的精髓，因为加入约束就是打破对称的开始，对称破缺了才显得参差多态。
+ trajectory类：trajectory类的constraint大概是最常见的人区分不同primitive的方法了。考虑一下，push，pull，carry 力控类：加入了末端力感知和对环境的力的适应后，终于能做点serious的事情了，比如，cut，pour，squeeze，insert  Manipulation Task#前面讲了atom，接下来讲讲hierarchy。那么一个task的复杂性很好定义，就是看它的序列长度。
+对于一个task，我们要注意的是，它和atom之间有时候并没有严格的分界线。比如insert，完全可以看作是contact &#43; trajectory类contraint的一个primitive（approach到洞口），加上EndCondition Monitor监控，然后不停迭代一个力控类的primitive（在洞口附近找洞）的过程。所以有时候怎么定义atom/task，我们不得不借助一些叫“约定俗成”的东西。而且大家也能看出来，其实没法精确地按照trajectory走是大概率的事情，所以对EndConditon的描述也是至关重要的。
+本站的task将全部依托于atom构建，而atom将全部依托concept构建。我尽力可视化了这种hierarchy，并给出了具体的case。希望能对大家有所启发。">
+<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="Manipulation Task Zoo" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://mvig.sjtu.edu.cn/realobjectbank/docs/manipulation_task/" />
+
+<title>Manipulation Task Zoo | Real Object Bank</title>
+<link rel="manifest" href="/realobjectbank/manifest.json">
+<link rel="icon" href="/realobjectbank/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/realobjectbank/book.min.6cd8553a6854f4812343f0f0c8baca31271e686434f381fbe3c7226f66639176.css" integrity="sha256-bNhVOmhU9IEjQ/DwyLrKMSceaGQ084H748cib2ZjkXY=">
+<script defer src="/realobjectbank/en.search.min.4d829ebd593d69c127b361dc6aa16229183b92744e7d698d78b69327668fb825.js" integrity="sha256-TYKevVk9acEns2HcaqFiKRg7knROfWmNeLaTJ2aPuCU="></script>
+
+<script defer src="/realobjectbank/sw.min.c4ef7997be86a6966c49234864dd556f9a616c517050765f4ca07ba54540624d.js" integrity="sha256-xO95l76GppZsSSNIZN1Vb5phbFFwUHZfTKB7pUVAYk0="></script>
+<link rel="alternate" type="application/rss+xml" href="https://mvig.sjtu.edu.cn/realobjectbank/docs/manipulation_task/index.xml" title="Real Object Bank" />
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body dir=>
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/realobjectbank"><span>Real Object Bank</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/object/" class="">Object</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/object/real/" class="collapsed ">Real</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/object/cad/" class="collapsed ">CAD</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/object/tools/" class="">Tools</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/scene/" class="">Scene</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/scene/real/" class="collapsed ">Real</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/scene/sim/" class="collapsed ">Simulation</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/scene/tools/" class="">Tools</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/perception_task/" class="">Perception Task Zoo</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/perception_task/6dof/" class="">Object 6DoF Estimation</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/perception_task/6dof_part/" class="">Object Articulation Estimation</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/perception_task/point_match/" class="">Point Matching</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/" class="active">Manipulation Task Zoo</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/concept/" class="collapsed ">Concept</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/primitive/" class="collapsed ">Primitive</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/task/" class="collapsed ">Tasks</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/primitivenet/" class="collapsed ">PrimitiveNet</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/realobjectbank/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Manipulation Task Zoo</strong>
+
+  <label for="toc-control">
+    
+    <img src="/realobjectbank/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#manipulation-task-zoo">Manipulation Task Zoo</a></li>
+    <li><a href="#manipulation-primitives">Manipulation Primitives</a>
+      <ul>
+        <li><a href="#precondition--endeffect">PreCondition &amp; EndEffect</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#constraint">Constraint</a></li>
+      </ul>
+    </li>
+    <li><a href="#manipulation-task">Manipulation Task</a>
+      <ul>
+        <li><a href="#manipulation-task-recording方案">Manipulation Task Recording方案</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="manipulation-task-zoo">
+  Manipulation Task Zoo
+  <a class="anchor" href="#manipulation-task-zoo">#</a>
+</h1>
+<p>构建操作任务的task zoo，正常的思路是先brainstorm，把能想到的操作任务都写下来，再总结。然后，根据目前的硬件水平，控制水平决定哪些任务先做，哪些后做，哪些不做。</p>
+<p>我们考虑一个Task，是由primitive组成的序列，也就是Primitive Flow。Primitive说白了就是一些rules/priors，就是当你说机器人需要做这个primitive的时候，就不用多想了，直接按照这个prior来就行。指派机器人什么时候用什么primitive的功能，由人指定，或task planning完成。而对primitive本身而言，这些rules给的好不好，也很影响primitive的自适应性。</p>
+<p>这就是这个Manipulation Task Zoo用来support的两个问题，primitive/skill learning和task planning。</p>
+<h1 id="manipulation-primitives">
+  Manipulation Primitives
+  <a class="anchor" href="#manipulation-primitives">#</a>
+</h1>
+<p>显然，我们是用还原论的视角看这个问题，那么还原论自带hierarchy和atom元素。对于manipulation task而言，它的atom我们管它叫primitive。一个primitive用如下方式定义：
+$$Primitive=PreCondition \otimes Contact \otimes Constraints \otimes EndCondition$$</p>
+<p>这个定义很平凡，如果能找到反例麻烦联系我一下。
+但里面意味还是有一些的，首先，它排除了in-hand manipulation的情况。四大组成部分，用的是$\otimes$连接，表示这是一个集合运算，而且各环节是允许耦合关系的（不允许的话就用$\oplus$了）。从工程的角度来讲，这是能写进数据库的。</p>
+<blockquote>
+<p>关于in-hand manipulation，因为其高度的灵活性，它很难被总结。我们会在task zoo里收录一些，看有没有机会总结出来，但现在主流还是case by case的做。而我们也主要作为防御性研究使用，就是大概看看按现在的硬件水平能做到什么程度。当然对应的app肯定也是最fancy的。</p>
+</blockquote>
+<h2 id="precondition--endeffect">
+  PreCondition &amp; EndEffect
+  <a class="anchor" href="#precondition--endeffect">#</a>
+</h2>
+<p>PreCondition描述这个primitive发生的前置条件，如果不满足的话，需要通过monitor监控并传导到控制器调整。PreCondition必然包含一堆可证伪的命题。如果我们暂时只考虑一阶逻辑，那么这里只用准备一堆的concept二分类器即可。这里最大的问题是concept可能是environment/task-dependent的，从而导致很难单纯的用logic来把它描述完备。其实EndEffect是同样的道理，所以我就一并放这儿了。</p>
+<h2 id="contact">
+  Contact
+  <a class="anchor" href="#contact">#</a>
+</h2>
+<p>Contact的定义还是相对比较容易的，我们可以用point-based的思路来定义。这样的话可以兼容各种末端。当然那些柔性末端呈现包裹状态的，可能不能直接用这个定义来考虑，不过可能稍微转化一下形式，也就一回事了。
+在contact阶段，最难的是考虑如何从target上选择contact点。这里可能需要一些object understanding的介入（物体的affordance，有些时候只有操纵某些地方才是make sense的（特别是对于tool来说）。）。</p>
+<p>当contact选点完成后，此时物体和手被认为相对静止。</p>
+<h2 id="constraint">
+  Constraint
+  <a class="anchor" href="#constraint">#</a>
+</h2>
+<p>Constraint是primitive定义的<strong>精髓</strong>，因为加入约束就是打破对称的开始，对称破缺了才显得参差多态。</p>
+<ul>
+<li>trajectory类：trajectory类的constraint大概是最常见的人区分不同primitive的方法了。考虑一下，push，pull，carry</li>
+<li>力控类：加入了末端力感知和对环境的力的适应后，终于能做点serious的事情了，比如，cut，pour，squeeze，insert</li>
+</ul>
+<h1 id="manipulation-task">
+  Manipulation Task
+  <a class="anchor" href="#manipulation-task">#</a>
+</h1>
+<p>前面讲了atom，接下来讲讲hierarchy。那么一个task的复杂性很好定义，就是看它的序列长度。</p>
+<p>对于一个task，我们要注意的是，它和atom之间有时候并没有严格的分界线。比如insert，完全可以看作是contact + trajectory类contraint的一个primitive（approach到洞口），加上EndCondition Monitor监控，然后不停迭代一个力控类的primitive（在洞口附近找洞）的过程。所以有时候怎么定义atom/task，我们不得不借助一些叫“约定俗成”的东西。而且大家也能看出来，其实没法精确地按照trajectory走是大概率的事情，所以对EndConditon的描述也是至关重要的。</p>
+<p><strong>本站的task将全部依托于atom构建，而atom将全部依托concept构建。我尽力可视化了这种hierarchy，并给出了具体的case。希望能对大家有所启发。</strong></p>
+<h2 id="manipulation-task-recording方案">
+  Manipulation Task Recording方案
+  <a class="anchor" href="#manipulation-task-recording%e6%96%b9%e6%a1%88">#</a>
+</h2>
+<ul>
+<li>记录设备
+<ul>
+<li>RGB-D相机 * 1</li>
+<li>NDI trakStar * 2</li>
+<li>PST Base * 4</li>
+<li>3D Scanner * n</li>
+<li>tactile glove（TBD）</li>
+<li>tactile glove with teleoperation supported (TBD)</li>
+</ul>
+</li>
+<li>受限于当前网站流量，带宽等，目前我们简单放一些demo。</li>
+</ul>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+  
+
+
+  
+
+  
+
+
+
+<div class="book-languages" tabindex="0" aria-haspopup="true">
+  <ul>
+    <li class="flex align-center">
+      <img src="/realobjectbank/svg/translate.svg" class="book-icon" alt="Languages" />
+      English
+    </li> 
+  </ul>
+
+  <ul class="book-languages-list">
+    
+    <li class="active">
+      <a href="https://mvig.sjtu.edu.cn/realobjectbank/" class="flex align-center">
+        <img src="/realobjectbank/svg/translate.svg" class="book-icon" alt="Languages" />
+        English
+      </a>
+    </li>
+    
+    <li class="">
+      <a href="https://mvig.sjtu.edu.cn/realobjectbank/zh/" class="flex align-center">
+        <img src="/realobjectbank/svg/translate.svg" class="book-icon" alt="Languages" />
+        Chinese
+      </a>
+    </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/alex-shpak/hugo-book/edit/master/exampleSite/content/docs/manipulation_task/_index.md" target="_blank" rel="noopener">
+      <img src="/realobjectbank/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#manipulation-task-zoo">Manipulation Task Zoo</a></li>
+    <li><a href="#manipulation-primitives">Manipulation Primitives</a>
+      <ul>
+        <li><a href="#precondition--endeffect">PreCondition &amp; EndEffect</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#constraint">Constraint</a></li>
+      </ul>
+    </li>
+    <li><a href="#manipulation-task">Manipulation Task</a>
+      <ul>
+        <li><a href="#manipulation-task-recording方案">Manipulation Task Recording方案</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

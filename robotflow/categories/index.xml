@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/categories/</link>
+    <description>Recent content in Categories on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 26 Feb 2021 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>dev</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/categories/dev/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/categories/dev/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>robotflow</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/categories/robotflow/</link>
+      <pubDate>Wed, 06 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/categories/robotflow/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>simulation</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/categories/simulation/</link>
+      <pubDate>Wed, 06 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/categories/simulation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>digest</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/categories/digest/</link>
+      <pubDate>Mon, 20 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/categories/digest/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tricks</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/categories/tricks/</link>
+      <pubDate>Thu, 25 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/categories/tricks/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>aoa</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/categories/aoa/</link>
+      <pubDate>Sun, 21 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/categories/aoa/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

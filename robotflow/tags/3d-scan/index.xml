@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>3d scan on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/3d-scan/</link>
+    <description>Recent content in 3d scan on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 07 Jul 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/3d-scan/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>EinScan Pro 2X 2020版白平衡校准失败原因与方案</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/einscan-pro-2x-2020%E7%89%88%E7%99%BD%E5%B9%B3%E8%A1%A1%E6%A0%A1%E5%87%86%E5%A4%B1%E8%B4%A5%E5%8E%9F%E5%9B%A0%E4%B8%8E%E6%96%B9%E6%A1%88/</link>
+      <pubDate>Tue, 07 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/einscan-pro-2x-2020%E7%89%88%E7%99%BD%E5%B9%B3%E8%A1%A1%E6%A0%A1%E5%87%86%E5%A4%B1%E8%B4%A5%E5%8E%9F%E5%9B%A0%E4%B8%8E%E6%96%B9%E6%A1%88/</guid>
+      <description>问题描述：  问题设备：EinScan-Pro 2X 2020 问题版本：ExScanPro-V3.5.0.5 问题现象：相机标定正常；白平衡标定一直失败 问题分析：白平衡采集的图像过亮 临时解决方案：降低白平衡时候纹理相机增益（配置文件cameraGain_tex_cali修改为55）  具体操作步骤  到ExScanPro软件的安装目录下面，\path\to\ExScanPro\res(最后这个res是实际路径) 打开Config.xml，搜索cameraGain_tex_cali，将这个地方对应的参数改为55（默认64）  </description>
+    </item>
+    
+  </channel>
+</rss>

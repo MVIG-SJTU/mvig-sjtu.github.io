@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%9B%B8%E6%9C%BA%E6%A8%A1%E5%9E%8B/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/conda%E6%98%AF%E6%80%8E%E4%B9%88%E6%90%9E%E5%9D%8F%E4%BD%A0%E7%9A%84%E7%BC%96%E8%AF%91%E7%9A%84/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/ros-melodic%E6%94%AF%E6%8C%81python3/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           ROS Melodic支持python3 | RobotFlow
+       
+  </title>
+  <meta name="title" content="ROS Melodic支持python3 | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "ROS Melodic支持python3",
+    "headline" : "ROS Melodic支持python3",
+    "description" : "ROS melodic支持python3 我们后来发现python2和python3是可以直接通信的，所以这一个兼容性的问题暂时不是很大了。关于MoveIt我们也可以用C\u002b\u002b去调里面的库。\n背景 我们知道ROS1系列都是基于python2的，从Noetic开始（对应Ubuntu 20.04）能原生支持python3，因为2020年1月开始python的社区不再支持python2。\n但稍早一些的版本，还是基于python2的，这样如果我们想构建一个与通信架构无关的机器人应用工具包（比如robotflow），那还是要放在python3的环境下进行的。 鉴于现在ROS1拥有比较完整的生态，ROS2还有很多bug，我们还是尽可能适配ROS1。\n考虑目前最后一个python2的ROS1版本，melodic，其实它内部已经支持了python3，只不过pre-build的还是python2而已。因此，我们需要重新编译melodic。\n在网上找了很多方案，最后按照如下步骤，成功完成melodic python3的编译安装。\nInstallation 我测试的时候是在虚拟机上，全新安装的Ubuntu 18.04的基础上做以下步骤的。所以前面有几步可能没有什么用，不过对于之前有安装过其他版本的情况，也不想重新安装的情况下，还是有点用的。\n# ensure there are no ros packages\rsudo apt-get remove --autoremove ros-*\r# 添加ros的源，否则下面会有几个包装不了\r# check for updates\rsudo apt update\r# ensure \/etc\/ros removal\rsudo rm -rf \/etc\/ros\/\r# install the python3 libraries\rsudo apt install -y python3 python3-dev python3-pip build-essential\r# Remove python2\rsudo apt purge -y python2.7*\r# link python -\u0026gt; python3\rsudo ln -s \/usr\/bin\/python3 \/usr\/bin\/python\r# Same for pip\rsudo ln -s \/usr\/bin\/pip3 \/usr\/bin\/pip\r# install the ros dependencies\rsudo -H pip3 install rosdep rospkg rosinstall_generator rosinstall wstool vcstools catkin_tools catkin_pkg\r# initialize catkin build environment\rsudo rosdep init \u0026amp;\u0026amp; rosdep update\r# create catkin workspace\rmkdir -p ~\/ros_catkin_ws\/src \u0026amp;\u0026amp; cd \u0026quot;$_\/.",
+    "inLanguage" : "en-us",
+    "author" : "徐文强",
+    "creator" : "徐文强",
+    "publisher": "徐文强",
+    "accountablePerson" : "徐文强",
+    "copyrightHolder" : "徐文强",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-07-19 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2020-07-19 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/ros-melodic%E6%94%AF%E6%8C%81python3\/",
+    "wordCount" : "445",
+    "keywords" : [ "ros","moveit", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">ROS Melodic支持python3</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">徐文强</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-07-19 itemprop="datePublished">July 19, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="ros-melodic支持python3">ROS melodic支持python3</h1>
+<p>我们后来发现python2和python3是可以直接通信的，所以这一个兼容性的问题暂时不是很大了。关于MoveIt我们也可以用C++去调里面的库。</p>
+<h2 id="背景">背景</h2>
+<p>我们知道ROS1系列都是基于python2的，从Noetic开始（对应Ubuntu 20.04）能原生支持python3，因为2020年1月开始python的社区不再支持python2。</p>
+<p>但稍早一些的版本，还是基于python2的，这样如果我们想构建一个与通信架构无关的机器人应用工具包（比如robotflow），那还是要放在python3的环境下进行的。
+鉴于现在ROS1拥有比较完整的生态，ROS2还有很多bug，我们还是尽可能适配ROS1。</p>
+<p>考虑目前最后一个python2的ROS1版本，melodic，其实它内部已经支持了python3，只不过pre-build的还是python2而已。因此，我们需要重新编译melodic。</p>
+<p>在网上找了很多方案，最后按照如下步骤，成功完成melodic python3的编译安装。</p>
+<h2 id="installation">Installation</h2>
+<p>我测试的时候是在虚拟机上，全新安装的Ubuntu 18.04的基础上做以下步骤的。所以前面有几步可能没有什么用，不过对于之前有安装过其他版本的情况，也不想重新安装的情况下，还是有点用的。</p>
+<pre><code># ensure there are no ros packages
+sudo apt-get remove --autoremove ros-*
+
+# 添加ros的源，否则下面会有几个包装不了
+
+# check for updates
+sudo apt update
+
+# ensure /etc/ros removal
+sudo rm -rf /etc/ros/
+
+# install the python3 libraries
+sudo apt install -y python3 python3-dev python3-pip build-essential
+
+# Remove python2
+sudo apt purge -y python2.7*
+
+# link python -&gt; python3
+sudo ln -s /usr/bin/python3 /usr/bin/python
+
+# Same for pip
+sudo ln -s /usr/bin/pip3 /usr/bin/pip
+
+# install the ros dependencies
+sudo -H pip3 install rosdep rospkg rosinstall_generator rosinstall wstool vcstools catkin_tools catkin_pkg
+
+# initialize catkin build environment
+sudo rosdep init &amp;&amp; rosdep update
+
+# create catkin workspace
+mkdir -p ~/ros_catkin_ws/src &amp;&amp; cd &quot;$_/..&quot;
+
+# initialize catkin workspace (will show warning about Extending... ignore that)
+catkin config --init -DCMAKE_BUILD_TYPE=Release --blacklist rqt_rviz rviz_plugin_tutorials librviz_tutorial --install
+
+# generate a ros melodic install
+rosinstall_generator desktop_full --rosdistro melodic --deps --tar &gt; melodic-desktop-full.rosinstall
+
+# initialize the install
+wstool init -j8 src melodic-desktop-full.rosinstall
+
+# If a download fails, just re-run the following command until all packages download properly:
+wstool update -j4 -t src
+
+# setup environment and isntall dependencies
+export ROS_PYTHON_VERSION=3
+
+# install wxPython，如果这里有cannot unpack file的error，就去掉--no-cache-dir --ignore-installed选项
+pip3 install -U -f --no-cache-dir --ignore-installed https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
+
+# create install_skip file
+printf '#/bin/bash\nif [ $(whoami) != root ]; then\n    echo You must be root or use sudo to install packages.\n    return\nfi\n\nfor pkg in &quot;$@&quot;\ndo\n    echo &quot;Installing $pkg&quot;\n    sudo apt-get -my install $pkg &gt;&gt; install.log\ndone' &gt; install_skip
+
+# make file executable
+chmod +x install_skip
+
+# install python 3 packages, 如果前面没有添加ros的源，这一步会有几个包找不到python3-rospkg-modules, python3-catkin-pkg-modules, python3-rosdep-modules。但是python3-wxtools这个包是真找不到，不过在上面已经用pip install过了。 
+sudo ./install_skip `rosdep check --from-paths src --ignore-src | grep python | sed -e &quot;s/^apt\t//g&quot; | sed -z &quot;s/\n/ /g&quot; | sed -e &quot;s/\&lt;python\&gt;/python3/g&quot;`
+
+# skip python 2 packages，注意这里有三个依赖python2的包没有被skip掉，分别是libboost-all-dev，libpcl-dev，libgazebo9-dev安装任何一个包都会把python2带回来，从而污染安装。（特别是影响moveit）
+
+# 安装完后把/usr/bin/python删掉，然后sudo ln -s /usr/bin/python3 /usr/bin/python
+
+rosdep install --from-paths src --ignore-src -y --skip-keys=&quot;libboost-all-dev libpcl-dev libgazebo9-dev `rosdep check --from-paths src --ignore-src | grep python | sed -e &quot;s/^apt\t//g&quot; | sed -z &quot;s/\n/ /g&quot;`&quot;
+
+# 安装完后把/usr/bin/python删掉，然后sudo ln -s /usr/bin/python3 /usr/bin/python
+
+# rename all old python links to python3
+find . -type f -exec sed -i 's/\/usr\/bin\/env[ ]*\&lt;python\&gt;/\/usr\/bin\/env python3/g' {} +
+
+# remove all depricated install-layout=deb arguments
+find ./ -name 'python_distutils_install.sh' -exec sed -i 's/--install-layout=deb//g' {} \;
+
+# install python-empy
+sudo apt install -y python-empy
+
+# build ros，这一步大概需要1个小时，可能是虚拟机影响了性能
+catkin build
+# build完成的时候会有TypeError: signal handler must be signal.SIG_IGN, signal.SIG_DFL, or a callable object
+# 但只要前面Summary里Abandoned和Failed部分没有出错就可以。
+
+# export python path
+export PYTHONPATH=/usr/lib/python3/dist-packages
+
+# source setup
+source ~/ros_catkin_ws/install/setup.bash
+</code></pre><h2 id="和其他程序的兼容性">和其他程序的兼容性</h2>
+<h3 id="moveit----failed">MoveIt &ndash; Failed</h3>
+<p>MoveIt直接装prebuilt的包没有反应，不清楚是不是有什么特殊的操作。选择从source code安装。
+根据<a href="https://moveit.ros.org/install/source/">官方教程</a>，一通操作。到<code>catkin build</code>这一步，多半会出问题，说有一些包找不到。遇到这种情况：</p>
+<ol>
+<li>首先，根据<a href="https://moveit.ros.org/install/source/dependencies/">这篇文章</a>，OMPL装了</li>
+<li>因为是python3，有一个包需要特别处理一下，叫eigenpy，默认用apt方式得到的是py2的。具体安装方式请参考<a href="https://github.com/stack-of-tasks/eigenpy">这篇文章</a>。试过ubuntu apt安装，很麻烦，一方面网不好，一方面apt下来了也找不到。一种折中方案是用conda来安装，创建一个和默认python3版本一致的conda环境，在那个环境里装上eigenpy，就可以了。至于前面的python3也用conda的行不行，这个问题我也不确定，没试过。通常conda会mess up从源码开始的build，不过这次是拯救世界了。</li>
+<li>此外需要安装一下glew。<code>sudo apt install libglew-dev</code></li>
+<li>catkin build的过程中时不时会崩掉，原因是缺失了一些包，对缺失的包</li>
+</ol>
+<pre><code>catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release --pkg [package_name]
+</code></pre><p>比如，eigen_stl_containers，对应的就是
+catkin_make_isolated &ndash;install -DCMAKE_BUILD_TYPE=Release &ndash;pkg eigen_stl_containers
+有一些包的依赖关系比较深，比如要装moveit_core要先装fcl，按上述命令装即可。</p>
+<ul>
+<li>eigen_stl_containers</li>
+<li>random_numbers</li>
+<li>object_recognition_msgs</li>
+<li>octomap_msgs</li>
+<li>graph_msgs</li>
+<li>warehouse_ros</li>
+<li>fcl -&gt; moveit_core</li>
+<li>ompl</li>
+</ul>
+<h3 id="franka-ros----successful">Franka ROS &ndash; Successful</h3>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/ros-melodic%E6%94%AF%E6%8C%81python3/>http://mvig.sjtu.edu.cn/robotflow/article/ros-melodic%E6%94%AF%E6%8C%81python3/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/ros/">
+                    #ros</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/moveit/">
+                    #moveit</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%9B%B8%E6%9C%BA%E6%A8%A1%E5%9E%8B/" class="prev" rel="prev" title="一文搞懂相机模型"><i class="iconfont icon-left"></i>&nbsp;一文搞懂相机模型</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/conda%E6%98%AF%E6%80%8E%E4%B9%88%E6%90%9E%E5%9D%8F%E4%BD%A0%E7%9A%84%E7%BC%96%E8%AF%91%E7%9A%84/" class="next" rel="next" title="Conda是怎么搞坏你的编译的">Conda是怎么搞坏你的编译的&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

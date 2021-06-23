@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%973urdf%E6%A0%BC%E5%BC%8F%E6%A8%A1%E5%9E%8B%E8%BD%ACfbx%E6%A8%A1%E5%9E%8B/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-pybind11%E7%B3%BB%E5%88%971%E7%BC%96%E8%AF%91%E5%8C%85%E5%88%B0python%E5%BA%93/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/easy_handeye-tutorial/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           手眼标定的福音，Easy HandEye从入门到精通 | RobotFlow
+       
+  </title>
+  <meta name="title" content="手眼标定的福音，Easy HandEye从入门到精通 | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "手眼标定的福音，Easy HandEye从入门到精通",
+    "headline" : "手眼标定的福音，Easy HandEye从入门到精通",
+    "description" : "A tutorial on using easy-handeye to calibrate robot arm Easy-handeye can calibrate both eye-in-hand and eye-on-base robot arm.\nPre-requests The following pre-requests are some bugs that I met when I first ran Easy-handeye. I cannot make sure all dependencies are listed. Most bugs or errors come from the shortage of ros packages, please install them based on error logs.\n1. Make sure ROS and Moveit is successfully installed. ROS should be installed in desktop-full version.",
+    "inLanguage" : "en-us",
+    "author" : "付昊源",
+    "creator" : "付昊源",
+    "publisher": "付昊源",
+    "accountablePerson" : "付昊源",
+    "copyrightHolder" : "付昊源",
+    "copyrightYear" : "2021",
+    "datePublished": "2021-01-15 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2021-01-15 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/easy_handeye-tutorial\/",
+    "wordCount" : "772",
+    "keywords" : [ "calibration","ros", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">手眼标定的福音，Easy HandEye从入门到精通</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">付昊源</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2021-01-15 itemprop="datePublished">January 15, 2021</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="a-tutorial-on-using-easy-handeye-to-calibrate-robot-arm">A tutorial on using easy-handeye to calibrate robot arm</h1>
+<p>Easy-handeye can calibrate both eye-in-hand and eye-on-base robot arm.</p>
+<h2 id="pre-requests">Pre-requests</h2>
+<p>The following pre-requests are some bugs that I met when I first ran <a href="https://github.com/IFL-CAMP/easy_handeye">Easy-handeye</a>. I cannot make sure all dependencies are listed. Most bugs or errors come from the shortage of ros packages, please install them based on error logs.</p>
+<h3 id="1-make-sure-ros-and-moveithttpdocsrosorgenmelodicapimoveit_tutorialshtmldocgetting_startedgetting_startedhtml-is-successfully-installed">1. Make sure ROS and <a href="http://docs.ros.org/en/melodic/api/moveit_tutorials/html/doc/getting_started/getting_started.html">Moveit</a> is successfully installed.</h3>
+<p>ROS should be installed in desktop-full version. Easy-handeye will rely on moveit by default to automatically sample poses, plan trajectories based on sampled poses and execute plans. After installing Moveit, please run some demo to check, such as <a href="http://docs.ros.org/en/melodic/api/moveit_tutorials/html/doc/move_group_python_interface/move_group_python_interface_tutorial.html">this</a>. Don&rsquo;t be afraid if you see some errors like in the following image, it can still run.</p>
+<p><img src="../assets/easy_handeye_asset/moveit_bug.png" alt="moveit_error"></p>
+<h3 id="2-if-you-use-anaconda-or-miniconda-remove-conda-path-from-environment-variables">2. If you use anaconda or miniconda, remove conda path from environment variables.</h3>
+<p>In ROS, most shebang will use <code>/usr/bin/python</code>, but if you have <code>conda</code> added into your path, command <code>python</code> may use <code>${PATH_TO_CONDA}/bin/python</code> instead. This may result to some terrible faults. So I strongly recommend removing the conda from your environment variables. In this way, <code>python</code> will be clear.</p>
+<p>After removing conda, use command</p>
+<pre><code>which python
+</code></pre><p>and make sure</p>
+<pre><code>/usr/bin/python
+</code></pre><p>is shown.</p>
+<h3 id="3-check-python-version">3. Check python version</h3>
+<p>In Ubuntu 18.04, the default version of <code>python</code> is 2.7, but some people may change it for convenience. If you find your <code>python</code> version is not 2.7, please change it by the following commands</p>
+<pre><code>sudo rm -rf /usr/bin/python
+sudo cp /usr/bin/python2.7 /usr/bin/python
+</code></pre><h3 id="4-install-transforms3d">4. Install transforms3d</h3>
+<pre><code>pip install transforms3d
+</code></pre><h3 id="5-install-opencv-and-opencv-contrib">5. Install OpenCV and OpenCV-contrib</h3>
+<pre><code>pip install opencv-python
+python -m pip install opencv-contrib-python
+</code></pre><h3 id="6-install-joint-trajectory-controller">6. Install joint-trajectory-controller</h3>
+<pre><code>sudo apt-get install ros-melodic-joint-trajectory-controller
+</code></pre><h3 id="7-ros-package">7. ROS package</h3>
+<p>To calibrate, the following two ros packages are needed:</p>
+<ul>
+<li>The package which is responsible for communication with hardware. For example, <a href="https://github.com/frankaemika/franka_ros">franka_ros</a> for Franka Emika robot and <a href="https://github.com/ros-industrial/universal_robot/tree/kinetic-devel/ur_bringup">ur_bringup</a> for UR robot. In most cases, this package need compilation, so make sure they are put under <code>{$RFLIB}/ros/src</code> and can be successfully compiled.</li>
+<li>The moveit config package of your robot. For example, <a href="https://github.com/ros-planning/panda_moveit_config">panda_moveit_config</a> and <a href="https://github.com/ros-industrial/universal_robot/tree/kinetic-devel/ur5_moveit_config">ur5_moveit_config</a>. In most cases, this package doesn&rsquo;t need compilation, so please put them under <code>/opt/ros/melodic/share</code>.</li>
+</ul>
+<p>These two packages are used by Moveit.</p>
+<h2 id="usage">Usage</h2>
+<p>In the following parts, a small tutorial on how to write launch files and calibrate robot arm with camera is shown.</p>
+<h3 id="calibrate-write-custom-launch-files">Calibrate: Write custom launch files</h3>
+<p>With easy_handeye, we only need some launch files to automatically calibrate. Create a new launch file which includes the following four parts:</p>
+<ul>
+<li>Include the launch file which is responsible for communication with your hardware.</li>
+<li>Include the tracking system&rsquo;s launch file, such as <code>realsense_d435_driver</code> in RFLIB.</li>
+<li>Include the moveit stack of your robot.</li>
+<li>Include <code>easy_handeye</code>'s <code>calibrate.launch</code>, with correctly indicating some parameters:
+<ul>
+<li><code>eye_on_hand</code>(bool): true for eye_on_hand case, false for eye_on_base case.</li>
+<li><code>namespace_prefix</code>(string): a unique name for each calibration. I strongly recommend using your robot&rsquo;s name and camera&rsquo;s name as namespace_prefix, e.g. <code>franka_realsensed435</code></li>
+<li><code>move_group</code>(string): the move_group name in Moveit.</li>
+<li><code>robot_base_frame</code>(string): the robot&rsquo;s base frame tf name in ROS.</li>
+<li><code>robot_effector_frame</code>(string): the robot&rsquo;s end-effector frame tf name in ROS.</li>
+<li><code>tracking_base_frame</code>(string): the camera&rsquo;s frame tf name in ROS.</li>
+<li><code>tracking_marker_frame</code>(string): the markers&rsquo;s frame tf name in ROS (Usually this frame can be calculated by camera, and surely associated with <code>tracking_base_frame</code>).</li>
+</ul>
+</li>
+</ul>
+<p>An example for calibrating Franka is shown <a href="../assets/easy_handeye_asset/robot_calibration/launch/calibrate_franka.launch">here</a>, you can run</p>
+<pre><code>roslaunch robot_calibration calibrate_franka.launch robot_ip:=&lt;your_franka_ip&gt; eye_on_hand:=true
+</code></pre><p>to run, if everything works well, you will see something like this.</p>
+<p><img src="../assets/easy_handeye_asset/easy_handeye_overview.png" alt="overview"></p>
+<p>Just take this eye-on-hand case as an example. Here, you can see an RViz and two GUI windows. In the left-top window, which is rqt_easy_hand GUI, you need to first click <code>Check starting pose</code>, then it will generate some poses of end-effector used for calibration.</p>
+<p><img src="../assets/easy_handeye_asset/rqt_easy_handeye.png" alt="rqt_easy_handeye"></p>
+<p>You should click <code>Plan</code> to check the trajectory, then <code>Execute</code> to move the real hardware.</p>
+<p><img src="../assets/easy_handeye_asset/plan.png" alt="plan"></p>
+<p>After each execution, click <code>Take Sample</code> in the right-bottom window. Then, back to the rqt_easy_hand GUI, click <code>Next Pose</code> and continue a new pose. After all poses have been executed and taken as samples, click <code>Compute</code> to generate the camera&rsquo;s pose w.r.t. end-effector. Finally, you can save it by clicking <code>Save</code>.</p>
+<p><img src="../assets/easy_handeye_asset/compute.png" alt="compute"></p>
+<h3 id="publish-publish-the-transform-of-camera">Publish: publish the transform of camera</h3>
+<p>After calibration, the relating files will be saved on disk. When you start your robot nodes in ROS, you can use <code>publish.launch</code> in easy_handeye, with correctly indicating the following parameters:</p>
+<ul>
+<li><code>eye_on_hand</code>(bool): true for eye_on_hand case, false for eye_on_base case.</li>
+<li><code>namespace_prefix</code>(string): a unique name for each calibration. Please make sure this name is exactly the same in calibration parameters.</li>
+</ul>
+<p>An example can be seen <a href="../assets/easy_handeye_asset/robot_calibration/launch/publish_franka.launch">here</a>. In this file, I also provide the franka visualization node, you can visualize tf in RViz and check the calibration accuracy. To test its accuracy, just slowly move the robot arm, and check whether marker&rsquo;s frame is fixed.</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/easy_handeye-tutorial/>http://mvig.sjtu.edu.cn/robotflow/article/easy_handeye-tutorial/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/calibration/">
+                    #calibration</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/ros/">
+                    #ros</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%973urdf%E6%A0%BC%E5%BC%8F%E6%A8%A1%E5%9E%8B%E8%BD%ACfbx%E6%A8%A1%E5%9E%8B/" class="prev" rel="prev" title="Articulation入库系列3——URDF格式的articulation模型转fbx格式"><i class="iconfont icon-left"></i>&nbsp;Articulation入库系列3——URDF格式的articulation模型转fbx格式</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-pybind11%E7%B3%BB%E5%88%971%E7%BC%96%E8%AF%91%E5%8C%85%E5%88%B0python%E5%BA%93/" class="next" rel="next" title="All You Need for Pybind11系列01——编译包到python库">All You Need for Pybind11系列01——编译包到python库&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/robotflow/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

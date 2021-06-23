@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="robot_ip" />
+  <arg name="eye_on_hand" doc="eye-on-hand instead of eye-on-base" />
+  <arg if="$(arg eye_on_hand)" name="namespace" value="franka_eih_calib" />
+  <arg unless="$(arg eye_on_hand)" name="namespace" value="franka_eob_calib" />
+
+  <arg name="resWidth" default="640"/>
+  <arg name="resHeight" default="480"/>
+
+  <!-- Calibrate parameters -->
+  <include file="$(find easy_handeye)/launch/publish.launch">
+    <arg name="eye_on_hand" value="$(arg eye_on_hand)" />
+    <arg name="namespace_prefix" value="$(arg namespace)" />
+  </include>
+
+  <include file="$(find franka_visualization)/launch/franka_visualization.launch">
+    <arg name="load_gripper" value="true" />
+    <arg name="robot_ip" value="$(arg robot_ip)" />
+  </include>
+
+  <node pkg="realsense_d435_server" name="realsense2_driver" type="realsense2_driver" output="screen">
+      <param name="resWidth"  type="int"  value="$(arg resWidth)" />
+      <param name="resHeight"  type="int"  value="$(arg resHeight)" />
+  </node>
+  <include file="$(find camera_transform_publisher)/launch/aruco_publisher_realsense.launch"/>
+
+</launch>

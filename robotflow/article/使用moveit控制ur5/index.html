@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/ros%E5%92%8Cur5%E9%85%8D%E7%BD%AE%E6%96%87%E6%A1%A3%E5%8F%8A%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/%E6%89%8B%E7%9C%BC%E6%A0%87%E5%AE%9A%E4%BB%8B%E7%BB%8D%E4%B8%8E%E4%BD%BF%E7%94%A8/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/%E4%BD%BF%E7%94%A8moveit%E6%8E%A7%E5%88%B6ur5/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           使用MoveIt控制UR5 | RobotFlow
+       
+  </title>
+  <meta name="title" content="使用MoveIt控制UR5 | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "使用MoveIt控制UR5",
+    "headline" : "使用MoveIt控制UR5",
+    "description" : "使用MoveIt控制UR5 MoveIt简介  MOVEit！是目前针对移动操作最先进的软件。 它结合了运动规划，操纵，三维感知，运动学，控制和导航的最新进展 它提供了一个易于使用的平台，开发先进的机器人应用程序，评估新的机器人设计和建筑集成的机器人产品 它广泛应用于工业，商业，研发和其他领域。 MOVEit！是最广泛使用的开源软件的操作，并已被用于超过65个机器人  该简介引用自MoveIt!入门教程-简介，详情见官方主页https:\/\/moveit.ros.org\/。\n预备知识 学习 http:\/\/wiki.ros.org\/ROS\/Tutorials 的Core ROS Tutorials \u0026ndash; 1.1 Beignner Level \u0026ndash; 5~8节，对ROS node, topic, service, roslaunch等基本概念有了解。\n在RViz中操控UR5机器人 在带有Universal Robot的包的工作空间下，启动UR5的驱动程序。\nroslaunch ur_modern_driver ur5_bringup.launch robot_ip:=IP_OF_THE_ROBOT [reverse_port:=REVERSE_PORT] 然后执行以下命令。该launch文件主要配置了对应于UR5的参数，并启动了MoveIt包中的程序节点。\nroslaunch ur5_moveit_config ur5_moveit_planning_execution.launch 最后，执行如下命令来启动RViz，便可在图形界面RViz中可视化地操控机器人。\nroslaunch ur5_moveit_config moveit_rviz.launch config:=true 使用代码运行MoveIt MoveIt提供了名为MoveItGroupInterface的类，它简洁易用地封装了MoveIt的主要功能，如：设定某joints position或end effector的position为目标，为此规划一个path；控制机械臂的运动；在场景中添加、删除物体，为机械臂attach、detach物体等。MoveIt是基于C\u002b\u002b实现的，而这个interface支持C\u002b\u002b、python、命令行三种语言的调用。\n该教程以python为例来使用该MoveItGroupInterface，参考了官方文档 https:\/\/ros-planning.github.io\/moveit_tutorials\/doc\/move_group_python_interface\/move_group_python_interface_tutorial.html ，但由于官方文档中使用了panda机械手的仿真，而我们希望操控UR5，所以在代码中planning_group的名称应当从\u0026quot;panda_arm\u0026quot;改为\u0026quot;manipulator\u0026rdquo;；在设置joints position为goal时，要注意UR5的joint数目比panda的少一个。\n按照官方文档中的示例编写了如下Python脚本，使用MoveItGroupInterface来控制机器人。可将该脚本放置在任意ROS package的scripts目录中，使用\nchmod \u002bx [python_script_name] 来将该脚本变为可执行程序，再通过rosrun来使用它。\nrosrun [package_name] [python_script_name] 该脚本只是简单示例，可参阅MoveIt官方文档了解细节。\n#!\/usr\/bin\/env python import rospy import moveit_commander import sys import moveit_msgs.",
+    "inLanguage" : "en-us",
+    "author" : "薛震东",
+    "creator" : "薛震东",
+    "publisher": "薛震东",
+    "accountablePerson" : "薛震东",
+    "copyrightHolder" : "薛震东",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-05-28 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2020-05-28 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/%E4%BD%BF%E7%94%A8moveit%E6%8E%A7%E5%88%B6ur5\/",
+    "wordCount" : "945",
+    "keywords" : [ "ROS","UR5","MoveIt", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">使用MoveIt控制UR5</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">薛震东</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-05-28 itemprop="datePublished">May 28, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="使用moveit控制ur5">使用MoveIt控制UR5</h1>
+<h2 id="moveit简介">MoveIt简介</h2>
+<ul>
+<li>MOVEit！是目前针对移动操作最先进的软件。</li>
+<li>它结合了运动规划，操纵，三维感知，运动学，控制和导航的最新进展</li>
+<li>它提供了一个易于使用的平台，开发先进的机器人应用程序，评估新的机器人设计和建筑集成的机器人产品</li>
+<li>它广泛应用于工业，商业，研发和其他领域。</li>
+<li>MOVEit！是最广泛使用的开源软件的操作，并已被用于超过<a href="http://moveit.ros.org/robots/">65个机器人</a></li>
+</ul>
+<p>该简介引用自<a href="https://www.ncnynl.com/archives/201610/1028.html">MoveIt!入门教程-简介</a>，详情见官方主页https://moveit.ros.org/。</p>
+<h2 id="预备知识">预备知识</h2>
+<p>学习 <a href="http://wiki.ros.org/ROS/Tutorials">http://wiki.ros.org/ROS/Tutorials</a> 的Core ROS Tutorials &ndash; 1.1 Beignner Level &ndash; 5~8节，对ROS node, topic, service, roslaunch等基本概念有了解。</p>
+<h2 id="在rviz中操控ur5机器人">在RViz中操控UR5机器人</h2>
+<p>在带有Universal Robot的包的工作空间下，启动UR5的驱动程序。</p>
+<pre><code>roslaunch ur_modern_driver ur5_bringup.launch robot_ip:=IP_OF_THE_ROBOT [reverse_port:=REVERSE_PORT]
+</code></pre><p>然后执行以下命令。该launch文件主要配置了对应于UR5的参数，并启动了MoveIt包中的程序节点。</p>
+<pre><code>roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch
+</code></pre><p>最后，执行如下命令来启动RViz，便可在图形界面RViz中可视化地操控机器人。</p>
+<pre><code>roslaunch ur5_moveit_config moveit_rviz.launch config:=true
+</code></pre><h2 id="使用代码运行moveit">使用代码运行MoveIt</h2>
+<p>MoveIt提供了名为MoveItGroupInterface的类，它简洁易用地封装了MoveIt的主要功能，如：设定某joints position或end effector的position为目标，为此规划一个path；控制机械臂的运动；在场景中添加、删除物体，为机械臂attach、detach物体等。MoveIt是基于C++实现的，而这个interface支持C++、python、命令行三种语言的调用。</p>
+<p>该教程以python为例来使用该MoveItGroupInterface，参考了官方文档 <a href="https://ros-planning.github.io/moveit_tutorials/doc/move_group_python_interface/move_group_python_interface_tutorial.html">https://ros-planning.github.io/moveit_tutorials/doc/move_group_python_interface/move_group_python_interface_tutorial.html</a> ，但由于官方文档中使用了panda机械手的仿真，而我们希望操控UR5，所以在代码中planning_group的名称应当从&quot;panda_arm&quot;改为&quot;manipulator&rdquo;；在设置joints position为goal时，要注意UR5的joint数目比panda的少一个。</p>
+<p>按照官方文档中的示例编写了如下Python脚本，使用MoveItGroupInterface来控制机器人。可将该脚本放置在任意ROS package的scripts目录中，使用</p>
+<pre><code>chmod +x [python_script_name]
+</code></pre><p>来将该脚本变为可执行程序，再通过rosrun来使用它。</p>
+<pre><code>rosrun [package_name] [python_script_name]
+</code></pre><p>该脚本只是简单示例，可参阅MoveIt官方文档了解细节。</p>
+<pre><code>#!/usr/bin/env python
+
+import rospy
+import moveit_commander
+import sys
+import moveit_msgs.msg
+from math import pi
+import geometry_msgs.msg
+from moveit_commander.conversions import pose_to_list
+import copy
+
+def all_close(goal, actual, tolerance):
+    &quot;&quot;&quot;
+    Convenience method for testing if a list of values are within a tolerance of their counterparts in another list
+    @param: goal       A list of floats, a Pose or a PoseStamped
+    @param: actual     A list of floats, a Pose or a PoseStamped
+    @param: tolerance  A float
+    @returns: bool
+    &quot;&quot;&quot;
+    all_equal = True
+    if type(goal) is list:
+        for index in range(len(goal)):
+            if abs(actual[index] - goal[index]) &gt; tolerance:
+                return False
+
+    elif type(goal) is geometry_msgs.msg.PoseStamped:
+        return all_close(goal.pose, actual.pose, tolerance)
+
+    elif type(goal) is geometry_msgs.msg.Pose:
+        return all_close(pose_to_list(goal), pose_to_list(actual), tolerance)
+
+    return True
+
+
+class MoveGroupPythonInterfaceTutorial(object):
+    def __init__(self):
+        super(MoveGroupPythonInterfaceTutorial, self).__init__()
+
+        moveit_commander.roscpp_initialize(sys.argv)
+        rospy.init_node('my_move_group_python_interface_tutorial', anonymous=True)
+
+        robot = moveit_commander.RobotCommander()
+
+        scene = moveit_commander.PlanningSceneInterface()
+
+        group_name = &quot;manipulator&quot;
+        move_group = moveit_commander.MoveGroupCommander(group_name)
+
+        display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
+                                                       moveit_msgs.msg.DisplayTrajectory,
+                                                       queue_size=20)
+
+        planning_frame = move_group.get_planning_frame()
+        print &quot;============ Planning frame: %s&quot; % planning_frame
+
+        eef_link = move_group.get_end_effector_link()
+        print &quot;============ End effector link: %s&quot; % eef_link
+
+        group_names = robot.get_group_names()
+        print &quot;============ Available Planning Groups:&quot;, robot.get_group_names()
+
+        print &quot;============ Printing robot state&quot;
+        print robot.get_current_state()
+        print &quot;&quot;
+
+        # Misc variables
+        self.box_name = ''
+        self.robot = robot
+        self.scene = scene
+        self.move_group = move_group
+        self.display_trajectory_publisher = display_trajectory_publisher
+        self.planning_frame = planning_frame
+        self.eef_link = eef_link
+        self.group_names = group_names
+
+    def go_to_joint_state(self):
+        move_group = self.move_group
+
+        joint_goal = move_group.get_current_joint_values()
+        joint_goal[0] = 0
+        joint_goal[1] = -pi / 2
+        joint_goal[2] = 0
+        joint_goal[3] = -pi / 3
+        joint_goal[4] = 0
+        joint_goal[5] = pi / 8
+
+        # The go command can be called with joint values, poses, or without any
+        # parameters if you have already set the pose or joint target for the group
+        move_group.go(joint_goal, wait=True)
+
+        # Calling ``stop()`` ensures that there is no residual movement
+        move_group.stop()
+
+        ## END_SUB_TUTORIAL
+
+        # For testing:
+        current_joints = move_group.get_current_joint_values()
+        return all_close(joint_goal, current_joints, 0.01)
+
+    def go_to_pose_goal(self):
+        move_group = self.move_group
+
+        # Get current end effector pose.
+        # print move_group.get_current_pose()
+
+        # Set a reasonable goal with respect to current end-effector pose.
+        pose_goal = geometry_msgs.msg.Pose()
+        pose_goal.orientation.w = 0.7
+        pose_goal.position.x = 0.1
+        pose_goal.position.y = 0.2
+        pose_goal.position.z = 0.8
+
+        move_group.set_pose_target(pose_goal)
+
+        plan = move_group.plan()
+
+        self.display_trajectory(plan)
+
+        execute = raw_input(&quot;execute? (y/n)&quot;)
+        if execute == &quot;y&quot;: 
+            move_group.execute(plan)
+            move_group.stop()
+        
+        move_group.clear_pose_targets()
+        current_pose = self.move_group.get_current_pose().pose
+        return all_close(pose_goal, current_pose, 0.01)
+
+    def plan_cartesian_path(self, scale=1):
+        move_group = self.move_group
+
+        waypoints = []
+
+        wpose = move_group.get_current_pose().pose
+        wpose.position.z -= scale * 0.1  # First move up (z)
+        wpose.position.y += scale * 0.2  # and sideways (y)
+        waypoints.append(copy.deepcopy(wpose))
+
+        wpose.position.x += scale * 0.1  # Second move forward/backwards in (x)
+        waypoints.append(copy.deepcopy(wpose))
+
+        wpose.position.y -= scale * 0.1  # Third move sideways (y)
+        waypoints.append(copy.deepcopy(wpose))
+
+        (plan, fraction) = move_group.compute_cartesian_path(
+            waypoints,   # waypoints to follow
+            0.01,        # eef_step
+            0.0)         # jump_threshold
+
+        return plan, fraction
+
+    def display_trajectory(self, plan):
+        robot = self.robot
+        display_trajectory_publisher = self.display_trajectory_publisher
+
+        display_trajectory = moveit_msgs.msg.DisplayTrajectory()
+        display_trajectory.trajectory_start = robot.get_current_state()
+        display_trajectory.trajectory.append(plan)
+
+        display_trajectory_publisher.publish(display_trajectory)
+
+def main():
+
+    try: 
+        print &quot;&quot;
+        print &quot;----------------------------------------------------------&quot;
+        print &quot;Welcome to the Our MoveIt MoveGroup Python Interface Playground&quot;
+        print &quot;----------------------------------------------------------&quot;
+        print &quot;Press Ctrl-D to exit at any time&quot;
+        print &quot;&quot;
+
+        print &quot;============ Press `Enter` to begin the tutorial by setting up the moveit_commander ...&quot;
+        raw_input()
+        tutorial = MoveGroupPythonInterfaceTutorial()
+
+        while (True): 
+            print &quot;Input command. &quot;
+            print &quot;Press '1' to execute a movement using a joint state goal ...&quot;
+            print &quot;Press '2' to execute a movement using a pose goal ...&quot;
+            print &quot;Press '3' to plan and display a Cartesian path ...&quot;
+            # print &quot;============ Press `Enter` to display a saved trajectory (this will replay the Cartesian path)  ...&quot;
+            command = input(&quot;Enter&quot;)
+            command = int(command)
+            if command == 1: 
+                tutorial.go_to_joint_state() 
+            elif command == 2: 
+                tutorial.go_to_pose_goal() 
+            elif command == 3: 
+                tutorial.plan_cartesian_path()
+
+    except rospy.ROSInterruptException:
+        return
+    except KeyboardInterrupt:
+        return
+
+if __name__ == '__main__':
+    main()
+</code></pre><h2 id="可视化与坐标系">可视化与坐标系</h2>
+<p>目前已经学会使用可视化与代码的方式来控制UR5机械臂，通过图形界面指定joint position是直观的，通过代码设定坐标是准确的高效的。因此我们希望能方便地知道RViz中机器人的位置坐标，给定位置坐标，也希望在RViz中显示出来。</p>
+<p>对于前者，可以在启动UR5驱动、MoveIt、Rviz之后，监听发布机器人末端位置坐标的topic来实时显示它的位置坐标。</p>
+<p>首先列出当前所有topic，发现名为&rdquo;/rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic/feedback&quot;的topic，然后使用rostopic echo监听它的内容</p>
+<pre><code>rostopic list
+</code></pre><pre><code>rostopic echo /rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic/feedback
+</code></pre><p>对于后者，可以参考RViz文档[http://wiki.ros.org/rviz/Tutorials/Markers%3A%20Basic%20Shapes](<a href="http://wiki.ros.org/rviz/Tutorials/Markers%3A">http://wiki.ros.org/rviz/Tutorials/Markers%3A</a> Basic Shapes)。通过第三方程序节点在关心的坐标点显示一个basic shape（如arrow），便可以简单直观地在RViz中看到它的位置，如下代码从RViz教程中改编。将这份代码作为可执行节点编译，执行的时候输入8个参数，分别是reference frame name, position_x, position_y, position_z, quaternion_x, quaternion_y, quaternion_z, quaternion_w，便可以在该位置显示一个箭头。对于操作细节请参考文档。</p>
+<p>在shi</p>
+<pre><code>#include &lt;ros/ros.h&gt;
+#include &lt;visualization_msgs/Marker.h&gt;
+#include &lt;cstdlib&gt; 
+
+int main( int argc, char** argv )
+{
+  ros::init(argc, argv, &quot;mark_arrow&quot;);
+  ros::NodeHandle n;
+  ros::Rate r(1);
+  ros::Publisher marker_pub = n.advertise&lt;visualization_msgs::Marker&gt;(&quot;visualization_marker&quot;, 1);
+
+  // Set our initial shape type to be a cube
+  uint32_t shape = visualization_msgs::Marker::ARROW;
+
+  if (argc != 9) {
+    ROS_INFO(&quot;Input correct pose format in command line&quot;); 
+    return 1; 
+  }
+
+  while (ros::ok())
+  {
+    visualization_msgs::Marker marker;
+    // Set the frame ID and timestamp.  See the TF tutorials for information on these.
+    marker.header.frame_id = argv[1];
+    marker.header.stamp = ros::Time::now();
+
+    // Set the namespace and id for this marker.  This serves to create a unique ID
+    // Any marker sent with the same namespace and id will overwrite the old one
+    marker.ns = &quot;mark_arrows&quot;;
+    marker.id = 0;
+
+    // Set the marker type.  Initially this is CUBE, and cycles between that and SPHERE, ARROW, and CYLINDER
+    marker.type = shape;
+
+    // Set the marker action.  Options are ADD, DELETE, and new in ROS Indigo: 3 (DELETEALL)
+    marker.action = visualization_msgs::Marker::ADD;
+
+    // Set the pose of the marker.  This is a full 6DOF pose relative to the frame/time specified in the header
+    marker.pose.position.x = atof(argv[2]); 
+    marker.pose.position.y = atof(argv[3]); 
+    marker.pose.position.z = atof(argv[4]); 
+    marker.pose.orientation.x = atof(argv[5]); 
+    marker.pose.orientation.y = atof(argv[6]); 
+    marker.pose.orientation.z = atof(argv[7]); 
+    marker.pose.orientation.w = atof(argv[8]); 
+
+    // Set the scale of the marker -- 1x1x1 here means 1m on a side
+    marker.scale.x = 0.1;
+    marker.scale.y = 0.01;
+    marker.scale.z = 0.01;
+
+    // Set the color -- be sure to set alpha to something non-zero!
+    marker.color.r = 0.0f;
+    marker.color.g = 1.0f;
+    marker.color.b = 0.0f;
+    marker.color.a = 1.0;
+
+    marker.lifetime = ros::Duration();
+
+    // Publish the marker
+    while (marker_pub.getNumSubscribers() &lt; 1)
+    {
+      if (!ros::ok())
+      {
+        return 0;
+      }
+      ROS_WARN_ONCE(&quot;Please create a subscriber to the marker&quot;);
+      sleep(1);
+    }
+    marker_pub.publish(marker);
+
+    r.sleep();
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/%E4%BD%BF%E7%94%A8moveit%E6%8E%A7%E5%88%B6ur5/>http://mvig.sjtu.edu.cn/robotflow/article/%E4%BD%BF%E7%94%A8moveit%E6%8E%A7%E5%88%B6ur5/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/ros/">
+                    #ROS</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/ur5/">
+                    #UR5</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/moveit/">
+                    #MoveIt</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/ros%E5%92%8Cur5%E9%85%8D%E7%BD%AE%E6%96%87%E6%A1%A3%E5%8F%8A%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C/" class="prev" rel="prev" title="ROS和UR5配置文档及踩坑经验"><i class="iconfont icon-left"></i>&nbsp;ROS和UR5配置文档及踩坑经验</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/%E6%89%8B%E7%9C%BC%E6%A0%87%E5%AE%9A%E4%BB%8B%E7%BB%8D%E4%B8%8E%E4%BD%BF%E7%94%A8/" class="next" rel="next" title="手眼标定介绍与使用">手眼标定介绍与使用&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

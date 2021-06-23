@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Real Object Bank</title>
+    <link>https://mvig.sjtu.edu.cn/realobjectbank/posts/</link>
+    <description>Recent content in Posts on Real Object Bank</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 31 Aug 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://mvig.sjtu.edu.cn/realobjectbank/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>cup1</title>
+      <link>https://mvig.sjtu.edu.cn/realobjectbank/posts/object/real/cup1/</link>
+      <pubDate>Mon, 31 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://mvig.sjtu.edu.cn/realobjectbank/posts/object/real/cup1/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

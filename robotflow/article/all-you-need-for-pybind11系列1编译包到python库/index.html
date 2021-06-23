@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/easy_handeye-tutorial/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9711pybind11/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-pybind11%E7%B3%BB%E5%88%971%E7%BC%96%E8%AF%91%E5%8C%85%E5%88%B0python%E5%BA%93/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           All You Need for Pybind11系列01——编译包到python库 | RobotFlow
+       
+  </title>
+  <meta name="title" content="All You Need for Pybind11系列01——编译包到python库 | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "All You Need for Pybind11系列01——编译包到python库",
+    "headline" : "All You Need for Pybind11系列01——编译包到python库",
+    "description" : "All You Need for Pybind11系列01——编译包到python库 本系列Pybind11的安装方式默认为pip install pybind11\nCMake安装包到python库 详情请见这篇文章，注意这样生成的python库的so文件在build下，而不在当前环境的site-packages下面\ng\u002b\u002b安装包到python库 考虑到我们搞的是相对大型的系统，这种安装方式对包管理很不友好，因此不在这里多说。如果感兴趣，可以看看pybind11的官方文档。\nsetuptools安装包到python库 准备代码 代码结构如下：\n.\r├── CMakeLists.txt\r└── src\r└── main.cpp\r└── setup.py\r└── pyproject.toml\r就是在CMake安装方式之外要多准备一个setup.py文件。其中CMakeLists.txt和main.cpp中的内容和CMake教程中一致。\n# -*- coding: utf-8 -*- import os import sys import subprocess from setuptools import setup, Extension from setuptools.command.build_ext import build_ext # Convert distutils Windows platform specifiers to CMake -A arguments PLAT_TO_CMAKE = { \u0026#34;win32\u0026#34;: \u0026#34;Win32\u0026#34;, \u0026#34;win-amd64\u0026#34;: \u0026#34;x64\u0026#34;, \u0026#34;win-arm32\u0026#34;: \u0026#34;ARM\u0026#34;, \u0026#34;win-arm64\u0026#34;: \u0026#34;ARM64\u0026#34;, } # A CMakeExtension needs a sourcedir instead of a file list.",
+    "inLanguage" : "en-us",
+    "author" : "徐文强",
+    "creator" : "徐文强",
+    "publisher": "徐文强",
+    "accountablePerson" : "徐文强",
+    "copyrightHolder" : "徐文强",
+    "copyrightYear" : "2021",
+    "datePublished": "2021-02-26 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2021-02-26 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/all-you-need-for-pybind11%E7%B3%BB%E5%88%971%E7%BC%96%E8%AF%91%E5%8C%85%E5%88%B0python%E5%BA%93\/",
+    "wordCount" : "523",
+    "keywords" : [ "cmake","cpp", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">All You Need for Pybind11系列01——编译包到python库</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">徐文强</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2021-02-26 itemprop="datePublished">February 26, 2021</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="all-you-need-for-pybind11系列01编译包到python库">All You Need for Pybind11系列01——编译包到python库</h1>
+<p>本系列Pybind11的安装方式默认为<code>pip install pybind11</code></p>
+<h2 id="cmake安装包到python库">CMake安装包到python库</h2>
+<p>详情请见<a href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9711pybind11/">这篇文章</a>，注意这样生成的python库的so文件在build下，而不在当前环境的site-packages下面</p>
+<h2 id="g安装包到python库">g++安装包到python库</h2>
+<p>考虑到我们搞的是相对大型的系统，这种安装方式对包管理很不友好，因此不在这里多说。如果感兴趣，可以看看pybind11的官方文档。</p>
+<h2 id="setuptools安装包到python库">setuptools安装包到python库</h2>
+<h3 id="准备代码">准备代码</h3>
+<p>代码结构如下：</p>
+<pre><code>.
+├── CMakeLists.txt
+└── src
+    └── main.cpp
+└── setup.py
+└── pyproject.toml
+</code></pre><p>就是在CMake安装方式之外要多准备一个setup.py文件。其中CMakeLists.txt和main.cpp中的内容和CMake教程中一致。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># -*- coding: utf-8 -*-</span>
+<span style="color:#f92672">import</span> os
+<span style="color:#f92672">import</span> sys
+<span style="color:#f92672">import</span> subprocess
+
+<span style="color:#f92672">from</span> setuptools <span style="color:#f92672">import</span> setup, Extension
+<span style="color:#f92672">from</span> setuptools.command.build_ext <span style="color:#f92672">import</span> build_ext
+
+<span style="color:#75715e"># Convert distutils Windows platform specifiers to CMake -A arguments</span>
+PLAT_TO_CMAKE <span style="color:#f92672">=</span> {
+    <span style="color:#e6db74">&#34;win32&#34;</span>: <span style="color:#e6db74">&#34;Win32&#34;</span>,
+    <span style="color:#e6db74">&#34;win-amd64&#34;</span>: <span style="color:#e6db74">&#34;x64&#34;</span>,
+    <span style="color:#e6db74">&#34;win-arm32&#34;</span>: <span style="color:#e6db74">&#34;ARM&#34;</span>,
+    <span style="color:#e6db74">&#34;win-arm64&#34;</span>: <span style="color:#e6db74">&#34;ARM64&#34;</span>,
+}
+
+
+<span style="color:#75715e"># A CMakeExtension needs a sourcedir instead of a file list.</span>
+<span style="color:#75715e"># The name must be the _single_ output extension from the CMake build.</span>
+<span style="color:#75715e"># If you need multiple extensions, see scikit-build.</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CMakeExtension</span>(Extension):
+    <span style="color:#66d9ef">def</span> __init__(self, name, sourcedir<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>):
+        Extension<span style="color:#f92672">.</span>__init__(self, name, sources<span style="color:#f92672">=</span>[])
+        self<span style="color:#f92672">.</span>sourcedir <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>abspath(sourcedir)
+
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CMakeBuild</span>(build_ext):
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">build_extension</span>(self, ext):
+        extdir <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>abspath(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>dirname(self<span style="color:#f92672">.</span>get_ext_fullpath(ext<span style="color:#f92672">.</span>name)))
+
+        <span style="color:#75715e"># required for auto-detection of auxiliary &#34;native&#34; libs</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> extdir<span style="color:#f92672">.</span>endswith(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>sep):
+            extdir <span style="color:#f92672">+=</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>sep
+
+        cfg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Debug&#34;</span> <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>debug <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;Release&#34;</span>
+
+        <span style="color:#75715e"># CMake lets you override the generator - we need to check this.</span>
+        <span style="color:#75715e"># Can be set with Conda-Build, for example.</span>
+        cmake_generator <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;CMAKE_GENERATOR&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>)
+
+        <span style="color:#75715e"># Set Python_EXECUTABLE instead if you use PYBIND11_FINDPYTHON</span>
+        <span style="color:#75715e"># EXAMPLE_VERSION_INFO shows you how to pass a value into the C++ code</span>
+        <span style="color:#75715e"># from Python.</span>
+        cmake_args <span style="color:#f92672">=</span> [
+            <span style="color:#e6db74">&#34;-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={}&#34;</span><span style="color:#f92672">.</span>format(extdir),
+            <span style="color:#e6db74">&#34;-DPYTHON_EXECUTABLE={}&#34;</span><span style="color:#f92672">.</span>format(sys<span style="color:#f92672">.</span>executable),
+            <span style="color:#e6db74">&#34;-DEXAMPLE_VERSION_INFO={}&#34;</span><span style="color:#f92672">.</span>format(self<span style="color:#f92672">.</span>distribution<span style="color:#f92672">.</span>get_version()),
+            <span style="color:#e6db74">&#34;-DCMAKE_BUILD_TYPE={}&#34;</span><span style="color:#f92672">.</span>format(cfg),  <span style="color:#75715e"># not used on MSVC, but no harm</span>
+        ]
+        build_args <span style="color:#f92672">=</span> []
+
+        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>compiler<span style="color:#f92672">.</span>compiler_type <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;msvc&#34;</span>:
+            <span style="color:#75715e"># Using Ninja-build since it a) is available as a wheel and b)</span>
+            <span style="color:#75715e"># multithreads automatically. MSVC would require all variables be</span>
+            <span style="color:#75715e"># exported for Ninja to pick it up, which is a little tricky to do.</span>
+            <span style="color:#75715e"># Users can override the generator with CMAKE_GENERATOR in CMake</span>
+            <span style="color:#75715e"># 3.15+.</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> cmake_generator:
+                cmake_args <span style="color:#f92672">+=</span> [<span style="color:#e6db74">&#34;-GNinja&#34;</span>]
+
+        <span style="color:#66d9ef">else</span>:
+
+            <span style="color:#75715e"># Single config generators are handled &#34;normally&#34;</span>
+            single_config <span style="color:#f92672">=</span> any(x <span style="color:#f92672">in</span> cmake_generator <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> {<span style="color:#e6db74">&#34;NMake&#34;</span>, <span style="color:#e6db74">&#34;Ninja&#34;</span>})
+
+            <span style="color:#75715e"># CMake allows an arch-in-generator style for backward compatibility</span>
+            contains_arch <span style="color:#f92672">=</span> any(x <span style="color:#f92672">in</span> cmake_generator <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> {<span style="color:#e6db74">&#34;ARM&#34;</span>, <span style="color:#e6db74">&#34;Win64&#34;</span>})
+
+            <span style="color:#75715e"># Specify the arch if using MSVC generator, but only if it doesn&#39;t</span>
+            <span style="color:#75715e"># contain a backward-compatibility arch spec already in the</span>
+            <span style="color:#75715e"># generator name.</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> single_config <span style="color:#f92672">and</span> <span style="color:#f92672">not</span> contains_arch:
+                cmake_args <span style="color:#f92672">+=</span> [<span style="color:#e6db74">&#34;-A&#34;</span>, PLAT_TO_CMAKE[self<span style="color:#f92672">.</span>plat_name]]
+
+            <span style="color:#75715e"># Multi-config generators have a different way to specify configs</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> single_config:
+                cmake_args <span style="color:#f92672">+=</span> [
+                    <span style="color:#e6db74">&#34;-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}&#34;</span><span style="color:#f92672">.</span>format(cfg<span style="color:#f92672">.</span>upper(), extdir)
+                ]
+                build_args <span style="color:#f92672">+=</span> [<span style="color:#e6db74">&#34;--config&#34;</span>, cfg]
+
+        <span style="color:#75715e"># Set CMAKE_BUILD_PARALLEL_LEVEL to control the parallel build level</span>
+        <span style="color:#75715e"># across all generators.</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;CMAKE_BUILD_PARALLEL_LEVEL&#34;</span> <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> os<span style="color:#f92672">.</span>environ:
+            <span style="color:#75715e"># self.parallel is a Python 3 only way to set parallel jobs by hand</span>
+            <span style="color:#75715e"># using -j in the build_ext call, not supported by pip or PyPA-build.</span>
+            <span style="color:#66d9ef">if</span> hasattr(self, <span style="color:#e6db74">&#34;parallel&#34;</span>) <span style="color:#f92672">and</span> self<span style="color:#f92672">.</span>parallel:
+                <span style="color:#75715e"># CMake 3.12+ only.</span>
+                build_args <span style="color:#f92672">+=</span> [<span style="color:#e6db74">&#34;-j{}&#34;</span><span style="color:#f92672">.</span>format(self<span style="color:#f92672">.</span>parallel)]
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>exists(self<span style="color:#f92672">.</span>build_temp):
+            os<span style="color:#f92672">.</span>makedirs(self<span style="color:#f92672">.</span>build_temp)
+
+        subprocess<span style="color:#f92672">.</span>check_call(
+            [<span style="color:#e6db74">&#34;cmake&#34;</span>, ext<span style="color:#f92672">.</span>sourcedir] <span style="color:#f92672">+</span> cmake_args, cwd<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>build_temp
+        )
+        subprocess<span style="color:#f92672">.</span>check_call(
+            [<span style="color:#e6db74">&#34;cmake&#34;</span>, <span style="color:#e6db74">&#34;--build&#34;</span>, <span style="color:#e6db74">&#34;.&#34;</span>] <span style="color:#f92672">+</span> build_args, cwd<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>build_temp
+        )
+
+
+<span style="color:#75715e"># The information here can also be placed in setup.cfg - better separation of</span>
+<span style="color:#75715e"># logic and declaration, and simpler if you include description/version in a file.</span>
+setup(
+    name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cmake_example&#34;</span>,
+    version<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;0.0.1&#34;</span>,
+    author<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Wenqiang Xu&#34;</span>,
+    author_email<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;vinjohn@sjtu.edu.cn&#34;</span>,
+    description<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;A test project using pybind11 and CMake&#34;</span>,
+    long_description<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>,
+    ext_modules<span style="color:#f92672">=</span>[CMakeExtension(<span style="color:#e6db74">&#34;cmake_example&#34;</span>)],
+    cmdclass<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#34;build_ext&#34;</span>: CMakeBuild},
+    zip_safe<span style="color:#f92672">=</span>False,
+)
+</code></pre></div><p>在<code>pyproject.toml</code>里，内容如下</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml">[<span style="color:#a6e22e">build</span><span style="color:#960050;background-color:#1e0010">-</span><span style="color:#a6e22e">system</span>]
+<span style="color:#a6e22e">requires</span> = [
+    <span style="color:#e6db74">&#34;setuptools&gt;=42&#34;</span>,
+    <span style="color:#e6db74">&#34;wheel&#34;</span>,
+    <span style="color:#e6db74">&#34;ninja; sys_platform != &#39;win32&#39;&#34;</span>,
+    <span style="color:#e6db74">&#34;cmake&gt;=3.12&#34;</span>,
+]
+<span style="color:#a6e22e">build</span><span style="color:#960050;background-color:#1e0010">-</span><span style="color:#a6e22e">backend</span> = <span style="color:#e6db74">&#34;setuptools.build_meta&#34;</span>
+</code></pre></div><h2 id="编译流程">编译流程</h2>
+<ul>
+<li>如果用pip install的方式安装，那么pyproject.toml是必须的。
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">pip install .
+</code></pre></div></li>
+<li>如果用python setup.py install的方式安装，那么pyproject.toml是必须的，但这种情况下需要装一下ninja
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">pip install ninja
+python setup.py install
+</code></pre></div></li>
+<li>其实这个流程就是把cmake跑了一遍，然后用ninja构建，最后把它放到site-packages下面</li>
+</ul>
+<h2 id="测试用例">测试用例</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> cmake_example
+cmake_example<span style="color:#f92672">.</span>add(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>)
+cmake_example<span style="color:#f92672">.</span>subtract(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>)
+</code></pre></div>
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-pybind11%E7%B3%BB%E5%88%971%E7%BC%96%E8%AF%91%E5%8C%85%E5%88%B0python%E5%BA%93/>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-pybind11%E7%B3%BB%E5%88%971%E7%BC%96%E8%AF%91%E5%8C%85%E5%88%B0python%E5%BA%93/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/cmake/">
+                    #cmake</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/cpp/">
+                    #cpp</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/easy_handeye-tutorial/" class="prev" rel="prev" title="手眼标定的福音，Easy HandEye从入门到精通"><i class="iconfont icon-left"></i>&nbsp;手眼标定的福音，Easy HandEye从入门到精通</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9711pybind11/" class="next" rel="next" title="All You Need for CMake系列11——Pybind11">All You Need for CMake系列11——Pybind11&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>
