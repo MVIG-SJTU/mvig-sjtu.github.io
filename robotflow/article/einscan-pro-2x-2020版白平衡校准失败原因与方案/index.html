@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/open-mmlab-contribute-%E7%9A%84-workflow/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%9B%B8%E6%9C%BA%E6%A8%A1%E5%9E%8B/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/einscan-pro-2x-2020%E7%89%88%E7%99%BD%E5%B9%B3%E8%A1%A1%E6%A0%A1%E5%87%86%E5%A4%B1%E8%B4%A5%E5%8E%9F%E5%9B%A0%E4%B8%8E%E6%96%B9%E6%A1%88/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           EinScan Pro 2X 2020版白平衡校准失败原因与方案 | RobotFlow
+       
+  </title>
+  <meta name="title" content="EinScan Pro 2X 2020版白平衡校准失败原因与方案 | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "EinScan Pro 2X 2020版白平衡校准失败原因与方案",
+    "headline" : "EinScan Pro 2X 2020版白平衡校准失败原因与方案",
+    "description" : "问题描述：  问题设备：EinScan-Pro 2X 2020 问题版本：ExScanPro-V3.5.0.5 问题现象：相机标定正常；白平衡标定一直失败 问题分析：白平衡采集的图像过亮 临时解决方案：降低白平衡时候纹理相机增益（配置文件cameraGain_tex_cali修改为55）  具体操作步骤  到ExScanPro软件的安装目录下面，\\path\\to\\ExScanPro\\res(最后这个res是实际路径) 打开Config.xml，搜索cameraGain_tex_cali，将这个地方对应的参数改为55（默认64）  ",
+    "inLanguage" : "en-us",
+    "author" : "徐文强",
+    "creator" : "徐文强",
+    "publisher": "徐文强",
+    "accountablePerson" : "徐文强",
+    "copyrightHolder" : "徐文强",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-07-07 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2020-07-07 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/einscan-pro-2x-2020%E7%89%88%E7%99%BD%E5%B9%B3%E8%A1%A1%E6%A0%A1%E5%87%86%E5%A4%B1%E8%B4%A5%E5%8E%9F%E5%9B%A0%E4%B8%8E%E6%96%B9%E6%A1%88\/",
+    "wordCount" : "11",
+    "keywords" : [ "robot","3d scan", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">EinScan Pro 2X 2020版白平衡校准失败原因与方案</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">徐文强</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-07-07 itemprop="datePublished">July 7, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h2 id="问题描述">问题描述：</h2>
+<ul>
+<li>问题设备：EinScan-Pro 2X 2020</li>
+<li>问题版本：ExScanPro-V3.5.0.5</li>
+<li>问题现象：相机标定正常；白平衡标定一直失败</li>
+<li>问题分析：白平衡采集的图像过亮</li>
+<li>临时解决方案：降低白平衡时候纹理相机增益（配置文件cameraGain_tex_cali修改为55）</li>
+</ul>
+<h2 id="具体操作步骤">具体操作步骤</h2>
+<ul>
+<li>到ExScanPro软件的安装目录下面，\path\to\ExScanPro\res(最后这个res是实际路径)</li>
+<li>打开Config.xml，搜索cameraGain_tex_cali，将这个地方对应的参数改为55（默认64）</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/einscan-pro-2x-2020%E7%89%88%E7%99%BD%E5%B9%B3%E8%A1%A1%E6%A0%A1%E5%87%86%E5%A4%B1%E8%B4%A5%E5%8E%9F%E5%9B%A0%E4%B8%8E%E6%96%B9%E6%A1%88/>http://mvig.sjtu.edu.cn/robotflow/article/einscan-pro-2x-2020%E7%89%88%E7%99%BD%E5%B9%B3%E8%A1%A1%E6%A0%A1%E5%87%86%E5%A4%B1%E8%B4%A5%E5%8E%9F%E5%9B%A0%E4%B8%8E%E6%96%B9%E6%A1%88/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/robot/">
+                    #robot</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/3d-scan/">
+                    #3d scan</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/open-mmlab-contribute-%E7%9A%84-workflow/" class="prev" rel="prev" title="open-mmlab contribute 的 workflow"><i class="iconfont icon-left"></i>&nbsp;open-mmlab contribute 的 workflow</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%9B%B8%E6%9C%BA%E6%A8%A1%E5%9E%8B/" class="next" rel="next" title="一文搞懂相机模型">一文搞懂相机模型&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

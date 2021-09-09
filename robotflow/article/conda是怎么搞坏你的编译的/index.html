@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/ros-melodic%E6%94%AF%E6%8C%81python3/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/robotflow%E5%B7%A5%E7%A8%8Btrack%E4%B8%80%E6%9C%9F/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/conda%E6%98%AF%E6%80%8E%E4%B9%88%E6%90%9E%E5%9D%8F%E4%BD%A0%E7%9A%84%E7%BC%96%E8%AF%91%E7%9A%84/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Conda是怎么搞坏你的编译的 | RobotFlow
+       
+  </title>
+  <meta name="title" content="Conda是怎么搞坏你的编译的 | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "Conda是怎么搞坏你的编译的",
+    "headline" : "Conda是怎么搞坏你的编译的",
+    "description" : "Conda是怎么搞坏你的编译的 今天的文章主要讨论一下用conda影响系统路径的几种方式，以后编译一些库的时候大家可以注意一下。\n 最简单能处理的情况，当编译需要的python指向了conda的python  把conda从环境变量中去掉，新版的conda通常deactivate掉conda env即可。 把\/usr\/bin下的python，也就是系统自带的python，export到环境变量，确认在bash里敲python或者python3是默认安装的python   稍微麻烦的情况，编译时某些库，引用了conda里的安装包，这里有两种情况：  一种是你可以用conda的；一种是你自己准备了这些库，不想用conda的，通常是因为它的库没有安装完整（比如cuda只有一个runtime，没有nvcc）  前者如果只涉及到一个conda环境的时候，没关系直接用。但如果有多个环境的时候就会有问题。 后者需要改路径，改路径要么直接改CMakelist文件，要么通过gui版的cmake来改。     最麻烦的情况，CMakelist没写好，导致使用的python或其他包的路径在conda和系统路径下反复横跳。  如果处理不了，老老实实删conda    简评 大部分情况下，conda还是挺好用的，不过如果遇到一些意料之外的问题，还是优先考虑一下是不是路径被污染了。",
+    "inLanguage" : "en-us",
+    "author" : "徐文强",
+    "creator" : "徐文强",
+    "publisher": "徐文强",
+    "accountablePerson" : "徐文强",
+    "copyrightHolder" : "徐文强",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-07-22 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2020-07-22 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/conda%E6%98%AF%E6%80%8E%E4%B9%88%E6%90%9E%E5%9D%8F%E4%BD%A0%E7%9A%84%E7%BC%96%E8%AF%91%E7%9A%84\/",
+    "wordCount" : "14",
+    "keywords" : [ "conda", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Conda是怎么搞坏你的编译的</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">徐文强</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-07-22 itemprop="datePublished">July 22, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="conda是怎么搞坏你的编译的">Conda是怎么搞坏你的编译的</h1>
+<p>今天的文章主要讨论一下用conda影响系统路径的几种方式，以后编译一些库的时候大家可以注意一下。</p>
+<ul>
+<li>最简单能处理的情况，当编译需要的python指向了conda的python
+<ul>
+<li>把conda从环境变量中去掉，新版的conda通常deactivate掉conda env即可。</li>
+<li>把/usr/bin下的python，也就是系统自带的python，export到环境变量，确认在bash里敲python或者python3是默认安装的python</li>
+</ul>
+</li>
+<li>稍微麻烦的情况，编译时某些库，引用了conda里的安装包，这里有两种情况：
+<ul>
+<li>一种是你可以用conda的；一种是你自己准备了这些库，不想用conda的，通常是因为它的库没有安装完整（比如cuda只有一个runtime，没有nvcc）
+<ul>
+<li>前者如果只涉及到一个conda环境的时候，没关系直接用。但如果有多个环境的时候就会有问题。</li>
+<li>后者需要改路径，改路径要么直接改CMakelist文件，要么通过gui版的cmake来改。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>最麻烦的情况，CMakelist没写好，导致使用的python或其他包的路径在conda和系统路径下反复横跳。
+<ul>
+<li>如果处理不了，老老实实删conda</li>
+</ul>
+</li>
+</ul>
+<h2 id="简评">简评</h2>
+<p>大部分情况下，conda还是挺好用的，不过如果遇到一些意料之外的问题，还是优先考虑一下是不是路径被污染了。</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/conda%E6%98%AF%E6%80%8E%E4%B9%88%E6%90%9E%E5%9D%8F%E4%BD%A0%E7%9A%84%E7%BC%96%E8%AF%91%E7%9A%84/>http://mvig.sjtu.edu.cn/robotflow/article/conda%E6%98%AF%E6%80%8E%E4%B9%88%E6%90%9E%E5%9D%8F%E4%BD%A0%E7%9A%84%E7%BC%96%E8%AF%91%E7%9A%84/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/conda/">
+                    #conda</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/ros-melodic%E6%94%AF%E6%8C%81python3/" class="prev" rel="prev" title="ROS Melodic支持python3"><i class="iconfont icon-left"></i>&nbsp;ROS Melodic支持python3</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/robotflow%E5%B7%A5%E7%A8%8Btrack%E4%B8%80%E6%9C%9F/" class="next" rel="next" title="RobotFlow工程track一期">RobotFlow工程track一期&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

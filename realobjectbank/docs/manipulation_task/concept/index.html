@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en" dir=>
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Concept#Concept是一个很抽象的词，什么都可以描述concept。我这里根据task的定义也整理一套concept出来，当然不代表最终意见，会反复修改。
+Contact-related Concept#人类造了很多词用于描述不同的动作，但这些词对应的动作，其力学pattern可能是类似的。因此，我们构建了一个physics-based近义词表，这个表将从源头上把一些人类认知的词整理到一个集合上去，并用一个词作为该集合的代表。比如push和poke的关系。
+此外关于contact的point这边，affordance要依托object knowledge（所以为啥把task zoo的事情也放在object knowledge bank这个网站，这就是原因。反过来object knowledge也要依托于primitive的定义，因为我们对primitive的定义也是基于认知的）。
+需要注意的是，affordance带来的contact通常是constraint-oriented contact，也就是它的语义信号足够强，其中也蕴含了contact完后该怎么运动的信息。
+Constraint-related Concept#我们说了constraint主要有三种类型，即trajectory，force和object affordance。 幸运的是，trajectory本质上是几何的，可以用简单的参数来表示；force本质上是力学的，不考虑振荡的情况也是可以描述的。
+Condition-related Concept#">
+<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="Concept" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://mvig.sjtu.edu.cn/realobjectbank/docs/manipulation_task/concept/" />
+
+<title>Concept | Real Object Bank</title>
+<link rel="manifest" href="/realobjectbank/manifest.json">
+<link rel="icon" href="/realobjectbank/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/realobjectbank/book.min.6cd8553a6854f4812343f0f0c8baca31271e686434f381fbe3c7226f66639176.css" integrity="sha256-bNhVOmhU9IEjQ/DwyLrKMSceaGQ084H748cib2ZjkXY=">
+<script defer src="/realobjectbank/en.search.min.4d829ebd593d69c127b361dc6aa16229183b92744e7d698d78b69327668fb825.js" integrity="sha256-TYKevVk9acEns2HcaqFiKRg7knROfWmNeLaTJ2aPuCU="></script>
+
+<script defer src="/realobjectbank/sw.min.c4ef7997be86a6966c49234864dd556f9a616c517050765f4ca07ba54540624d.js" integrity="sha256-xO95l76GppZsSSNIZN1Vb5phbFFwUHZfTKB7pUVAYk0="></script>
+<link rel="alternate" type="application/rss+xml" href="https://mvig.sjtu.edu.cn/realobjectbank/docs/manipulation_task/concept/index.xml" title="Real Object Bank" />
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body dir=>
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/realobjectbank"><span>Real Object Bank</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/object/" class="">Object</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/object/real/" class="collapsed ">Real</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/object/cad/" class="collapsed ">CAD</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/object/tools/" class="">Tools</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/scene/" class="">Scene</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/scene/real/" class="collapsed ">Real</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/scene/sim/" class="collapsed ">Simulation</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/scene/tools/" class="">Tools</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/perception_task/" class="">Perception Task Zoo</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/perception_task/6dof/" class="">Object 6DoF Estimation</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/perception_task/6dof_part/" class="">Object Articulation Estimation</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/perception_task/point_match/" class="">Point Matching</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/" class="">Manipulation Task Zoo</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/concept/" class="collapsed active">Concept</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/primitive/" class="collapsed ">Primitive</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/task/" class="collapsed ">Tasks</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/primitivenet/" class="collapsed ">PrimitiveNet</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/realobjectbank/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Concept</strong>
+
+  <label for="toc-control">
+    
+    <img src="/realobjectbank/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#concept">Concept</a>
+      <ul>
+        <li><a href="#contact-related-concept">Contact-related Concept</a></li>
+        <li><a href="#constraint-related-concept">Constraint-related Concept</a></li>
+        <li><a href="#condition-related-concept">Condition-related Concept</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="concept">
+  Concept
+  <a class="anchor" href="#concept">#</a>
+</h1>
+<p>Concept是一个很抽象的词，什么都可以描述concept。我这里根据task的定义也整理一套concept出来，当然不代表最终意见，会反复修改。</p>
+<h2 id="contact-related-concept">
+  Contact-related Concept
+  <a class="anchor" href="#contact-related-concept">#</a>
+</h2>
+<p>人类造了很多词用于描述不同的动作，但这些词对应的动作，其力学pattern可能是类似的。因此，我们构建了一个physics-based近义词表，这个表将从源头上把一些人类认知的词整理到一个集合上去，并用一个词作为该集合的代表。比如push和poke的关系。</p>
+<p>此外关于contact的point这边，affordance要依托object knowledge（所以为啥把task zoo的事情也放在object knowledge bank这个网站，这就是原因。反过来object knowledge也要依托于primitive的定义，因为我们对primitive的定义也是基于认知的）。</p>
+<p>需要注意的是，affordance带来的contact通常是constraint-oriented contact，也就是它的语义信号足够强，其中也蕴含了contact完后该怎么运动的信息。</p>
+<h2 id="constraint-related-concept">
+  Constraint-related Concept
+  <a class="anchor" href="#constraint-related-concept">#</a>
+</h2>
+<p>我们说了constraint主要有三种类型，即trajectory，force和object affordance。
+幸运的是，trajectory本质上是几何的，可以用简单的参数来表示；force本质上是力学的，不考虑振荡的情况也是可以描述的。</p>
+<h2 id="condition-related-concept">
+  Condition-related Concept
+  <a class="anchor" href="#condition-related-concept">#</a>
+</h2>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+  
+
+
+  
+
+  
+
+
+
+<div class="book-languages" tabindex="0" aria-haspopup="true">
+  <ul>
+    <li class="flex align-center">
+      <img src="/realobjectbank/svg/translate.svg" class="book-icon" alt="Languages" />
+      English
+    </li> 
+  </ul>
+
+  <ul class="book-languages-list">
+    
+    <li class="active">
+      <a href="https://mvig.sjtu.edu.cn/realobjectbank/" class="flex align-center">
+        <img src="/realobjectbank/svg/translate.svg" class="book-icon" alt="Languages" />
+        English
+      </a>
+    </li>
+    
+    <li class="">
+      <a href="https://mvig.sjtu.edu.cn/realobjectbank/zh/" class="flex align-center">
+        <img src="/realobjectbank/svg/translate.svg" class="book-icon" alt="Languages" />
+        Chinese
+      </a>
+    </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/alex-shpak/hugo-book/edit/master/exampleSite/content/docs/manipulation_task/concept/_index.md" target="_blank" rel="noopener">
+      <img src="/realobjectbank/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#concept">Concept</a>
+      <ul>
+        <li><a href="#contact-related-concept">Contact-related Concept</a></li>
+        <li><a href="#constraint-related-concept">Constraint-related Concept</a></li>
+        <li><a href="#condition-related-concept">Condition-related Concept</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

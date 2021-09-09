@@ -1,0 +1,182 @@
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <title>Publications | SJTU Machine Vision and Intelligence Group</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="CS348 Computer Vision">
+    <meta property="og:url" content="http://yoursite.com/teaching/index.html">
+    <meta property="og:site_name" content="SJTU Machine Vision and Intelligence Group">
+    <meta property="og:updated_time" content="2017-10-08T15:42:37.720Z">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="CS348 Computer Vision">
+
+    <link rel="alternate" href="/atom.xml" title="SJTU Machine Vision and Intelligence Group" type="application/atom+xml">
+
+
+
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style type="text/css">
+        div.instructorphoto>img{
+            width:150px;
+            height:150px;
+            border-radius:50%;
+            align-content: center;
+            margin: 50px 50px;
+        }
+        tr,th,td{
+            align-content: center;
+            text-align: center;
+        }
+        table.member>tbody>tr>td{
+            border: none;
+        }
+        table.member>tbody>tr>th{
+            border: none;
+        }
+    </style>
+
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu-navbar" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="main-menu-navbar">
+            <!-- <h4 style="font-family:verdana;">Machine Vision and Intelligence Group</h4> -->
+            <ul class="nav navbar-nav">
+                <li><a class="navbar_brand"><strong>Machine Vision and Intelligence Group &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</strong></a></li>
+
+                <li><a class="" href="/index.html">Cewu Lu</a></li>
+
+                <li><a class="" href="/research/index.html">Research</a></li>
+
+                <li><a class="active" href="/publications/index.html">Publications</a></li>
+
+                <li><a class="" href="/teaching/index.html">Teaching</a></li>
+
+                <!-- <li><a class="" href="/member/index.html">Member</a></li> -->
+
+                <!-- <li><a class=""
+                href="/data/index.html">Data</a></li>
+
+                <li><a class=""
+                href="/code/index.html">Code</a></li> -->
+
+            </ul>
+            <!--
+            <ul class="nav navbar-nav navbar-right">
+
+              <li><a href="/atom.xml" title="RSS Feed"><i class="fa fa-rss"></i></a></li>
+
+            </ul>
+            -->
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div class="container">
+    <div class="blog-header">
+
+
+    </div>
+    <div class="row">
+        <div class="col-sm-30 blog-main">
+            <article id="true-undefined" class="article article-type-true" itemscope="" itemprop="blogPost">
+                <header class="article-header">
+
+                    <center><strong><h1>PointSIFT: A SIFT-like Network Module for 3D Point Cloud Semantic Segmentation</h1><strong>
+                        <p style="font-size:16px">
+                            Mingyang Jiang,
+                            Yiran Wu,
+                            Tianqi Zhao,
+                            Zelin Zhao, 
+                            <a href="/index.html">Cewu Lu*</a>
+                        </p>
+                        (* corresponding author: lucewu@sjtu.edu.cn)</strong></strong></center>
+                    <div style="clear:both;"></div>
+                </header></article></div>
+        <div class="sechighlight">
+            <div class="container sec">
+                <h2>Abstract</h2>
+                <div id="coursedesc">
+                    Recently, 3D understanding research pays more attention to extracting the feature from point cloud directly. Therefore, exploring shape pattern description in points is essential. Inspired by SIFT that is an outstanding 2D shape representation, we design a PointSIFT module that encodes information of different orientations and is adaptive to scale of shape. Specifically, an orientation-encoding unit is designed to describe eight crucial orientations. Thus, by stacking several orientation-encoding units, we can get the multi-scale representation. Extensive experiments show our PointSIFT-based framework outperform state-of-the-art method on standard benchmarking datasets.</div>
+            </div>
+        </div>
+        <div class="container sec">
+            <!-- <a href="../densecap.pdf" style="font-size:22px">Paper</a><br> -->
+            <a>
+                <img src="./pointSIFT/op.jpg" style="width:100%;border: 0px solid #AAA;">
+            </a>
+            <b>Figure 1.</b> Illustration of the details in Orientation-encoding Point Convolutional layer. (a): point
+            clouds in 3D space. (b) neighbors in eight directions. (c) three stages convolution combines all the
+            features.
+            <a>
+                <img src="./pointSIFT/network.png" style="width:100%;border: 0px solid #AAA;">
+            </a>
+            <b>Figure 2.</b>  Illustration of end-to-end network architecture. The network contains two part: Encoder
+            (Set Abstraction) and Decoder (Feature Propagation). PointSIFT modules (red color) are inserted
+            between all adjacent layers of Set Abstraction (blue color) and Feature Propagation module (green
+            color). Both set Abstraction module and Feature Propagation module are introduced in PointNet paper. The
+            encoder and the decoder are linked by several skip connections.
+
+        </div>
+        <div class="container sec">
+            <h2>Code and Paper</h2>
+            <div style="font-size:18px">
+                Our preprint paper is <a href="https://arxiv.org/abs/1807.00652" target="_blank" rel="external">here</a>. Our main module, training and evaluating code is available on <a href="https://github.com/MVIG-SJTU/pointSIFT" target="_blank" rel="external">Github</a>.
+                <br>
+                You can simply use it in your project by:
+            </div>
+            <pre class="prettyprint lang-py">
+import tensorflow as tf
+# import our module
+from tf_utils.pointSIFT_util import pointSIFT_module
+# input coordinates
+xyz = tf.tf.placeholder(tf.float32, shape=(batch_size, num_point, 3))
+# input features
+point_feature = tf.tf.placeholder(tf.float32, shape=(batch_size, num_point, input_dim)
+# setting phases
+is_training = tf.placeholder(dtype=tf.bool, shape=())
+# setting searching radius (0.1 as an example)
+radius = 0.1
+_, out_feature, _ = pointSIFT_module(xyz, point_feature, radius, output_dim, is_training)</pre>
+        </div>
+        <div class="container sec">
+            <h2>Example Results</h2>
+            <br>
+
+            <div id="gallery">
+                <div><center><a href="./sh_files/results.png"><img src="./pointSIFT/0001.jpg" width="100%"></a></center></div>
+            </div>
+        </div>
+
+        <div class="article-meta">
+            <div class="entry-content">
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="/js/script.js"></script>
+<script src="pointSIFT/google.js"></script>
+</body>
+</html>

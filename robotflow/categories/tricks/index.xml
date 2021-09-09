@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>tricks on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/categories/tricks/</link>
+    <description>Recent content in tricks on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 25 Jun 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/categories/tricks/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>机器搬到新地方配置网络连接</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E6%9C%BA%E5%99%A8%E6%90%AC%E5%88%B0%E6%96%B0%E5%9C%B0%E6%96%B9%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5/</link>
+      <pubDate>Thu, 25 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E6%9C%BA%E5%99%A8%E6%90%AC%E5%88%B0%E6%96%B0%E5%9C%B0%E6%96%B9%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5/</guid>
+      <description> 想办法进入路由器管理页面  有可能这一步会比较麻烦，可能需要装宽带的人的指导   设置静态ip地址，该地址是这台服务器在内网里的地址，通常是192.168开头 设置端口转发，假如端口号是24000，可以设置24000~24999转发到服务器上 可能需要重启服务器 设置ssh  安装 sudo apt install ssh 配置 vim /etc/ssh/sshd_config 把port号改了 sudo systemctl restart ssh    </description>
+    </item>
+    
+    <item>
+      <title>GraspIt安装踩坑经验</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/graspit%E5%AE%89%E8%A3%85%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C/</link>
+      <pubDate>Sun, 21 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/graspit%E5%AE%89%E8%A3%85%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C/</guid>
+      <description>GraspIt安装踩坑经验 基本流程 GraspIt安装的基本流程可以按照这里的指示依次安装相应的依赖项、克隆Github仓库后手动编译安装。
+错误提示 若cmake时出现&amp;rdquo; A required library with BLAS API not found. Please specify library location.&amp;quot;，或执行&amp;quot;make -j5&amp;quot;时出现&amp;quot;libgraspit.io: undefined reference to &amp;lsquo;daxpy_&#39;&amp;ldquo;等一系列&amp;quot;undefined reference to&amp;quot;的报错，可以尝试参考这里执行&amp;quot;sudo apt-get install libatlas-base-dev&amp;quot;后重新编译。
+Qt版本问题 GraspIt是一个比较老的包，但暂时还没办法被替代，它只支持Qt4，而新的ROS已经支持到Qt5了，因此在安装过程中可能会有Qt版本的冲突。为了解决这个问题，我们常规的ROS版本设定是ROS1的kinetic，所以只能在ubuntu 16.04的机器上跑。</description>
+    </item>
+    
+    <item>
+      <title>杜绝 tmux 中 conda 环境错乱之一劳永逸办法</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E6%9D%9C%E7%BB%9Dtmux%E9%87%8Cconda%E7%8E%AF%E5%A2%83%E9%94%99%E4%B9%B1%E4%B9%8B%E4%B8%80%E5%8A%B3%E6%B0%B8%E9%80%B8%E5%8A%9E%E6%B3%95/</link>
+      <pubDate>Sat, 20 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E6%9D%9C%E7%BB%9Dtmux%E9%87%8Cconda%E7%8E%AF%E5%A2%83%E9%94%99%E4%B9%B1%E4%B9%8B%E4%B8%80%E5%8A%B3%E6%B0%B8%E9%80%B8%E5%8A%9E%E6%B3%95/</guid>
+      <description>杜绝 tmux 中 conda 环境错乱之一劳永逸办法 思路 永远禁止 conda 环境自动激活，每次到了 tmux 里面需要开始生产的时候才激活。笔者试验了几个月，发现腿也不痛了腰也不酸了，再也不用 which pip / which python 了！
+情况一 如果使用的 conda 版本较老 （$&amp;lt;4.4$），那么很有可能 ~/.bashrc 文件中会有 conda activate 一行。把这行给注释掉。（一般是在文件的末尾）
+情况二 如果使用的 conda 版本较新，很可能只需要一行命令就可以了：
+conda config --set auto_activate_base false 效果 打开一个新的终端，发现提示符前不会再出现 (base) 字样，说明设置成功。
+参考资料 https://stackoverflow.com/questions/54429210/how-do-i-prevent-conda-from-activating-the-base-environment-by-default</description>
+    </item>
+    
+    <item>
+      <title>如何批量从IEEE上下文章</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E5%A6%82%E4%BD%95%E6%89%B9%E9%87%8F%E4%BB%8Eieee%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AB%A0/</link>
+      <pubDate>Sat, 23 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E5%A6%82%E4%BD%95%E6%89%B9%E9%87%8F%E4%BB%8Eieee%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AB%A0/</guid>
+      <description>以前我们涉足的Vision相关的领域都是崇尚open access的，所以如果需要批量扫文章的时候，把整个会议拖库下下来是很容易的事情。但我们接下来会接触到机器人的领域，这个领域里很多文章版权都在IEEE手上。目前IEEE Xplore下着下着就会限制ip，所以如果需要批量化把一整个会议/期刊的文章都下下来的话，那么就需要费点事情了。
+因为进入新领域，要快速入门，我只有一个笨办法，就是尽可能把所有相关文章遍历一遍。所以第一步需要把文章都收集起来。
+FBI Warning 完整的把一个会议或者期刊的文章从IEEE上拖下来是违反使用条例Term of use的。所以我也不会在文中涉及具体的code，code请见网盘，或找文强要。
+零星的几篇文章下载 通过学校的ip（在校园内，或者走VPN）直接去ieeexplore下载即可。
+大批量(&amp;gt;100)文章下载 根据经验，在一次ip限制里，官方会允许你下载50篇左右的文章，因此，如果量不大的话，请直接走官方渠道，官方也提供一次下载十篇的批量化下载（在网页上找找就能看到啦）。
+那么面对大批量的文章，要怎么做呢？
+ 用selenium + chrome，再通过xpath分析的方式，把网页中title，link都爬下来。因为这部分内容是完全公开的，所以没有任何限制。 使用requests，去请求刚刚爬下来的link，这个link是利用jsp动态获取pdf，所以需要用beautiful soup解析一下request link得到的内容，以得到pdf的地址。 因为用requests还是会被ban，所以最好是每50篇后让进程睡15分钟（经验值）  如果不想让进程sleep？ 因为每50篇就sleep 15分钟，那下得多的话还是要等很久。如果不想sleep，那么就不能走官方渠道。这时候就需要请出sci-hub了。 只需要在官方的链接，比如：https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;amp;arnumber=126246，前加上https://sci-hub.tw/即可。最后得到：https://sci-hub.tw/https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;amp;arnumber=126246
+两个https看上去有点诡异，但绝对work。
+注意，用sci-hub前缀，依然需要学校ip。下多了sci-hub也会封ip，不过它的封禁策略相对比较缓和，基本上等一天就没事了。如果不想等，把当前的校园网断开连接，多刷新几下，再重连，大概率就能继续work，如果还不行，就repeat几次。</description>
+    </item>
+    
+    <item>
+      <title>Minkowski安装过程中的一些坑</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/minkowski%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/</link>
+      <pubDate>Sun, 19 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/minkowski%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/</guid>
+      <description>Requirements and check methods  Ubuntu 14.04 or higher CUDA 10.1 or higher nvcc --version  pytorch 1.3 or higher python import torch torch.__version__  python 3.6 or higher gcc-7 or higher gcc -v g++ -v   Installation The Minkowski engine github page gives three ways to install: pip, anaconda, or on the system directly. Here I strongly recommand installing it using anaconda since our servers are managed based on anaconda environment.</description>
+    </item>
+    
+    <item>
+      <title>修改默认gcc版本</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4gcc%E7%89%88%E6%9C%AC/</link>
+      <pubDate>Wed, 19 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4gcc%E7%89%88%E6%9C%AC/</guid>
+      <description>网上有一些switch的方案，但配置起来比较麻烦，有可能不同步。 我们还是直接改路径，这样在编译的时候会稳定一点。 sudo apt install gcc-6 g++-6
+sudo ln -s /usr/bin/gcc-6 /usr/local/bin/gcc
+sudo ln -s /usr/bin/g++-6 /usr/local/bin/g++</description>
+    </item>
+    
+    <item>
+      <title>合理设置mkl，降低负载、提升性能</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E5%90%88%E7%90%86%E8%AE%BE%E7%BD%AEmkl%E9%99%8D%E4%BD%8E%E8%B4%9F%E8%BD%BD%E6%8F%90%E5%8D%87%E6%80%A7%E8%83%BD/</link>
+      <pubDate>Fri, 31 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E5%90%88%E7%90%86%E8%AE%BE%E7%BD%AEmkl%E9%99%8D%E4%BD%8E%E8%B4%9F%E8%BD%BD%E6%8F%90%E5%8D%87%E6%80%A7%E8%83%BD/</guid>
+      <description>背景 MKL 是英特尔提供的号称最快而且最多人使用的科学计算库。
+公元 2020 年，大家常用的 numpy, scikit-learn, scipy, 甚至 mxnet 等 Python package 都已经默认使用 mkl编译。mkl 带来给我们带来了性能提升，而且并不需要我们改动 Python 代码，这固然是一件好事。然而，在日常使用过程中，我们也发现了一些意外。
+MKL的缺点  Intel MKL 的默认策略其实比较复杂，可以简单地认为是尽可能使得全核心满载。
+ 这对于那些动辄好几小时的大矩阵运算来说当然非常好。然而，我们日常的 Work Load 可能就是几个小 numpy array 倒腾，不太需要 mkl 库来加速。特别是 dataloader 阶段，dataloader 本身就已经是多线程运行的了（num_workers 参数），如果每个线程在 mkl 的“帮助”下争抢全核心，很容易造成 Load Average 爆炸，算力被浪费在系统调度上，性能反而大大降低的现象。
+不健康的情况   单个 Python 程序占满了整个 CPU，但是实际“利用率”（绿色部分）并不高，大量算力被浪费在了系统调度上 （橙色部分）。（24000 是双路 CPU，因此 2000% 的占用对应一整个 CPU）   单个 Python 程序被分散到几个核心上运行，但总负荷约为 100%，且系统调度占用比较高。这可能是单个线程 由于种种原因被操作系统不断地切换到不同核心运行，一般认为会影响性能。   解决方案  详情请见 How to set good environment variables for the Intel MKL library 一文，这里只搬运解决方法。</description>
+    </item>
+    
+    <item>
+      <title>如何使用XShell将tensorboard转发到本地浏览器</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8xshell%E5%B0%86tensorboard%E8%BD%AC%E5%8F%91%E5%88%B0%E6%9C%AC%E5%9C%B0%E6%B5%8F%E8%A7%88%E5%99%A8/</link>
+      <pubDate>Wed, 25 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8xshell%E5%B0%86tensorboard%E8%BD%AC%E5%8F%91%E5%88%B0%E6%9C%AC%E5%9C%B0%E6%B5%8F%E8%A7%88%E5%99%A8/</guid>
+      <description>如何使用XShell将tensorboard转发到本地浏览器  设置隧道转发 右键单击会话项，选择属性   类别一栏选择“隧道” 点击添加 设置侦听端口与目标端口，这里尽量选择较大的数字像15555，避免使用太简单容易想到的数字，防止大家在服务器上冲突。侦听端口是本地的端口，目标端口是服务器端口。
+设置完成后点击确定，然后重新连接服务器。
+Tensorboard的使用  命令tensorboard &amp;ndash;logdir=/home/you/log &amp;ndash;port=15555 logdir是tensorboard文件所在位置；
+文件通常名为类似events.out.tfevents.1569252962.nonews。这里通常只需要指定到目录即可，如果目录下有多个文件，就会在浏览器上同时显示，然后选择你所需要的即可。 port即为刚刚设置的目标端口，此时会被转发到你的主机上。
+打开浏览器，访问localhost:15555（你刚刚指定的目标端口）</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,32 @@
+{
+    "category":"cup",
+    "type": "rigid",
+    "modeling_method":"cad",
+    "sparse_keypoint":[],
+    "dense_keypoint":[],
+    "center_of_mass":"",
+    "weight":"",
+    "inertial":"",
+    "part_num":6,
+    "part_cat_num":6,
+    "parts":[
+        {
+            "category":"bar",
+            "part_id":1,
+            "part_path":"",
+            "mass":3,
+            "inertial":[],
+            "location":[],
+            "orientation":[]
+        },
+        {
+            "category":"body",
+            "part_id":2,
+            "part_path":"",
+            "mass":3,
+            "inertial":[],
+            "location":[],
+            "orientation":[]
+        }
+    ]
+}

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/zh/categories/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://mvig.sjtu.edu.cn/realobjectbank/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://mvig.sjtu.edu.cn/realobjectbank/zh/categories/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/zh/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://mvig.sjtu.edu.cn/realobjectbank/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://mvig.sjtu.edu.cn/realobjectbank/zh/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://mvig.sjtu.edu.cn/realobjectbank/zh/tags/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://mvig.sjtu.edu.cn/realobjectbank/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://mvig.sjtu.edu.cn/realobjectbank/zh/tags/"
+                />
+  </url>
+  
+</urlset>

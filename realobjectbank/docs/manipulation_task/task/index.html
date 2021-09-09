@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en" dir=>
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Tasks的难度#我们考虑一个task的流程，首先，它要判断precondition，并调整机器人/环境或者物体的状态以适应precondition，然后找到contact点，接着plan出approach的方式，再次和目标产生接触（Monitor确认），保持相对静止，随后根据约束进行相应的运动，达到endcondition（Monitor确认），如果没有达到结束条件，需要后处理（Monitor确认）。重复执行这个流程，直到任务完成。
+所以一个task的难度被每一步卡住： $$D_{task} = (D_{pre}*D_{contact} * D_{contact_plan} * D_{constraint_plan} * D_{end} * D_{post})^n$$ 其中，n表示这个任务的长度（即任务序列中primitive的个数）。假设每一步我们都能用$0\sim 1$的范围定出一个difficult来。1表示非常容易，0表示非常困难。这么定主要是计算比较直观，反过来定的话在前面加一个“1-”本质上是一样的。那么经过了这么长的序列，每一步再准也可能出问题。
+其中，最硬的点，在precondition和endcondition的判断，contact点的预测，constraint planning，以及任务长度n上。其他的不是说它就不硬了，比如post-process以及contact plan，难还是难的，不过可能不太是我们需要关注的问题。
+因为precondition和endcondition通常是environment/task-dependent的，所以我们这里暂时不考虑它们。
+Contact点的预测的难度和什么有关？#这里分两个部分来讲，一个部分是contact自身所需要的空间关系，一个是点预测所需要的特征信息。前者还是和环境有关系，有的人会考虑把环境清理一下以有利于目标contact点的预测，也有的直接在clutter的环境下去选点，这个主要看任务了。后者就主要和自身的geometry，texture，functionality等有关系。
+constraint planning的难度和什么有关？#trajectory planning的难度主要取决于环境中障碍物的分布情况，换句话说就是构型空间的几何结构。 force planning的难度主要取决于任务的精细/准度要求。
+任务长度n#那显然n越长越难。
+抛开环境的因素不谈，我们可以粗略地把task有关的难度因素放在三个维度上：即object的维度，force的维度和任务长度的维度。
+ object至少也有三个维度，即geometry复杂性的维度(细小或特大都很难)，texture复杂性的维度（纹理越简单越难），flexibility的维度（自由度越高越难）  关于material带来的复杂性可以归结到是force的维度上去 如何用一个指标概况三个方面，可能也是一个可以研究的问题   force维度里如何细分暂时还没想好，可能做点实验有感觉了能总结出来 任务长度描述起来很简单  目前来看大体能递归地总结到三个维度上，给了我们可视化难度的机会。环境带来的难度可以作为一个additional dimension，外部还是太难建模了。
+Task Zoo的构建#因为object的复杂性主要还是object自身带来的，因此，我们在考虑task zoo的构建的过程中，主要考虑任务长度和是否力控要求高两个因素。当然一个简单的task，处理对象是比较复杂的物体的时候也会很难，但这种困难是物体带来的，我们在这里做这样一个区分，有利于把问题再梳理清楚一点。关于object复杂性问题，可以参考object knowledge bank里相关部分。
+我们不会特别说明任务中应使用的物体是什么，大家可以自行填空。只需要在这个task中，物体的难度梯度是怎么样的即可。如果有些物体性质导致的task topology发生变化，在此都简化处理，详细的请找Wenqiang要数据库。
+对于任何task，我们当然都可以上力控，对于有些task，是如果没有力控几乎肯定是做不好的，对于此类task，我们会特别标注，当然也就意味着这样的task难度会高一点。
+当n变大时，有些任务的解法可能就会有多种，因此对于n&gt;=3的任务，我们只给一个参考长度和参考序列。对于涉及到object-object interaction的地方，我们会考虑使用end-extension的策略，即把手中的物体建模出来作为新的末端。因此序列中有时执行末端会发生变化（比如拿着锤子敲钉子这个task）。
+n = 1#n=1的task，其实就是atom操作。">
+<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="Tasks" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://mvig.sjtu.edu.cn/realobjectbank/docs/manipulation_task/task/" />
+
+<title>Tasks | Real Object Bank</title>
+<link rel="manifest" href="/realobjectbank/manifest.json">
+<link rel="icon" href="/realobjectbank/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/realobjectbank/book.min.6cd8553a6854f4812343f0f0c8baca31271e686434f381fbe3c7226f66639176.css" integrity="sha256-bNhVOmhU9IEjQ/DwyLrKMSceaGQ084H748cib2ZjkXY=">
+<script defer src="/realobjectbank/en.search.min.4d829ebd593d69c127b361dc6aa16229183b92744e7d698d78b69327668fb825.js" integrity="sha256-TYKevVk9acEns2HcaqFiKRg7knROfWmNeLaTJ2aPuCU="></script>
+
+<script defer src="/realobjectbank/sw.min.c4ef7997be86a6966c49234864dd556f9a616c517050765f4ca07ba54540624d.js" integrity="sha256-xO95l76GppZsSSNIZN1Vb5phbFFwUHZfTKB7pUVAYk0="></script>
+<link rel="alternate" type="application/rss+xml" href="https://mvig.sjtu.edu.cn/realobjectbank/docs/manipulation_task/task/index.xml" title="Real Object Bank" />
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body dir=>
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/realobjectbank"><span>Real Object Bank</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/object/" class="">Object</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/object/real/" class="collapsed ">Real</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/object/cad/" class="collapsed ">CAD</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/object/tools/" class="">Tools</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/scene/" class="">Scene</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/scene/real/" class="collapsed ">Real</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/scene/sim/" class="collapsed ">Simulation</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/scene/tools/" class="">Tools</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/perception_task/" class="">Perception Task Zoo</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/perception_task/6dof/" class="">Object 6DoF Estimation</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/perception_task/6dof_part/" class="">Object Articulation Estimation</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/perception_task/point_match/" class="">Point Matching</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/" class="">Manipulation Task Zoo</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/concept/" class="collapsed ">Concept</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/primitive/" class="collapsed ">Primitive</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/task/" class="collapsed active">Tasks</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/primitivenet/" class="collapsed ">PrimitiveNet</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/realobjectbank/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Tasks</strong>
+
+  <label for="toc-control">
+    
+    <img src="/realobjectbank/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#tasks的难度">Tasks的难度</a>
+      <ul>
+        <li><a href="#contact点的预测的难度和什么有关">Contact点的预测的难度和什么有关？</a></li>
+        <li><a href="#constraint-planning的难度和什么有关">constraint planning的难度和什么有关？</a></li>
+        <li><a href="#任务长度n">任务长度n</a></li>
+      </ul>
+    </li>
+    <li><a href="#task-zoo的构建">Task Zoo的构建</a></li>
+    <li><a href="#n--1">n = 1</a></li>
+    <li><a href="#n--2">n = 2</a></li>
+    <li><a href="#n--3">n &gt;= 3</a></li>
+    <li><a href="#双手task">双手task</a></li>
+    <li><a href="#in-hand-manipulation">in-hand manipulation</a></li>
+  </ul>
+</nav>
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="tasks的难度">
+  Tasks的难度
+  <a class="anchor" href="#tasks%e7%9a%84%e9%9a%be%e5%ba%a6">#</a>
+</h1>
+<p>我们考虑一个task的流程，首先，它要判断precondition，并调整机器人/环境或者物体的状态以适应precondition，然后找到contact点，接着plan出approach的方式，再次和目标产生接触（Monitor确认），保持相对静止，随后根据约束进行相应的运动，达到endcondition（Monitor确认），如果没有达到结束条件，需要后处理（Monitor确认）。重复执行这个流程，直到任务完成。</p>
+<p>所以一个task的难度被每一步卡住：
+$$D_{task} = (D_{pre}*D_{contact} * D_{contact_plan} * D_{constraint_plan} * D_{end} * D_{post})^n$$
+其中，n表示这个任务的长度（即任务序列中primitive的个数）。假设每一步我们都能用$0\sim 1$的范围定出一个difficult来。1表示非常容易，0表示非常困难。这么定主要是计算比较直观，反过来定的话在前面加一个“1-”本质上是一样的。那么经过了这么长的序列，每一步再准也可能出问题。</p>
+<p>其中，最硬的点，在precondition和endcondition的判断，contact点的预测，constraint planning，以及任务长度n上。其他的不是说它就不硬了，比如post-process以及contact plan，难还是难的，不过可能不太是我们需要关注的问题。</p>
+<p>因为precondition和endcondition通常是environment/task-dependent的，所以我们这里暂时不考虑它们。</p>
+<h2 id="contact点的预测的难度和什么有关">
+  Contact点的预测的难度和什么有关？
+  <a class="anchor" href="#contact%e7%82%b9%e7%9a%84%e9%a2%84%e6%b5%8b%e7%9a%84%e9%9a%be%e5%ba%a6%e5%92%8c%e4%bb%80%e4%b9%88%e6%9c%89%e5%85%b3">#</a>
+</h2>
+<p>这里分两个部分来讲，一个部分是contact自身所需要的空间关系，一个是点预测所需要的特征信息。前者还是和环境有关系，有的人会考虑把环境清理一下以有利于目标contact点的预测，也有的直接在clutter的环境下去选点，这个主要看任务了。后者就主要和自身的geometry，texture，functionality等有关系。</p>
+<h2 id="constraint-planning的难度和什么有关">
+  constraint planning的难度和什么有关？
+  <a class="anchor" href="#constraint-planning%e7%9a%84%e9%9a%be%e5%ba%a6%e5%92%8c%e4%bb%80%e4%b9%88%e6%9c%89%e5%85%b3">#</a>
+</h2>
+<p>trajectory planning的难度主要取决于环境中障碍物的分布情况，换句话说就是构型空间的几何结构。
+force planning的难度主要取决于任务的精细/准度要求。</p>
+<h2 id="任务长度n">
+  任务长度n
+  <a class="anchor" href="#%e4%bb%bb%e5%8a%a1%e9%95%bf%e5%ba%a6n">#</a>
+</h2>
+<p>那显然n越长越难。</p>
+<p>抛开环境的因素不谈，我们可以粗略地把task有关的难度因素放在三个维度上：即object的维度，force的维度和任务长度的维度。</p>
+<ul>
+<li>object至少也有三个维度，即geometry复杂性的维度(细小或特大都很难)，texture复杂性的维度（纹理越简单越难），flexibility的维度（自由度越高越难）
+<ul>
+<li>关于material带来的复杂性可以归结到是force的维度上去</li>
+<li>如何用一个指标概况三个方面，可能也是一个可以研究的问题</li>
+</ul>
+</li>
+<li>force维度里如何细分暂时还没想好，可能做点实验有感觉了能总结出来</li>
+<li>任务长度描述起来很简单</li>
+</ul>
+<p>目前来看大体能递归地总结到三个维度上，给了我们可视化难度的机会。环境带来的难度可以作为一个additional dimension，外部还是太难建模了。</p>
+<h1 id="task-zoo的构建">
+  Task Zoo的构建
+  <a class="anchor" href="#task-zoo%e7%9a%84%e6%9e%84%e5%bb%ba">#</a>
+</h1>
+<p>因为object的复杂性主要还是object自身带来的，因此，我们在考虑task zoo的构建的过程中，主要考虑任务长度和是否力控要求高两个因素。当然一个简单的task，处理对象是比较复杂的物体的时候也会很难，但这种困难是物体带来的，我们在这里做这样一个区分，有利于把问题再梳理清楚一点。关于object复杂性问题，可以参考object knowledge bank里相关部分。</p>
+<p>我们不会特别说明任务中应使用的物体是什么，大家可以自行填空。只需要在这个task中，物体的难度梯度是怎么样的即可。如果有些物体性质导致的task topology发生变化，在此都简化处理，详细的请找Wenqiang要数据库。</p>
+<p>对于任何task，我们当然都可以上力控，对于有些task，是如果没有力控几乎肯定是做不好的，对于此类task，我们会特别标注，当然也就意味着这样的task难度会高一点。</p>
+<p>当n变大时，有些任务的解法可能就会有多种，因此对于n&gt;=3的任务，我们只给一个参考长度和参考序列。对于涉及到object-object interaction的地方，我们会考虑使用end-extension的策略，即把手中的物体建模出来作为新的末端。因此序列中有时执行末端会发生变化（比如拿着锤子敲钉子这个task）。</p>
+<h1 id="n--1">
+  n = 1
+  <a class="anchor" href="#n--1">#</a>
+</h1>
+<p>n=1的task，其实就是atom操作。</p>
+<ol>
+<li>push STH with (n contact_points) and {force setting}</li>
+<li>pull STH with (n contact_points) and {force setting}</li>
+<li>flip STH with (n contact_points) and {force setting}</li>
+<li>grasp STH with (n contact_points) in (grasp_type), and {force setting}</li>
+<li>release STH</li>
+<li>move with (trajectory) and {force setting}
+<ul>
+<li>generic trajectory even with constraint: polynomial fitting, DMP等</li>
+<li>revolute</li>
+</ul>
+</li>
+</ol>
+<h1 id="n--2">
+  n = 2
+  <a class="anchor" href="#n--2">#</a>
+</h1>
+<ol>
+<li>n = 1中1-4 + 6</li>
+<li>throw: 6 + 5</li>
+</ol>
+<h1 id="n--3">
+  n &gt;= 3
+  <a class="anchor" href="#n--3">#</a>
+</h1>
+<p>打括号表示可循环</p>
+<ol>
+<li>catch: 5 + 6 + 4</li>
+<li>pick &amp; place: 4 + 6 + 5</li>
+<li>拧：4 + 6 + 5</li>
+<li>insert: 4 + (6 + 1)</li>
+</ol>
+<h1 id="双手task">
+  双手task
+  <a class="anchor" href="#%e5%8f%8c%e6%89%8btask">#</a>
+</h1>
+<ol>
+<li>bend</li>
+<li>twist</li>
+<li>regasping</li>
+</ol>
+<h1 id="in-hand-manipulation">
+  in-hand manipulation
+  <a class="anchor" href="#in-hand-manipulation">#</a>
+</h1>
+<ol>
+<li>握笔写字</li>
+<li>转笔</li>
+<li>打鸡蛋</li>
+</ol>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+  
+
+
+  
+
+  
+
+
+
+<div class="book-languages" tabindex="0" aria-haspopup="true">
+  <ul>
+    <li class="flex align-center">
+      <img src="/realobjectbank/svg/translate.svg" class="book-icon" alt="Languages" />
+      English
+    </li> 
+  </ul>
+
+  <ul class="book-languages-list">
+    
+    <li class="active">
+      <a href="https://mvig.sjtu.edu.cn/realobjectbank/" class="flex align-center">
+        <img src="/realobjectbank/svg/translate.svg" class="book-icon" alt="Languages" />
+        English
+      </a>
+    </li>
+    
+    <li class="">
+      <a href="https://mvig.sjtu.edu.cn/realobjectbank/zh/" class="flex align-center">
+        <img src="/realobjectbank/svg/translate.svg" class="book-icon" alt="Languages" />
+        Chinese
+      </a>
+    </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/alex-shpak/hugo-book/edit/master/exampleSite/content/docs/manipulation_task/task/_index.md" target="_blank" rel="noopener">
+      <img src="/realobjectbank/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#tasks的难度">Tasks的难度</a>
+      <ul>
+        <li><a href="#contact点的预测的难度和什么有关">Contact点的预测的难度和什么有关？</a></li>
+        <li><a href="#constraint-planning的难度和什么有关">constraint planning的难度和什么有关？</a></li>
+        <li><a href="#任务长度n">任务长度n</a></li>
+      </ul>
+    </li>
+    <li><a href="#task-zoo的构建">Task Zoo的构建</a></li>
+    <li><a href="#n--1">n = 1</a></li>
+    <li><a href="#n--2">n = 2</a></li>
+    <li><a href="#n--3">n &gt;= 3</a></li>
+    <li><a href="#双手task">双手task</a></li>
+    <li><a href="#in-hand-manipulation">in-hand manipulation</a></li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

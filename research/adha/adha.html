@@ -1,0 +1,534 @@
+
+<html>
+  <head>
+    <meta charset="utf-8">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="/js/script.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    
+    <title>ADHA | SJTU Machine Vision and Intelligence Group</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="CS348 Computer Vision">
+    <meta property="og:url" content="http://yoursite.com/teaching/index.html">
+    <meta property="og:site_name" content="SJTU Machine Vision and Intelligence Group">
+    <meta property="og:updated_time" content="2017-10-08T15:42:37.720Z">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="CS348 Computer Vision">
+    
+    <link rel="alternate" href="../../atom.xml" title="SJTU Machine Vision and Intelligence Group" type="application/atom+xml">
+    
+    
+    
+    <link href="./css/css" rel="stylesheet" type="text/css">
+    
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/font-awesome.min.css">
+    <link rel="stylesheet" href="./css/styles.css">
+
+    <style type="text/css">
+      /*img{
+        width:150px; 
+        border-radius:50%; 
+        align-content: center;
+      }*/
+      tr,th,td{
+        align-content: center;
+        text-align: center;
+      }
+      table.member>tbody>tr>td{
+        border: none;
+      }
+      table.member>tbody>tr>th{
+        border: none;
+      }
+    </style>
+	
+
+    
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu-navbar" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          </button>
+          
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="main-menu-navbar">
+          <!-- <h4 style="font-family:verdana;">Machine Vision and Intelligence Group</h4> -->
+          <ul class="nav navbar-nav navbar-header">
+            <li><a class="navbar_brand" href="../../index.html"><strong>Machine Vision and Intelligence Group &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</strong></a></li>
+          </ul>
+		  <ul class="nav navbar-nav navbar-right">
+            <li><a class="" href="./adha.html">Home</a></li>
+            
+            <li><a class="" href="./download.html">Download</a></li>
+            
+            <li><a class="" href="./about.html">About Us</a></li>
+			
+			
+          </ul>
+        </div>
+      </div>
+    </nav>
+		
+		
+        <div class="container ">
+          <div class="blog-header">
+				
+				  <h1>ADHA: A Benchmark for Recognizing Adverbs describing Human Actions in Videos</h1>
+				
+				<p style="font-size:20px">
+						Bo Pang,
+						Kaiwen Zha,
+						<a href="/index.html">Cewu Lu*</a>
+					  </p>
+					  (* corresponding author: lu-cw@cs.sjtu.edu.cn)
+          </div>
+		</div>
+		<div style="background-color:#ededed ; padding-bottom: 45px ;">
+		  <div class="container">
+
+              <h2>Introduction</h2>
+              <div id="intro">
+				    <font size="4">ADHA: “Adverbs Describing Human Actions” is the first benchmark for a new problem — recognizing human action adverbs (HAA). This is the first step for computer vision to change over from pattern recognition to
+                    real AI. Some key features of ADHA are: a semantically complete set of adverbs describing human actions, a set of common, describable human actions, and an exhaustive labeling of simultaneously emerging actions in
+                    each video. An in-depth analysis on the implementation of current effective models in action recognition and image captioning on adverb recognition is committed, and the results show that such methods are infeasible. 
+					Moreover, we use expression knowledge in those models and show that it can significantly improve HAA recognition performance.</font>
+              </div>
+		      <a>
+                <img src="./image/intro.jpg" style="width:100%;border: 0px solid #AAA;padding-top: 25px;">
+              </a>
+		  </div>
+		</div>
+		<div style="padding-bottom: 45px ;">
+		  <div class="container">
+		    <h2 style="padding-bottom: 45px ;">Three-Stream Model</h2>
+			<h3>Demo</h3>
+			<iframe frameborder="0" width="1152" height="648" src="https://v.qq.com/iframe/player.html?vid=r0545g6qmgv&tiny=0&auto=0" allowfullscreen></iframe>
+			<!-- <video width="1152" height="648" controls="controls" autoplay="autoplay" style="padding-bottom: 45px ;">
+              <source src="./image/demo_video.mp4" type="video/mp4" />
+            </video> -->
+			<h3> result </h3>
+			<table style="border-spacing: 10px; border-collapse: separate;width: 100% ; padding-bottom: 45px">
+			  <tbody>
+			  <tr style="background-color:#fffff">
+				<td style="text-align:center;height: 110px">
+				  <h4>PBLSTM results. “T1-F1” means task 1 with feature 1. “-e” means using expression knowledge. Task 2 doesn’t recognize actions so “Act” does not have values in task 2.</h4>
+			      <a>
+                    <img src="./image/PBLSTMResult.jpg" style="width:100%;border: 0px solid #AAA;padding-top: 0px;">
+                  </a>
+				</td>
+				<td>
+				  <h4>Two-stream Model results. “-S” means spatial stream. “-M” means motion stream. “-F” means fusion streams. Task 2 doesn’t recognize actions so “Act” does not have values in task 2.</h4>
+			      <a>
+                    <img src="./image/Two_Stream_result.jpg" style="width:90%;border: 0px solid #AAA;padding-top: 0px;">
+                  </a>
+				</td>
+			  </tr>
+			  <tr>
+			  <td>
+			    <h4>Hybrid models results. "-H" means Hybrid model. Task 2 doesn’t recognize actions so “Act” does not have values in task 2.</h4>
+			      <a>
+                    <img src="./image/Hybrid_result.jpg" style="width:100%;border: 0px solid #AAA;padding-top: 0px;">
+                  </a>
+		      </td>
+			  </tr>
+			  </tbody>
+		    </table>
+            <h3> Code </h3>
+              <font size="4">You can find the code of the model at the <a href="https://github.com/BoPang1996/Hybrid-model-for-human-action-adverb-recognition" target="_blank">Github</a>.</font>
+			
+		  </div>
+		</div>
+		<div style="background-color:#ededed ; padding-bottom: 45px;">
+	      <div class="container">
+		    <h2>Statistics</h2>
+			<font size="4">The ADHA dataset consists of 11736 short videos and associated labels from an action set with 32 actions and an adverb set with 51 adverbs. In the dataset we also provide the tracking result of the target person using a 
+			semi-automatic annotation framework. In total there are 16716 persons labeled.</font>
+		  </div>
+		  <div class="container" style=";padding-top: 25px;">
+		    <table style="border-spacing: 10px; border-collapse: separate;width: 100%">
+			  <tbody>
+			  <tr style="background-color:#428bca">
+				<td style="text-align:center;height: 90px">
+				  <span style="font-size:35px; color:#ffffff">16716</span>
+				  <br>
+				  <font color="white">Target Person</font>
+				</td>
+				<td>
+				  <span style="font-size:35px; color:#ffffff">89096</span>
+				  <br>
+				  <font color="white">Second of video</font>
+				</td>
+				<td>
+				  <span style="font-size:35px; color:#ffffff">350</span>
+				  <br>
+				  <font color="white">Action-Adverb Pairs</font>
+				</td>
+				<td>
+				  <span style="font-size:35px; color:#ffffff">4.5312</span>
+				  <br>
+				  <font color="white">Adverb/Person</font>
+				</td>
+			  </tr>
+			  </tbody>
+			</table>
+		  </div>
+		  <div class="container" style="padding-bottom: 25px ;">
+		    <h4>Action Set</h4>
+			  <table style="border-spacing: 5px;width: 100%">
+			    <tbody style="">
+			      <tr style="height:35px ; background-color:#c9e1f7">
+			        <td style="text-align:center;">
+				      <font color="black">brush_hair</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">chew</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">clap</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">climb_stairs</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">dive</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">draw_sword</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">drink</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">eat</font>
+				    </td>
+			      </tr>
+				  <tr style="height:35px ; background-color:#e4f1fb">
+			        <td style="text-align:center;">
+				      <font color="black">fall_floor</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">hit</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">hug</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">kick</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">kiss</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">pick</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">pour</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">pullup</font>
+				    </td>
+			      </tr>
+				  <tr style="height:35px ; background-color:#c9e1f7">
+			        <td style="text-align:center;">
+				      <font color="black">punch</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">push</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">run</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">shake_hands</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">shoot_bow</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">shoot_gun</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">walk</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">wave</font>
+				    </td>
+			      </tr>
+				  <tr style="height:35px ; background-color:#e4f1fb">
+			        <td style="text-align:center;">
+				      <font color="black">sit</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">smoke</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">stand</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">swing_baseball</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">sword</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">sword_exercise</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">talk</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">throw</font>
+				    </td>
+			      </tr>
+			    </tbody>
+			  </table>
+		  </div>
+		  <div class="container" style="padding-bottom: 25px ;">
+			<h4>Adverb Set</h4>
+			  <table style="border-spacing: 5px;width: 100%">
+			    <tbody style="">
+			      <tr style="height:35px ; background-color:#c9e1f7">
+			        <td style="text-align:center;">
+				      <font color="black">promptly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">fast</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">kindly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">carefully</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">seriously</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">barely</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">easily</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">slowly</font>
+				    </td>
+			      </tr>
+				  <tr style="height:35px ; background-color:#e4f1fb">
+			        <td style="text-align:center;">
+				      <font color="black">quietly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">precisely</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">gently</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">surprisedly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">lightly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">heavily</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">happily</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">freely</font>
+				    </td>
+			      </tr>
+				  <tr style="height:35px ; background-color:#c9e1f7">
+			        <td style="text-align:center;">
+				      <font color="black">sadly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">proudly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">comfortably</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">calmly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">vigorously</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">nervously</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">reluctantly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">professionally</font>
+				    </td>
+			      </tr>
+				  <tr style="height:35px ; background-color:#e4f1fb">
+			        <td style="text-align:center;">
+				      <font color="black">politely</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">painfully</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">angrily</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">patiently</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">bitterly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">incidentally</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">frantically</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">intently</font>
+				    </td>
+			      </tr>
+				  <tr style="height:35px ; background-color:#c9e1f7">
+			        <td style="text-align:center;">
+				      <font color="black">gracefully</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">flatly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">confidently</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">weakly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">solemnly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">expertly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">inexorably</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">triumphantly</font>
+				    </td>
+			      </tr>
+				  <tr style="height:35px ; background-color:#e4f1fb">
+			        <td style="text-align:center;">
+				      <font color="black">hesitantly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">dramatically</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">officially</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">anxiously</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">hard</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">amazingly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">wearily</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">clumsily</font>
+				    </td>
+			      </tr>
+				  <tr style="height:35px ; background-color:#c9e1f7">
+			        <td style="text-align:center;">
+				      <font color="black">sweetly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">excitedly</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black">ironically</font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black"></font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black"></font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black"></font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black"></font>
+				    </td>
+					<td style="text-align:center;">
+				      <font color="black"></font>
+				    </td>
+			      </tr>
+			    </tbody>
+			  </table>
+		  </div>
+		</div>		
+		<div style="padding-bottom: 45px ;">
+		  <div class="container">
+            <h2>Distributions</h2>
+			  <h4>Action Distribution</h4>
+			    <div id="adc_dis" style="width: 100%; height: 400px; margin: 0 auto"></div>
+			    <script type="text/javascript" src="./image/action_statistics_new.js"></script>
+			  <h4>Adverb Distribution</h4>
+			    <div id="adv_dis" style="width: 100%; height: 400px; margin: 0 auto"></div>
+			    <script type="text/javascript" src="./image/adverb_statistics_new.js"></script>
+		  </div>
+		</div>
+		<div style="background-color:#ededed ; padding-bottom: 45px ;">
+		  <div class="container">
+		    <h2>Publication</h2>
+			  <font size="4">If you want to know more about the dataset, you can download the <a href="./adha.pdf" target="_blank" rel="external"> related paper here</a>.</font>
+			  <h3>Bibtex</h3>
+			  <pre style="font-size:12px;">@inproceedings{pang2017adha,
+                   title={Human Action Adverb Recognition: ADHA Dataset and A Hybrid Model},
+                   author={Pang, Bo and Zha, Kaiwen and Lu, Cewu},
+                   booktitle={arXiv preprint},
+                   year={2017}
+                  }
+                </pre>
+		  </div>
+		</div>
+		<div style="padding-bottom: 45px ;">
+		  <div class="container">
+		    <h2>Download</h2>
+			<font size="4">Click <a href="./download.html" target="_blank">Here</a> to download the dataset and the related materials.</font>
+		  </div>
+		</div>
+			  
+
+          <!-- <footer class="blog-footer">
+              <div class="container">
+                <div id="footer-info" class="inner">
+                  &copy; 2017 SJTU Machine Vision and Intelligence Group<br>
+                  Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+                </div>
+              </div>
+          </footer> -->
+
+        
+		
+  </body>
+</html>
+

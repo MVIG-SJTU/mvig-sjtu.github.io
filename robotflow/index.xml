@@ -1,0 +1,130 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>RobotFlow on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/</link>
+    <description>Recent content in RobotFlow on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 26 Feb 2021 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/robotflow/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Articles</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Digests</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/digest/</link>
+      <pubDate>Mon, 20 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/digest/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/about/</link>
+      <pubDate>Thu, 11 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/about/</guid>
+      <description>&lt;h2 id=&#34;robotflow是什么&#34;&gt;RobotFlow是什么？&lt;/h2&gt;
+&lt;p&gt;RobotFlow项目将围绕动作学习/规划，知识引擎的构建和高精力觉控制三个方向，打造一套通用机械臂操作（Manipulation）平台&lt;/p&gt;
+&lt;h2 id=&#34;这个网站是什么&#34;&gt;这个网站是什么？&lt;/h2&gt;
+&lt;p&gt;本站用于记录和公示RobotFlow项目每周的开发进度，以及实践中发现的有用的trick。之前本来打算用相对专业的项目管理软件，但要很好的用上那些软件，需要大家花不少时间来应付任务分发，任务进度等，很多事情和微信也有重叠。因此，结合当前的实际情况，尽可能让大家都高效和舒服，我们直接采用微信点对点问询+网站公示的方式来跟踪项目进度。此外很多共性的文档，比如项目有关的规定（code style等），工程上的trick，某些配置的流程也可以在网站上分享。&lt;/p&gt;
+&lt;p&gt;因为这个网站是轻量化的设定，所以更多的资料，比如机器人方面的课程，论文集（已收录ICRA，IROS，CoRL，RSS历年全部文章，其他有关联的也会保持更新）将会放在百度网盘上。因为这是一个公开的网站，资料收集不易，请找文强微信要网盘链接，而且请勿把内容分享到项目组外面去。&lt;/p&gt;
+&lt;h2 id=&#34;robotflow的现状和未来&#34;&gt;RobotFlow的现状和未来&lt;/h2&gt;
+&lt;p&gt;接下来我跟大家理一下RobotFlow的现状和未来打算。我们的终极目标是打造一个能自动化，智能化，完成给定任务的机器人。&lt;/p&gt;
+&lt;p&gt;我们考虑一个机器人自动化操作的基本流程，是给定task，然后感知环境，然后plan，然后执行。因此，我们把这样的流程拆成四个部分，即object/scene modeling（环境感知），skill learning，planning，和control。&lt;/p&gt;
+&lt;p&gt;Object/scene modeling小组：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;人员：刘浏（co-leader），詹欣宇，薛寒，吕峻，唐屠天，叶若琳，陈彦宁&lt;/li&gt;
+&lt;li&gt;年度目标：在今年将完成从纯CV到interactive perception的转化，就是在纯视觉之余，我们也要开始研究如何在交互的情况下获得物体和场景的信息。&lt;/li&gt;
+&lt;li&gt;Milestone：在今年CVPR，我们把纯视觉的工作都投出去，之后就切换到没有interaction不做的模式。&lt;/li&gt;
+&lt;li&gt;今年工作计划（7.2更新）
+&lt;ul&gt;
+&lt;li&gt;code：
+&lt;ul&gt;
+&lt;li&gt;YOLOv3和v4入库&lt;/li&gt;
+&lt;li&gt;基于上面两者的USD-Seg入库&lt;/li&gt;
+&lt;li&gt;DenseFusion和Tracking入库&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;CVPR 2021：
+&lt;ul&gt;
+&lt;li&gt;物体part级别的6D pose&lt;/li&gt;
+&lt;li&gt;USD-Seg with YOLOv4&lt;/li&gt;
+&lt;li&gt;Multiple Instance Reconstruction&lt;/li&gt;
+&lt;li&gt;Mesh2Vector2Mesh&lt;/li&gt;
+&lt;li&gt;Learning to segment 10000 objects&lt;/li&gt;
+&lt;li&gt;Real 3D object dataset with structural, mobility, semantic, affordance part annotation&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Skill Learning小组：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;人员：杨理欣（co-leader），詹欣宇，付昊源，薛震东，张行，向谨溢&lt;/li&gt;
+&lt;li&gt;年度目标：imitation learning的流程要完成。&lt;/li&gt;
+&lt;li&gt;Milestone：从image2hand的工作将向从直接record手和物体的交互动态-&amp;gt;skill表示过渡&lt;/li&gt;
+&lt;li&gt;今年工作计划（6.11更新）
+&lt;ul&gt;
+&lt;li&gt;code:
+&lt;ul&gt;
+&lt;li&gt;手和物体交互记录系统入库&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;CVPR 2021:
+&lt;ul&gt;
+&lt;li&gt;RGB2Hand-Object&lt;/li&gt;
+&lt;li&gt;Dataset&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Planning小组：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;人员：杜文昕，钱苏澄，付昊源，薛震东&lt;/li&gt;
+&lt;li&gt;年度目标：把相关的内容了解，熟悉&lt;/li&gt;
+&lt;li&gt;Milestone：PDDLStream应用到多种task上去。&lt;/li&gt;
+&lt;li&gt;今年工作计划（6.11更新）
+&lt;ul&gt;
+&lt;li&gt;code：
+&lt;ul&gt;
+&lt;li&gt;PDDLStream平台入库&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;CoRL 2021
+&lt;ul&gt;
+&lt;li&gt;PDDLStream with feedback&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Control小组：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;人员：丁俊峰（leader）&lt;/li&gt;
+&lt;li&gt;年度目标：把力控用上，熟悉&lt;/li&gt;
+&lt;li&gt;今年工作计划（6.11更新）
+&lt;ul&gt;
+&lt;li&gt;code：
+&lt;ul&gt;
+&lt;li&gt;落地插拔&lt;/li&gt;
+&lt;li&gt;learning to control&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

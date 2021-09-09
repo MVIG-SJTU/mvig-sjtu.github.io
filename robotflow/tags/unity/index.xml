@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>unity on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/unity/</link>
+    <description>Recent content in unity on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 06 Jan 2021 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/unity/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Articulation入库系列3——URDF格式的articulation模型转fbx格式</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%973urdf%E6%A0%BC%E5%BC%8F%E6%A8%A1%E5%9E%8B%E8%BD%ACfbx%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Wed, 06 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%973urdf%E6%A0%BC%E5%BC%8F%E6%A8%A1%E5%9E%8B%E8%BD%ACfbx%E6%A8%A1%E5%9E%8B/</guid>
+      <description>URDF格式的articulation模型转fbx格式 所需软件   Blender （这里使用Blender 2.83版本）
+  Unity 2020.1.0f1c1（Unity用于fbx文件验证，其他版本应该也可以）
+  评注（Wenqiang） 我们目前对joint的标注已基本unity化，unity导入articulation时，只需要part的hierarchy，其具体的转轴可以在unity里面调，而且比较方便（thanks to ArticulationBody这个feature），所以下述步骤实际上只需要1-2-3-11-12即可，在第二步中打开urdf，根据urdf数值调整每个part的位置和朝向。
+在unity中如何标注joint，请参考这篇文章。
+详细步骤   打开Blender，删除默认的cube, camera和light三个部件，导入物体obj模型，如果是articulation物体，需分别导入各个part的obj
+  （optional）由于本教程示例的urdf由unity的ROS#插件制作而来，所以其坐标系会和blender默认有所不同，导入时初始位置会有X旋转90度的情况，需手动修正
+  打开纹理渲染，确认物体纹理导入正确
+  为articulation物体建立运动结构，如图所示，把base_link作为link1的父节点
+  之后为可运动part建立旋转（或平移）的运动模式，首先打开urdf文件，获取link1运动的类型、旋转中心、旋转方向和旋转limit，即type, origin xyz, axis xyz, limit
+  在blender中选择左侧游标，根据旋转中心和转轴方向为游标设置位置和方向参数，这里需要注意，同上文所说，我们制作的urdf在坐标系上略有不同，所以这里三个值输入顺序需要有一个变化，具体为：旋转中心(x,y,z) -&amp;gt; (y,z,x) 旋转方向 (r,p,y) -&amp;gt; (p,y,r)(注：该变化在不同source的urdf中并不完全一致，还是以手调为准)
+输入后可以看出，3D游标位置处于link1旋转的中心点
+  验证旋转中心及位置的正确性，选择左侧旋转，旋转位置选择3D游标，略微转动物体，可以看出link1旋转模式符合预期
+  添加物体旋转约束，选择link1，在右下角菜单栏选择“物体约束属性”-“添加物体约束”-“限定旋转”，这里我们选择Y限值（刚刚旋转演示中的绿色旋转方向）为urdf中的两个limit（角度数值需要转换）
+  再次旋转物体，可以发现，当旋转超过限值后，将出现part脱离现象
+  刚刚只是设置游标验证运动方式，现在要将旋转中心和方向记录在link1中。选中link1，鼠标移至游标位置右键，选择设置原点，原点-&amp;gt;3D游标，即可将3D游标位置设置为物体旋转点，如图所示，右上角位置中已经变成了3D游标位置
+   将纹理写入模型中，在右下角选择纹理，将纹理打包按钮点亮，保证纹理被内嵌到模型里
+  导出fbx，点击文件-导出-fbx，路径模型选择“复制”，并将右侧内嵌纹理点亮，导出为box1.fbx模型文件
+  （optional）在Unity里验证fbx，打开unity工程，导入box1.</description>
+    </item>
+    
+    <item>
+      <title>unity踩坑指南（持续更新）</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/unity%E7%9A%84%E5%9D%91%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/</link>
+      <pubDate>Wed, 06 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/unity%E7%9A%84%E5%9D%91%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/</guid>
+      <description>Unity踩坑指南  universal render pipeline  URP和部分自定义shader有冲突，目前原因未名 URP和flex插件有冲突，会导致其显示不正常 igibson内置的纹理目前需要在URP下才能成功渲染，原因未名 URP和3D模式下的step时长有区别   unity中不含有运动规划器，因此需要另外写，关于这部分请参看这篇文章  另一个solution是官方的Unity Robotics Hub，这个项目野心很大，基本来说是想让unity接入ROS生态，目前刚开始，bug还比较多。而且Unity当前自带的PhysX的版本不是非常给力（参见下面PhysX的条目）。   Flex插件  Flex插件目前在ubuntu版本的unity下有bug，具体原因未知，在windows环境下正常   PhysX  这个不能怪unity，但是physx其实早有5.0版本，而且有比较完善的粒子系统（可以替代Flex），但是Nvidia出于某种目的没有开放（估计是先在Issac Sim里爽爽）。    </description>
+    </item>
+    
+    <item>
+      <title>C Sharp玩unity系列4——透明材质、折射与反射</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%974%E9%80%8F%E6%98%8E%E6%9D%90%E8%B4%A8%E6%8A%98%E5%B0%84%E4%B8%8E%E5%8F%8D%E5%B0%84/</link>
+      <pubDate>Thu, 24 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%974%E9%80%8F%E6%98%8E%E6%9D%90%E8%B4%A8%E6%8A%98%E5%B0%84%E4%B8%8E%E5%8F%8D%E5%B0%84/</guid>
+      <description>C Sharp玩unity系列4——透明材质、折射与反射 Cubemap 一个免费的Cubemap资源网站：HDRI Haven。
+Material与Shader Shader在本话题中的地位非常重要，在这里先贴上知乎《零基础入门Unity Shader》系列文章。
+ 零基础入门Unity Shader（一） 零基础入门Unity Shader（二） 零基础入门Unity Shader（三） 零基础入门Unity Shader（四） 零基础入门Unity Shader（五） 零基础入门Unity Shader（六） 零基础入门Unity Shader（七） 零基础入门Unity Shader（八） 零基础入门Unity Shader（九） 零基础入门Unity Shader（十）  Material是材质球，Shader是着色器。Material和Shader之间的关系是，Material使用Shader：一个Material只能使用一个Shader，而一个Shader可以被多个Material使用。需要注意的是，每一个Material使用的着色器都是一个Shader实例。举个例子，一个Shader文件叫做MyCustomShader.shader，其中包含一个变量Smoothness，默认值为0.5，而Material A和Material B都要使用MyCustomShader.shader。这时，我们可以在Material A和Material B中任意改动Smoothnesss的值，而A和B互不影响。
+因此，Shader文件就是我们要编写的着色器文件，它定义了一个材质在camera中看起来是什么样子的。Shader文件可以看作是一个小小的算法，用于计算物体mesh的每一个vertex和face渲染到2D图像上的像素值。这个话题继续展开下去就是CG领域的内容了，可能需要学很多CG的知识才能研究的很透彻。
+但幸运的是，Unity的HDRP（High Definition Render Pipeline）和URP（Universal Render Pipeline）模板创建的项目可以使用Shader Graph这个图形化界面来编写Shader。这种情况下，各个组件变成了输入和输出，只需要按照规则将数据流穿起来，就可以自动生成Shader文件。
+ 在网上的tutorial中还有人介绍到LWRP（Light Weight Render Pipeline）模板也可以使用Shader Graph，但是我的版本中没有找到这个模板，因此就略过了。
+ 此外，HDRP模板中的材质本身就可以增设折射属性，这使得我们不用借助Shader去搞伪折射，而直接调参即可。所以我们接下来分两个部分，一个部分是使用Shader Graph工具写一个实现折射+反射+菲涅尔效应（Fresnel Effect）的shadergraph文件；另一部分是直接使用UDRP中的Lit Material，并在此基础上调参实现反射和折射效果。
+Shader Graph in URP 首先创建一个新项目，模板选择Universal Rendering Pipeline。
+通过摄像机拍摄纹理进行折射 参考视频：here
+这个折射Shader是从相机拍摄的图片出发（也就是观察者的视角），通过Unity内置函数refract将图片按照给定的View和Normal以及IOR（折射率）进行折射计算，并把这个结果进行一系列的后处理，最终放在物体上进行渲染。
+这个方法显然是一种比较假的折射方式，劣势在于它只能渲染出摄像机看到的画面，如果摄像机看不到，它也就没法折射出来。因此可以看到，当摄像头视角离折射物体较近时，边缘部分会出现条纹效果。如果像视频中一样使用Floor和Substract模块，那么将会出现“万花筒”效果。
+但是，这种方法的优势在于，它的计算开销较小，同时在场景中可以更加真实地渲染多个物体，而且不同物体之间也可以相互渲染出来。渲染效果更加真实，实时性也更强。
+通过Reflection Probe进行折射 参考视频：here
+借助Reflection Probe反射出来的画面进行折射的方式可以更加真实地做出折射的效果。因为这里的折射源不仅仅是摄像机所能拍摄到的范围，而是真实的整个范围。但是相应的也就会出现一些问题，比如</description>
+    </item>
+    
+    <item>
+      <title>C Sharp玩unity系列3——ArticulationBody</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%973articulationbody/</link>
+      <pubDate>Sun, 13 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%973articulationbody/</guid>
+      <description>C Sharp玩unity系列3——ArticulationBody 从FXB导入unity Unity官方支持的Hierarchy结构的数据类型是FBX，尽管obj文件+material也可以正常导入Unity，但是因为obj文件本身并不支持层级结构，因此最多就是两层，对于机械臂这种Hierarchy结构的物体来说并不友好。因此我们从FBX类型文件出发，使用代码将其导入unity并生成prefab。具体代码和导入obj文件几乎相同，如下。
+string meshName = &amp;#34;demo.fbx&amp;#34;; string prefabName = &amp;#34;demo.prefab&amp;#34;; GameObject gameObject; GameObject go = AssetDatabase.LoadAssetAtPath(meshName, typeof(UnityEngine.Object)) as GameObject; if (go != null) { gameObject = Instantiate(go); PrefabUtility.SaveAsPrefabAsset(gameObject, prefabName); AssetDatabase.Refresh(); Destroy(gameObject); } 有了Prefab之后，就可以直接把prefab导入scene中，接下来就可以真正搞起来了。
+ArticulationBody 从Unity2020.10b1以来，Unity开始支持ArticulationBody这个属性。ArticulationBody的物理性质可以认为“继承”自刚体（在代码层面上不是继承关系，这里是一个语义上的“继承”），同时又对不同Joint之间的关系和相对位置进行了约束。
+如上图所示，一个逻辑上树形结构的Articulation物体，不同Joint之间的关系是层层递进的，这和ROS中的TF是一脉相承的逻辑关系。当一个part运动时，这个part的所有孩子都会跟随着这个part一起运动。
+在使用ArticulationBody时，树形结构中的每一个部分都要add ArticulationBody这个component（这里注意，Unity中的父子关系并不是继承，孩子并不能继承父亲的属性，例如Rigidbody、MeshCollider、ArticulationBody等，父子关系只表现在transform上）。
+如果是根节点的part，Inspector窗口中ArticulationBody的属性值如下图。Unity会自动识别该part是否为ArticulationBody的根。如果加了ArticulationBody的part不是从根节点开始的，那么Unity会自动将最靠近根节点的part作为根。例如，上图中，我们只把Shoulder及其所有孩子和后代添加ArticulationBody属性，则Shoulder会被认为是根。
+对于其他的part，Inspector窗口的ArticulationBody属性值如下图。
+这里最关键的是选项就是Anchor和Articulation Joint Type。由于ArticulationBody是今年新加入的类，官方文档中还没有详细解释，网上的博客也几乎没有，因此我在这里只结合我在使用时试验出的结果以及推测，对上述两个名词进行一定解释，如果后面发现有错误，会随时修改。
+Anchor Anchor顾名思义，就是两个part之间相连接的点。Anchor在ArticulationBody中有两部分，一部分是Parent Anchor，还有一部分是这个part本身的Anchor（下直接称Anchor）。一般情况下，我们会勾选Compute Parent Anchor，这时只能调整Anchor，我推测此时的Parent Anchor和Anchor是重合的。当然，也可以不勾选Compute Parent Anchor，手动调整Parent Anchor的position和rotation。但是，我实际尝试发现，即便Parent Anchor飘到一个跟物体毫不相干的位置，也并不会影响正常的运动。
+对于Anchor，它的position和rotation是相对于该part的原点而言的。一般而言，一个part的原点就是该part与其父亲part之间相连的点，因此position是(0,0,0)，但是Rotation相对更重要，这关系到一个joint的旋转自由度，详见Articulation Joint Type。
+Articulation Joint Type Articulation Joint Type一共有四种：
+ FixedJoint：固定关节，0自由度 PrismaticJoint：移动关节，1自由度 RevoluteJoint：旋转关节，1自由度 SphericalJoint：球形轴，3自由度  这里需要强调的是，对于PrismaticJoint，可以自己指定自由度的一个轴；对于RevoluteJoint，需要调整parent anchor，本part只能绕parent anchor的X轴方向旋转。</description>
+    </item>
+    
+    <item>
+      <title>C Sharp玩unity系列2——刚体</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%972%E5%88%9A%E4%BD%93/</link>
+      <pubDate>Thu, 03 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%972%E5%88%9A%E4%BD%93/</guid>
+      <description>C Sharp玩unity系列2——刚体 项目源码 本项目的源码在文件夹Rigidbody_tutorial中，访问请找Haoyuan。
+Prefab（预制件）的封装 在Unity中，Prefab是一个被经常使用的类型。一个外部资源（比如obj、fbx、dae文件）往往都要先被封装成Prefab（.prefab文件），然后才能load到Unity的Scene中。这一期教程中暂时还是使用Unity Editor，也就是GUI的方式定制Prefab。
+我们以OBJ文件为例。首先要把想要使用的obj文件复制到Assets文件夹下，然后把它拖到Scene中，把Scene列表中的该对象拖回Assets列表里，在弹出的对话框中选择Original Prefab，这时Assets中会自动生成.prefab文件，同时Scene列表中的物体也会自动变为Prefab类型。区分一个物体是不是prefab很简单：从图标上面看，普通的GameObject是一个空心的立方体，而Prefab是蓝色实心的立方体。
+Prefab定制好之后，我们可以预先对Prefab进行component的赋予，例如增加碰撞检测、增加刚体、柔体属性等等。我们建议使用以下方法对prefab进行设置。
+ 在Unity Editor界面的Project窗口中，双击刚才生成好的prefab文件，即可进入Prefab编辑模式。注意，这一模式下你对于prefab的任何修改都是会直接保存到prefab本身的。    左侧的Hierarchy窗口可以看到本prefab的父子结构。我们接下来既可以对prefab本身继续修改，也可以对它的孩子（也就是我们的obj文件所对应的GameObject）进行修改，具体把属性加到谁上面更好，就是task-specific的了。
+  想要添加属性，就在inspector窗口的最下面的一个Add Component按钮即可操作。本期教程中只需加入刚体属性和碰撞检测。需要注意的是，碰撞检测如果选用mesh collider，一定要将convex属性勾选为true，这样才可以进行正常的碰撞检测。属性添加完毕后如图所示。（我加在了孩子上）
+  运动 封装好了prefab文件后，接下来的部分我们都可以使用代码的方式来获取和控制。对于刚体来说，我们一般初始化时给它生成到一个位置上，然后用力去控制它的运动。首先将prefab拖到scene中，随便放在一个位置就可以，因为我们后续还会用代码对它的位置进行调整。控制的script脚本Move.cs如下
+using UnityEngine; public class Move : MonoBehaviour { Rigidbody m_Rigidbody; public float m_Thrust = 10f; void Start() { m_Rigidbody = GetComponentInChildren&amp;lt;Rigidbody&amp;gt;(); // m_Rigidbody = GetComponent&amp;lt;Rigidbody&amp;gt;();  m_Rigidbody.transform.position = new Vector3(0, 0, 0); m_Rigidbody.mass = 10; m_Rigidbody.useGravity = false; } void FixedUpdate() { if (Input.GetKey(&amp;#34;w&amp;#34;)) { m_Rigidbody.</description>
+    </item>
+    
+    <item>
+      <title>C Sharp玩unity系列1——导入或创建模型</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%971%E5%AF%BC%E5%85%A5%E6%88%96%E5%88%9B%E5%BB%BA%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Fri, 07 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%971%E5%AF%BC%E5%85%A5%E6%88%96%E5%88%9B%E5%BB%BA%E6%A8%A1%E5%9E%8B/</guid>
+      <description>C Sharp玩unity系列1——导入或创建模型  unity版本2020.1，在这个版本中unity引入了articulation（抱PhysX的大腿），使得建模articulated的物体比以往容易了很多。因此，我们的教程需要建立在2020.1以后的版本上。在不需要这个功能的时候，其他基础功能用别的版本应该也可以实现。
+ 写在前面 仿真在我们的科研中占据了越来越重要的地位，一个很简单的逻辑就是，以后组里做机器人的同学越来越多，但是组里的机器人并没有那么多，那么必然需要一个好用的仿真环境来先验证想法。
+目前面向机器人的几个仿真器包括gazebo，v-rep，mujoco，pybullet都比较阉割，对高保真渲染，高级建模（柔性，撕裂，流体等）支持都不是特别到位。而通用的仿真器，包括unity和unreal engine，学起来成本又很大。其中unity相对容易上手，通用性比较强，原生自带physX，和steamVR，mujoco之间都有混编的接口，虽然渲染比不过unreal，但也够用了。所以虽然需要额外学一个C#，但我们还是选择从unity开始上手。
+和Chrono这样的纯学术用物理引擎不同，unity是一个集成了前端后端各个环节的大框架。因此在创建unity相关的工程的时候通常是需要前端editor和C# scripting并用的。我们会在教程中尽量让能用code搞定的事情都用code搞定。
+本教程主要参考自官方手册 Version 2019.4和catlikecoding的Unity C#教程，网上的tutorial大多面向游戏开发或者CG，对我们这种CV-Robotics oriented的researcher极度不友好。因此希望本系列教程能bridge这个gap。
+本教程配套的脚本请见rf_unity_tutorial@github，目前还是private，有需要可以找Haoyuan要访问权限。文章中只给出关键性的代码，完整的请参考配套脚本。
+加载Mesh 对于我们来说，第一个需要处理的问题就是如何把模型载入unity场景。
+Unity目前官方支持的3D格式是FBX。我们常用的Obj也行，但如果要通过Obj的方式articulation的物体就不行了。所以我们还是老老实实用FBX格式，避免出现一些不必要的问题。 此外ROS#和URDF importer能直接读取URDF文件，不过各自都有各自的问题。 一个对物体和机器人都比较适中的方案是把URDF转成FBX，当然FBX承载不完URDF的所有信息，但是对于unity来说还是够用了。
+Obj转FBX 网上有很多在线转的方案，不过通常纹理是没有的。
+软件上MeshLab是不支持转换了（诡异的是它可以打开），不过Blender可以，也是带纹理的。官方也推荐用Maya或者3ds Max（最近好像版权到期了，2021年1月），这俩交大买了，不过Blender基本够用了，轻量，支持python脚本，还完全开源完全免费，各种插件也多，所以还是推荐用blender。
+ FBX是Autodesk推出的文件格式，Blender的FBX是用的自己写的reader/writer，所以如果实践中发现了什么奇怪的事情，还是用回官方SDK。官方SDK是免费但是闭源的，所以Blender的实现其实基本靠猜（但一般情况还是可以了）。
+ 不过Blender的使用也是一个大坑，因为功能很多，我们会在这个教程里穿插着讲，但不会系统地讲。关于如何用python控制Blender，可以参考官方文档。
+这里只针对格式转换的部分，脚本如下：
+import bpy # remove the default cube if &amp;#34;Cube&amp;#34; in bpy.data.meshes: mesh = bpy.data.meshes[&amp;#34;Cube&amp;#34;] print(&amp;#34;removing mesh&amp;#34;, mesh) bpy.data.meshes.remove(mesh) bpy.ops.import_scene.obj(filepath=&amp;#34;path/to/model.obj&amp;#34;) bpy.ops.export_scene.fbx(filepath=&amp;#34;path/to/model.fbx&amp;#34;) 关于支持Articulation的问题 从格式上来说，其实刚体，柔性物体，撕裂效果等是很容易的，一个unified的模型就可以，不过表示articulated的物体反而有点难，因为需要模型能支持hierarchy结构，并且能individually地控制每一个part。因为obj只支持一个级别的hierarchy（o-&amp;gt;g），因此多层次的连杆结构（比如机械臂）是没法直接通过obj支持的。不过dae和fbx是支持多层hierarchy的。
+那么我们要如何准备articulation的数据呢？Robotics界通用的做法是用URDF，所以我们要做的事情就是把urdf转换成fbx。因为我们前面说了FBX并没有开源，所以URDF到FBX的converter就很难写。一种方案是借助ROS里的包collada_urdf把urdf文件转成dae文件，再把dae文件转成fbx。dae文件的读取在blender里是bpy.ops.wm.collada_import。嗯，这种inconsistency一看就是老开源了~不过这个ROS包质量很差，而且已经没人维护了。
+另一种方案就是一边解析URDF，一边通过blender把各个part的模型读进blender，然后完成hierarchy的组装，再export出来。这个过程的自动化还在进行中，目前的流程请参考这篇文章。
+C#加载FBX模型 GameObject obj = (GameObject) Object.Instantiate(Resources.Load(&amp;#34;PrefabName&amp;#34;)) Unity里面Prefab是一个很常用的概念，这个词原意是预先建造的房屋，换句话说就是提前准备好的资源。在Unity中，一个.fbx文件（或者美工的.psd,.sai文件）都会先被封装成Prefab文件，此时它才可以在Editor中随便拖拽。关于Prefab的使用可以到网上去搜一下，它的基本的几个性质包括：
+ 在动画，交互中，场景中的GameObject可能会发生改变（比如被切开，柔性变换），但prefab是不变的 上面这一条的好处是，我可以随便复用prefab，不用每创建一个GameObject就复制一次 自然的，它就可以支持在仿真进行的过程中动态实时地创建物体。而不用把所有的物体都事先拖到场景中，隐藏起来，等需要的时候再显示。  Instantiate函数内在地封装了AddComponent和AddComponent，除非我们在玩Procedural Modeling，没有什么必要用这种方式处理mesh。我们下面给出一个创建简单几何Primitive，并用Procedural Modeling方式得到更复杂的模型的例子。</description>
+    </item>
+    
+  </channel>
+</rss>

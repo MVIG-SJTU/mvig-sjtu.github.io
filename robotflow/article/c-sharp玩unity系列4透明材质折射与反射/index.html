@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%973articulationbody/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/unity%E7%9A%84%E5%9D%91%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%974%E9%80%8F%E6%98%8E%E6%9D%90%E8%B4%A8%E6%8A%98%E5%B0%84%E4%B8%8E%E5%8F%8D%E5%B0%84/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           C Sharp玩unity系列4——透明材质、折射与反射 | RobotFlow
+       
+  </title>
+  <meta name="title" content="C Sharp玩unity系列4——透明材质、折射与反射 | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "C Sharp玩unity系列4——透明材质、折射与反射",
+    "headline" : "C Sharp玩unity系列4——透明材质、折射与反射",
+    "description" : "C Sharp玩unity系列4——透明材质、折射与反射 Cubemap 一个免费的Cubemap资源网站：HDRI Haven。\nMaterial与Shader Shader在本话题中的地位非常重要，在这里先贴上知乎《零基础入门Unity Shader》系列文章。\n 零基础入门Unity Shader（一） 零基础入门Unity Shader（二） 零基础入门Unity Shader（三） 零基础入门Unity Shader（四） 零基础入门Unity Shader（五） 零基础入门Unity Shader（六） 零基础入门Unity Shader（七） 零基础入门Unity Shader（八） 零基础入门Unity Shader（九） 零基础入门Unity Shader（十）  Material是材质球，Shader是着色器。Material和Shader之间的关系是，Material使用Shader：一个Material只能使用一个Shader，而一个Shader可以被多个Material使用。需要注意的是，每一个Material使用的着色器都是一个Shader实例。举个例子，一个Shader文件叫做MyCustomShader.shader，其中包含一个变量Smoothness，默认值为0.5，而Material A和Material B都要使用MyCustomShader.shader。这时，我们可以在Material A和Material B中任意改动Smoothnesss的值，而A和B互不影响。\n因此，Shader文件就是我们要编写的着色器文件，它定义了一个材质在camera中看起来是什么样子的。Shader文件可以看作是一个小小的算法，用于计算物体mesh的每一个vertex和face渲染到2D图像上的像素值。这个话题继续展开下去就是CG领域的内容了，可能需要学很多CG的知识才能研究的很透彻。\n但幸运的是，Unity的HDRP（High Definition Render Pipeline）和URP（Universal Render Pipeline）模板创建的项目可以使用Shader Graph这个图形化界面来编写Shader。这种情况下，各个组件变成了输入和输出，只需要按照规则将数据流穿起来，就可以自动生成Shader文件。\n 在网上的tutorial中还有人介绍到LWRP（Light Weight Render Pipeline）模板也可以使用Shader Graph，但是我的版本中没有找到这个模板，因此就略过了。\n 此外，HDRP模板中的材质本身就可以增设折射属性，这使得我们不用借助Shader去搞伪折射，而直接调参即可。所以我们接下来分两个部分，一个部分是使用Shader Graph工具写一个实现折射\u002b反射\u002b菲涅尔效应（Fresnel Effect）的shadergraph文件；另一部分是直接使用UDRP中的Lit Material，并在此基础上调参实现反射和折射效果。\nShader Graph in URP 首先创建一个新项目，模板选择Universal Rendering Pipeline。\n通过摄像机拍摄纹理进行折射 参考视频：here\n这个折射Shader是从相机拍摄的图片出发（也就是观察者的视角），通过Unity内置函数refract将图片按照给定的View和Normal以及IOR（折射率）进行折射计算，并把这个结果进行一系列的后处理，最终放在物体上进行渲染。\n这个方法显然是一种比较假的折射方式，劣势在于它只能渲染出摄像机看到的画面，如果摄像机看不到，它也就没法折射出来。因此可以看到，当摄像头视角离折射物体较近时，边缘部分会出现条纹效果。如果像视频中一样使用Floor和Substract模块，那么将会出现“万花筒”效果。\n但是，这种方法的优势在于，它的计算开销较小，同时在场景中可以更加真实地渲染多个物体，而且不同物体之间也可以相互渲染出来。渲染效果更加真实，实时性也更强。\n通过Reflection Probe进行折射 参考视频：here\n借助Reflection Probe反射出来的画面进行折射的方式可以更加真实地做出折射的效果。因为这里的折射源不仅仅是摄像机所能拍摄到的范围，而是真实的整个范围。但是相应的也就会出现一些问题，比如",
+    "inLanguage" : "en-us",
+    "author" : "付昊源",
+    "creator" : "付昊源",
+    "publisher": "付昊源",
+    "accountablePerson" : "付昊源",
+    "copyrightHolder" : "付昊源",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-09-24 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2020-09-24 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%974%E9%80%8F%E6%98%8E%E6%9D%90%E8%B4%A8%E6%8A%98%E5%B0%84%E4%B8%8E%E5%8F%8D%E5%B0%84\/",
+    "wordCount" : "83",
+    "keywords" : [ "simulation","unity", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">C Sharp玩unity系列4——透明材质、折射与反射</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">付昊源</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-09-24 itemprop="datePublished">September 24, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="c-sharp玩unity系列4透明材质折射与反射">C Sharp玩unity系列4——透明材质、折射与反射</h1>
+<h2 id="cubemap">Cubemap</h2>
+<p>一个免费的Cubemap资源网站：<a href="https://hdrihaven.com/">HDRI Haven</a>。</p>
+<h2 id="material与shader">Material与Shader</h2>
+<p>Shader在本话题中的地位非常重要，在这里先贴上知乎《零基础入门Unity Shader》系列文章。</p>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/46745694">零基础入门Unity Shader（一）</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/47163574">零基础入门Unity Shader（二）</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/47291987">零基础入门Unity Shader（三）</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/47506575">零基础入门Unity Shader（四）</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/47880664">零基础入门Unity Shader（五）</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/48530294">零基础入门Unity Shader（六）</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/49165180">零基础入门Unity Shader（七）</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/50492287">零基础入门Unity Shader（八）</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/51080323">零基础入门Unity Shader（九）</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/53676029">零基础入门Unity Shader（十）</a></li>
+</ul>
+<p>Material是材质球，Shader是着色器。Material和Shader之间的关系是，Material使用Shader：一个Material只能使用一个Shader，而一个Shader可以被多个Material使用。需要注意的是，<strong>每一个Material使用的着色器都是一个Shader实例</strong>。举个例子，一个Shader文件叫做<em>MyCustomShader.shader</em>，其中包含一个变量Smoothness，默认值为0.5，而Material A和Material B都要使用<em>MyCustomShader.shader</em>。这时，我们可以在Material A和Material B中任意改动Smoothnesss的值，而A和B互不影响。</p>
+<p>因此，Shader文件就是我们要编写的着色器文件，它定义了一个材质在camera中看起来是什么样子的。Shader文件可以看作是一个小小的算法，用于计算物体mesh的每一个vertex和face渲染到2D图像上的像素值。这个话题继续展开下去就是CG领域的内容了，可能需要学很多CG的知识才能研究的很透彻。</p>
+<p>但幸运的是，Unity的HDRP（High Definition Render Pipeline）和URP（Universal Render Pipeline）模板创建的项目可以使用Shader Graph这个图形化界面来编写Shader。这种情况下，各个组件变成了输入和输出，只需要按照规则将数据流穿起来，就可以自动生成Shader文件。</p>
+<blockquote>
+<p>在网上的tutorial中还有人介绍到LWRP（Light Weight Render Pipeline）模板也可以使用Shader Graph，但是我的版本中没有找到这个模板，因此就略过了。</p>
+</blockquote>
+<p>此外，HDRP模板中的材质本身就可以增设折射属性，这使得我们不用借助Shader去搞伪折射，而直接调参即可。所以我们接下来分两个部分，一个部分是使用Shader Graph工具写一个实现折射+反射+菲涅尔效应（Fresnel Effect）的<em>shadergraph</em>文件；另一部分是直接使用UDRP中的Lit Material，并在此基础上调参实现反射和折射效果。</p>
+<h2 id="shader-graph-in-urp">Shader Graph in URP</h2>
+<p>首先创建一个新项目，模板选择Universal Rendering Pipeline。</p>
+<h3 id="通过摄像机拍摄纹理进行折射">通过摄像机拍摄纹理进行折射</h3>
+<p>参考视频：<a href="https://www.youtube.com/watch?v=EELbMlnOzQE">here</a></p>
+<p>这个折射Shader是从相机拍摄的图片出发（也就是观察者的视角），通过Unity内置函数<em>refract</em>将图片按照给定的View和Normal以及IOR（折射率）进行折射计算，并把这个结果进行一系列的后处理，最终放在物体上进行渲染。</p>
+<p>这个方法显然是一种比较假的折射方式，劣势在于它只能渲染出摄像机看到的画面，如果摄像机看不到，它也就没法折射出来。因此可以看到，当摄像头视角离折射物体较近时，边缘部分会出现条纹效果。如果像视频中一样使用Floor和Substract模块，那么将会出现“万花筒”效果。</p>
+<p>但是，这种方法的优势在于，它的计算开销较小，同时在场景中可以更加真实地渲染多个物体，而且不同物体之间也可以相互渲染出来。渲染效果更加真实，实时性也更强。</p>
+<h3 id="通过reflection-probe进行折射">通过Reflection Probe进行折射</h3>
+<p>参考视频：<a href="https://www.youtube.com/watch?v=C5YfSmSLZHI">here</a></p>
+<p>借助Reflection Probe反射出来的画面进行折射的方式可以更加真实地做出折射的效果。因为这里的折射源不仅仅是摄像机所能拍摄到的范围，而是真实的整个范围。但是相应的也就会出现一些问题，比如</p>
+<ul>
+<li>Reflection Probe模块默认是只能反射场景的画面的，如果场景中有物体，则无法反射出来，因此多物体之间的折射和反射并不真实。</li>
+<li>如果把Reflection Probe的模式设置为realtime，则资源开销变大。</li>
+<li>Reflection Probe是有分辨率的，如果分辨率较低，折射出来的部分会比较模糊；如果分辨率较高，相应的开销就会变大。</li>
+</ul>
+<h2 id="lit-material-in-hdrp">Lit Material in HDRP</h2>
+<p>参考视频：<a href="https://www.youtube.com/watch?v=XTnobfLSTV0">here</a></p>
+<p>如果不考虑开销问题，只考虑真实性问题，那么可以直接选用High Definition Rendering Pipeline这个模板。这一模板下的Standard Shader直接加入了Transparent物体的属性，可以直接调节折射率、菲涅尔效应等等，还可以选择折射模式，详见视频。</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%974%E9%80%8F%E6%98%8E%E6%9D%90%E8%B4%A8%E6%8A%98%E5%B0%84%E4%B8%8E%E5%8F%8D%E5%B0%84/>http://mvig.sjtu.edu.cn/robotflow/article/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%974%E9%80%8F%E6%98%8E%E6%9D%90%E8%B4%A8%E6%8A%98%E5%B0%84%E4%B8%8E%E5%8F%8D%E5%B0%84/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/simulation/">
+                    #simulation</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/unity/">
+                    #unity</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%973articulationbody/" class="prev" rel="prev" title="C Sharp玩unity系列3——ArticulationBody"><i class="iconfont icon-left"></i>&nbsp;C Sharp玩unity系列3——ArticulationBody</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/unity%E7%9A%84%E5%9D%91%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" class="next" rel="next" title="unity踩坑指南（持续更新）">unity踩坑指南（持续更新）&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

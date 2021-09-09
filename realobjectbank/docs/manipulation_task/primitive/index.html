@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en" dir=>
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Primitives#本文给出的Primitives，省去了PreCondition和EndCondition的描述，在PrimitiveNet里给出了部分sample，详细的请找Wenqiang要数据库。
+因此，我们在这里主要关注Contact和constraint。
+0-Point Primitives#为了完备，当然先说一下没有Contact的情况，那就是0-Point的Primitive。那么这个定义有没有意义呢？当然是有的，无论是视觉伺服，还是无处不在的Monitor，对于task而言和对象都是无物理接触的。
+ eye contact ear contact status check move  1-Point Primitives#1-Point Primitive表示这个primitive最少可以用1个contact点完成，但更多的点当然也是ok的。当然鉴于实际的机械爪都胖胖的，所以实践中肯定也不只一个点了。
+ Push：单点情况下的push，通常也叫poke  trajectory constraint：包括从A点把sth/some point推到B点；假装推A但没推动等。 force constraint：Spread   Pull：  trajectory constraint   Flip/Roll Release：考虑一下指尖转篮球，然后把它放掉，这就是单点的release  2-Point Primitives#同理，更多的点完成这些primitive也是ok的。
+ Grasp  trajectory constraint force constraint    虽然目前最强的机械手有24个自由度，但在不考虑in-hand manipulation的情况下，我们定义到2-point primitive就行了。更多的点主要是提供了：
+ 冗余度，保持稳定 in-hand调整的可行性 某些奇妙抓型的可能性（比如握笔，握筷子）  需要注意的是，尽管我们多次说了在这个定义中暂时不考虑in-hand manipulation，但日常生活中，in-hand manipulation其实是无处不在的，包括握笔写字，虽然它也可以在不dexterous的情况下完成，但一定是少了笔头摇曳那味儿。我们会在Task章节里收录一些in-hand manipulation，并也尝试尽可能把它们放进这套框架里。">
+<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="Primitive" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://mvig.sjtu.edu.cn/realobjectbank/docs/manipulation_task/primitive/" />
+
+<title>Primitive | Real Object Bank</title>
+<link rel="manifest" href="/realobjectbank/manifest.json">
+<link rel="icon" href="/realobjectbank/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/realobjectbank/book.min.6cd8553a6854f4812343f0f0c8baca31271e686434f381fbe3c7226f66639176.css" integrity="sha256-bNhVOmhU9IEjQ/DwyLrKMSceaGQ084H748cib2ZjkXY=">
+<script defer src="/realobjectbank/en.search.min.4d829ebd593d69c127b361dc6aa16229183b92744e7d698d78b69327668fb825.js" integrity="sha256-TYKevVk9acEns2HcaqFiKRg7knROfWmNeLaTJ2aPuCU="></script>
+
+<script defer src="/realobjectbank/sw.min.c4ef7997be86a6966c49234864dd556f9a616c517050765f4ca07ba54540624d.js" integrity="sha256-xO95l76GppZsSSNIZN1Vb5phbFFwUHZfTKB7pUVAYk0="></script>
+<link rel="alternate" type="application/rss+xml" href="https://mvig.sjtu.edu.cn/realobjectbank/docs/manipulation_task/primitive/index.xml" title="Real Object Bank" />
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body dir=>
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/realobjectbank"><span>Real Object Bank</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/object/" class="">Object</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/object/real/" class="collapsed ">Real</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/object/cad/" class="collapsed ">CAD</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/object/tools/" class="">Tools</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/scene/" class="">Scene</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/scene/real/" class="collapsed ">Real</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/scene/sim/" class="collapsed ">Simulation</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/scene/tools/" class="">Tools</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/perception_task/" class="">Perception Task Zoo</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/perception_task/6dof/" class="">Object 6DoF Estimation</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/perception_task/6dof_part/" class="">Object Articulation Estimation</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/perception_task/point_match/" class="">Point Matching</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/" class="">Manipulation Task Zoo</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/concept/" class="collapsed ">Concept</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/primitive/" class="collapsed active">Primitive</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/task/" class="collapsed ">Tasks</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/primitivenet/" class="collapsed ">PrimitiveNet</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/realobjectbank/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Primitive</strong>
+
+  <label for="toc-control">
+    
+    <img src="/realobjectbank/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#primitives">Primitives</a>
+      <ul>
+        <li><a href="#0-point-primitives">0-Point Primitives</a></li>
+        <li><a href="#1-point-primitives">1-Point Primitives</a></li>
+        <li><a href="#2-point-primitives">2-Point Primitives</a></li>
+      </ul>
+    </li>
+    <li><a href="#几个延续问题">几个延续问题</a></li>
+  </ul>
+</nav>
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="primitives">
+  Primitives
+  <a class="anchor" href="#primitives">#</a>
+</h1>
+<p>本文给出的Primitives，省去了PreCondition和EndCondition的描述，在PrimitiveNet里给出了部分sample，详细的请找Wenqiang要数据库。</p>
+<p>因此，我们在这里主要关注Contact和constraint。</p>
+<h2 id="0-point-primitives">
+  0-Point Primitives
+  <a class="anchor" href="#0-point-primitives">#</a>
+</h2>
+<p>为了完备，当然先说一下没有Contact的情况，那就是0-Point的Primitive。那么这个定义有没有意义呢？当然是有的，无论是视觉伺服，还是无处不在的Monitor，对于task而言和对象都是无物理接触的。</p>
+<ol>
+<li>eye contact</li>
+<li>ear contact</li>
+<li>status check</li>
+<li>move</li>
+</ol>
+<h2 id="1-point-primitives">
+  1-Point Primitives
+  <a class="anchor" href="#1-point-primitives">#</a>
+</h2>
+<p>1-Point Primitive表示这个primitive最少可以用1个contact点完成，但更多的点当然也是ok的。当然鉴于实际的机械爪都胖胖的，所以实践中肯定也不只一个点了。</p>
+<ol>
+<li>Push：单点情况下的push，通常也叫poke
+<ul>
+<li>trajectory constraint：包括从A点把sth/some point推到B点；假装推A但没推动等。</li>
+<li>force constraint：Spread</li>
+</ul>
+</li>
+<li>Pull：
+<ul>
+<li>trajectory constraint</li>
+</ul>
+</li>
+<li>Flip/Roll</li>
+<li>Release：考虑一下指尖转篮球，然后把它放掉，这就是单点的release</li>
+</ol>
+<h2 id="2-point-primitives">
+  2-Point Primitives
+  <a class="anchor" href="#2-point-primitives">#</a>
+</h2>
+<p>同理，更多的点完成这些primitive也是ok的。</p>
+<ol>
+<li>Grasp
+<ul>
+<li>trajectory constraint</li>
+<li>force constraint</li>
+</ul>
+</li>
+</ol>
+<p>虽然目前最强的机械手有24个自由度，但在不考虑in-hand manipulation的情况下，我们定义到2-point primitive就行了。更多的点主要是提供了：</p>
+<ul>
+<li>冗余度，保持稳定</li>
+<li>in-hand调整的可行性</li>
+<li>某些奇妙抓型的可能性（比如握笔，握筷子）</li>
+</ul>
+<p>需要注意的是，尽管我们多次说了在这个定义中暂时不考虑in-hand manipulation，但日常生活中，in-hand manipulation其实是无处不在的，包括握笔写字，虽然它也可以在不dexterous的情况下完成，但一定是少了笔头摇曳那味儿。我们会在Task章节里收录一些in-hand manipulation，并也尝试尽可能把它们放进这套框架里。</p>
+<h1 id="几个延续问题">
+  几个延续问题
+  <a class="anchor" href="#%e5%87%a0%e4%b8%aa%e5%bb%b6%e7%bb%ad%e9%97%ae%e9%a2%98">#</a>
+</h1>
+<ul>
+<li>单手的atom primitive是不是真的只有这么几个？
+<ul>
+<li>我觉得是，可能有漏网之鱼，但不会多。</li>
+</ul>
+</li>
+<li>双手是否有primitive？
+<ul>
+<li>通常复杂性的上升一定会带来一些群体性的特性，但我想了很久确实难以找出一个有意义的双手专属primitive。</li>
+</ul>
+</li>
+</ul>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+  
+
+
+  
+
+  
+
+
+
+<div class="book-languages" tabindex="0" aria-haspopup="true">
+  <ul>
+    <li class="flex align-center">
+      <img src="/realobjectbank/svg/translate.svg" class="book-icon" alt="Languages" />
+      English
+    </li> 
+  </ul>
+
+  <ul class="book-languages-list">
+    
+    <li class="active">
+      <a href="https://mvig.sjtu.edu.cn/realobjectbank/" class="flex align-center">
+        <img src="/realobjectbank/svg/translate.svg" class="book-icon" alt="Languages" />
+        English
+      </a>
+    </li>
+    
+    <li class="">
+      <a href="https://mvig.sjtu.edu.cn/realobjectbank/zh/" class="flex align-center">
+        <img src="/realobjectbank/svg/translate.svg" class="book-icon" alt="Languages" />
+        Chinese
+      </a>
+    </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/alex-shpak/hugo-book/edit/master/exampleSite/content/docs/manipulation_task/primitive/_index.md" target="_blank" rel="noopener">
+      <img src="/realobjectbank/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#primitives">Primitives</a>
+      <ul>
+        <li><a href="#0-point-primitives">0-Point Primitives</a></li>
+        <li><a href="#1-point-primitives">1-Point Primitives</a></li>
+        <li><a href="#2-point-primitives">2-Point Primitives</a></li>
+      </ul>
+    </li>
+    <li><a href="#几个延续问题">几个延续问题</a></li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

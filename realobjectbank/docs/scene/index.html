@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en" dir=>
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Scene#场景是放置物体和操作者的地方，它本身由不可动的物体组成（墙，天花板，地板等），如果有一些物体设定为是不可动的（比如窗），那么它可以作为scene的一部分，如果设定为是可动的，那么请按照Object处理。
+和物体一样，它可以通过现实或者仿真的形式接触。
+场景的标注格式（updating~）#有什么建议可以跟我说。
+   标注项 标注格式 备注     类名/category 文本 可以结合wordnet形成taxonomy   几何模型/3D model mesh/sparse point cloud 如果mesh拿不到，可以用sparse点集代替   建模方式/modeling method 文本 cad，scan，slam   扫描仪型号/scanner model 文本 适用于建模方式为“scan”，“slam”的物体   纹理/texture 图片    材质/material 图片    尺寸/size 数值    光源/light source object 指定场景中的某个物体作为光源   区域功能/Affordance 热力图 格式暂定    ">
+<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="Scene" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://mvig.sjtu.edu.cn/realobjectbank/docs/scene/" />
+
+<title>Scene | Real Object Bank</title>
+<link rel="manifest" href="/realobjectbank/manifest.json">
+<link rel="icon" href="/realobjectbank/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/realobjectbank/book.min.6cd8553a6854f4812343f0f0c8baca31271e686434f381fbe3c7226f66639176.css" integrity="sha256-bNhVOmhU9IEjQ/DwyLrKMSceaGQ084H748cib2ZjkXY=">
+<script defer src="/realobjectbank/en.search.min.4d829ebd593d69c127b361dc6aa16229183b92744e7d698d78b69327668fb825.js" integrity="sha256-TYKevVk9acEns2HcaqFiKRg7knROfWmNeLaTJ2aPuCU="></script>
+
+<script defer src="/realobjectbank/sw.min.c4ef7997be86a6966c49234864dd556f9a616c517050765f4ca07ba54540624d.js" integrity="sha256-xO95l76GppZsSSNIZN1Vb5phbFFwUHZfTKB7pUVAYk0="></script>
+<link rel="alternate" type="application/rss+xml" href="https://mvig.sjtu.edu.cn/realobjectbank/docs/scene/index.xml" title="Real Object Bank" />
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body dir=>
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/realobjectbank"><span>Real Object Bank</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/object/" class="">Object</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/object/real/" class="collapsed ">Real</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/object/cad/" class="collapsed ">CAD</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/object/tools/" class="">Tools</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/scene/" class="active">Scene</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/scene/real/" class="collapsed ">Real</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/scene/sim/" class="collapsed ">Simulation</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/scene/tools/" class="">Tools</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/perception_task/" class="">Perception Task Zoo</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/perception_task/6dof/" class="">Object 6DoF Estimation</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/perception_task/6dof_part/" class="">Object Articulation Estimation</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/perception_task/point_match/" class="">Point Matching</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/" class="">Manipulation Task Zoo</a>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/concept/" class="collapsed ">Concept</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/primitive/" class="collapsed ">Primitive</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/task/" class="collapsed ">Tasks</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/realobjectbank/docs/manipulation_task/primitivenet/" class="collapsed ">PrimitiveNet</a>
+  
+
+          
+  
+  
+  
+
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/realobjectbank/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Scene</strong>
+
+  <label for="toc-control">
+    
+    <img src="/realobjectbank/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#scene">Scene</a>
+      <ul>
+        <li><a href="#场景的标注格式updating">场景的标注格式（updating~）</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="scene">
+  Scene
+  <a class="anchor" href="#scene">#</a>
+</h1>
+<p>场景是放置物体和操作者的地方，它本身由不可动的物体组成（墙，天花板，地板等），如果有一些物体设定为是不可动的（比如窗），那么它可以作为scene的一部分，如果设定为是可动的，那么请按照Object处理。</p>
+<p>和物体一样，它可以通过现实或者仿真的形式接触。</p>
+<h2 id="场景的标注格式updating">
+  场景的标注格式（updating~）
+  <a class="anchor" href="#%e5%9c%ba%e6%99%af%e7%9a%84%e6%a0%87%e6%b3%a8%e6%a0%bc%e5%bc%8fupdating">#</a>
+</h2>
+<p>有什么建议可以跟我说。</p>
+<table>
+<thead>
+<tr>
+<th>标注项</th>
+<th>标注格式</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>类名/category</td>
+<td>文本</td>
+<td>可以结合wordnet形成taxonomy</td>
+</tr>
+<tr>
+<td>几何模型/3D model</td>
+<td>mesh/sparse point cloud</td>
+<td>如果mesh拿不到，可以用sparse点集代替</td>
+</tr>
+<tr>
+<td>建模方式/modeling method</td>
+<td>文本</td>
+<td>cad，scan，slam</td>
+</tr>
+<tr>
+<td>扫描仪型号/scanner model</td>
+<td>文本</td>
+<td>适用于建模方式为“scan”，“slam”的物体</td>
+</tr>
+<tr>
+<td>纹理/texture</td>
+<td>图片</td>
+<td></td>
+</tr>
+<tr>
+<td>材质/material</td>
+<td>图片</td>
+<td></td>
+</tr>
+<tr>
+<td>尺寸/size</td>
+<td>数值</td>
+<td></td>
+</tr>
+<tr>
+<td>光源/light source</td>
+<td>object</td>
+<td>指定场景中的某个物体作为光源</td>
+</tr>
+<tr>
+<td>区域功能/Affordance</td>
+<td>热力图</td>
+<td>格式暂定</td>
+</tr>
+</tbody>
+</table>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+  
+
+
+  
+
+  
+
+
+
+<div class="book-languages" tabindex="0" aria-haspopup="true">
+  <ul>
+    <li class="flex align-center">
+      <img src="/realobjectbank/svg/translate.svg" class="book-icon" alt="Languages" />
+      English
+    </li> 
+  </ul>
+
+  <ul class="book-languages-list">
+    
+    <li class="active">
+      <a href="https://mvig.sjtu.edu.cn/realobjectbank/" class="flex align-center">
+        <img src="/realobjectbank/svg/translate.svg" class="book-icon" alt="Languages" />
+        English
+      </a>
+    </li>
+    
+    <li class="">
+      <a href="https://mvig.sjtu.edu.cn/realobjectbank/zh/" class="flex align-center">
+        <img src="/realobjectbank/svg/translate.svg" class="book-icon" alt="Languages" />
+        Chinese
+      </a>
+    </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/alex-shpak/hugo-book/edit/master/exampleSite/content/docs/scene/_index.md" target="_blank" rel="noopener">
+      <img src="/realobjectbank/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#scene">Scene</a>
+      <ul>
+        <li><a href="#场景的标注格式updating">场景的标注格式（updating~）</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

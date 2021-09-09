@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9706build-type/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9704shared-library/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9705installing/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           All You Need for CMake系列05——Installing | RobotFlow
+       
+  </title>
+  <meta name="title" content="All You Need for CMake系列05——Installing | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "All You Need for CMake系列05——Installing",
+    "headline" : "All You Need for CMake系列05——Installing",
+    "description" : "All You Need for CMake系列05——Installing 准备代码 代码结构如下：\n.\r├── cmake-examples.conf\r├── CMakeLists.txt\r├── include\r│ └── installing\r│ └── Hello.h\r└── src\r├── Hello.cpp\r└── main.cpp\r相较于之前，多了一个cmake-examples.conf文件，这个是用来配置一些cmake选项的。之前的shared\/static改成了installing，这是强调一下是不是动态\/静态lib跟目录结构没关系，只跟下面的CMakeLists文件的写法有关。\nHello.h里内容如下：\n#ifndef __HELLO_H__ #define __HELLO_H__  class Hello { public: void print(); }; #endif Hello.cpp里内容如下：\n#include \u0026lt;iostream\u0026gt; #include \u0026#34;installing\/Hello.h\u0026#34; void Hello::print() { std::cout \u0026lt;\u0026lt; \u0026#34;Hello Install!\u0026#34; \u0026lt;\u0026lt; std::endl; } main.cpp\n#include \u0026#34;installing\/Hello.h\u0026#34; int main(int argc, char *argv[]) { Hello hi; hi.print(); return 0; } CMakeLists.",
+    "inLanguage" : "en-us",
+    "author" : "徐文强",
+    "creator" : "徐文强",
+    "publisher": "徐文强",
+    "accountablePerson" : "徐文强",
+    "copyrightHolder" : "徐文强",
+    "copyrightYear" : "2021",
+    "datePublished": "2021-02-26 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2021-02-26 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/all-you-need-for-cmake%E7%B3%BB%E5%88%9705installing\/",
+    "wordCount" : "176",
+    "keywords" : [ "cmake","cpp", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">All You Need for CMake系列05——Installing</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">徐文强</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2021-02-26 itemprop="datePublished">February 26, 2021</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="all-you-need-for-cmake系列05installing">All You Need for CMake系列05——Installing</h1>
+<h2 id="准备代码">准备代码</h2>
+<p>代码结构如下：</p>
+<pre><code>.
+├── cmake-examples.conf
+├── CMakeLists.txt
+├── include
+│   └── installing
+│       └── Hello.h
+└── src
+    ├── Hello.cpp
+    └── main.cpp
+</code></pre><p>相较于之前，多了一个cmake-examples.conf文件，这个是用来配置一些cmake选项的。之前的shared/static改成了installing，这是强调一下是不是动态/静态lib跟目录结构没关系，只跟下面的CMakeLists文件的写法有关。</p>
+<p><code>Hello.h</code>里内容如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#ifndef __HELLO_H__
+</span><span style="color:#75715e">#define __HELLO_H__
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Hello</span>
+{
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">void</span> print();
+};
+
+<span style="color:#75715e">#endif
+</span></code></pre></div><p><code>Hello.cpp</code>里内容如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;installing/Hello.h&#34;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">void</span> Hello<span style="color:#f92672">::</span>print()
+{
+    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Hello Install!&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+}
+</code></pre></div><p><code>main.cpp</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;installing/Hello.h&#34;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>argv[])
+{
+    Hello hi;
+    hi.print();
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><p><code>CMakeLists.txt</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake">cmake_minimum_required(<span style="color:#e6db74">VERSION</span> <span style="color:#e6db74">3.5</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>project(<span style="color:#e6db74">cmake_examples_install</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>add_library(<span style="color:#e6db74">cmake_examples_inst</span> <span style="color:#e6db74">SHARED</span>
+    <span style="color:#e6db74">src/Hello.cpp</span>
+)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>target_include_directories(<span style="color:#e6db74">cmake_examples_inst</span>
+    <span style="color:#e6db74">PUBLIC</span> 
+        <span style="color:#f92672">${</span>PROJECT_SOURCE_DIR<span style="color:#f92672">}</span><span style="color:#e6db74">/include</span>
+)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>add_executable(<span style="color:#e6db74">cmake_examples_inst_bin</span>
+    <span style="color:#e6db74">src/main.cpp</span>
+)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>target_link_libraries( <span style="color:#e6db74">cmake_examples_inst_bin</span>
+    <span style="color:#e6db74">PRIVATE</span> 
+        <span style="color:#e6db74">cmake_examples_inst</span>
+)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e">############################################################
+</span><span style="color:#75715e"># Install
+</span><span style="color:#75715e">############################################################
+</span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Binaries
+</span><span style="color:#75715e"></span>install (<span style="color:#e6db74">TARGETS</span> <span style="color:#e6db74">cmake_examples_inst_bin</span>
+    <span style="color:#e6db74">DESTINATION</span> <span style="color:#e6db74">bin</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Library
+</span><span style="color:#75715e"># Note: may not work on windows
+</span><span style="color:#75715e"></span>install (<span style="color:#e6db74">TARGETS</span> <span style="color:#e6db74">cmake_examples_inst</span>
+    <span style="color:#e6db74">LIBRARY</span> <span style="color:#e6db74">DESTINATION</span> <span style="color:#e6db74">lib</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Header files
+</span><span style="color:#75715e"></span>install(<span style="color:#e6db74">DIRECTORY</span> <span style="color:#f92672">${</span>PROJECT_SOURCE_DIR<span style="color:#f92672">}</span><span style="color:#e6db74">/include/</span> 
+    <span style="color:#e6db74">DESTINATION</span> <span style="color:#e6db74">include</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Config
+</span><span style="color:#75715e"></span>install (<span style="color:#e6db74">FILES</span> <span style="color:#e6db74">cmake-examples.conf</span>
+    <span style="color:#e6db74">DESTINATION</span> <span style="color:#e6db74">etc</span>)<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p><code>cmake-examples.conf</code>：这里创建一个空文件即可。</p>
+<h2 id="要点">要点</h2>
+<ol>
+<li>在本教程中演示了如何在CMakeLists.txt中添加对安装的支持。CMakeLists的前半段和前文Shared Library的部分一致。我们看看install函数的使用</li>
+<li>install(标识符 对象 目标根目录 目标文件夹)
+<ul>
+<li>标识符有TARGETS，DIRECTORY，FILES。TARGETS用于编译出来的lib或者二进制文件。DIRECTORY后面跟目录地址，FILES跟文件地址</li>
+<li>DESTINATION就是$CMAKE_INSTALL_PREFIX里定义的路径，详见下面<a href="#%E4%BF%AE%E6%94%B9%E5%AE%89%E8%A3%85%E8%B7%AF%E5%BE%84">修改安装路径</a>部分。最终路径是目标根目录+目录文件夹的组合路径</li>
+</ul>
+</li>
+<li>在windows下面的动态lib和linux上有一些区别。不过我们暂时不追求通用平台的开发。</li>
+</ol>
+<h2 id="编译流程">编译流程</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">mkdir build
+cd build
+cmake ..
+make
+
+sudo make install
+</code></pre></div><p>在生成出来的install_manifest.txt里可以看到各文件的安装路径。</p>
+<h3 id="修改安装路径">修改安装路径</h3>
+<p>安装路径的默认变量是<code>CMAKE_INSTALL_PREFIX</code>，默认是/usr/local，如果需要修改，可以在cmake的时候添加一个argument：<code>cmake .. -DCMAKE_INSTALL_PREFIX=/install/location</code></p>
+<p>如果不想每次都在命令行上输入，可以在CMakeLists里加上这么一段：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmake" data-lang="cmake">if( <span style="color:#e6db74">CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT</span> )<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>  message(<span style="color:#e6db74">STATUS</span> <span style="color:#e6db74">&#34;Setting default CMAKE_INSTALL_PREFIX path to ${CMAKE_BINARY_DIR}/install&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>  set(<span style="color:#e6db74">CMAKE_INSTALL_PREFIX</span> <span style="color:#e6db74">&#34;${CMAKE_BINARY_DIR}/install&#34;</span> <span style="color:#e6db74">CACHE</span> <span style="color:#e6db74">STRING</span> <span style="color:#e6db74">&#34;The path to use for make install&#34;</span> <span style="color:#e6db74">FORCE</span>)<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>endif()<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>实际起作用的是set那一句，其中可以把${CMAKE_BINARY_DIR}/install改成你想指定的路径。</p>
+<p>也可以在make install后面加一个DESTDIR路径<code>make install DESTDIR=/path/to/install</code>，但这样安装出来的路径是<code>/path/to/install/usr/local</code></p>
+<h3 id="uninstall">Uninstall</h3>
+<p>通常不会有人在CMakeLists里面写uninstall的命令，添加uninstall可以参考<a href="https://gitlab.kitware.com/cmake/community/-/wikis/FAQ">这里</a>。不过大概率也用不上。</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9705installing/>http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9705installing/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/cmake/">
+                    #cmake</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/cpp/">
+                    #cpp</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9706build-type/" class="prev" rel="prev" title="All You Need for CMake系列06——Build Type"><i class="iconfont icon-left"></i>&nbsp;All You Need for CMake系列06——Build Type</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/all-you-need-for-cmake%E7%B3%BB%E5%88%9704shared-library/" class="next" rel="next" title="All You Need for CMake系列04——Shared Library">All You Need for CMake系列04——Shared Library&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

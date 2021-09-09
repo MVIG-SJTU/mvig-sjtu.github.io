@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/%E6%9D%9C%E7%BB%9Dtmux%E9%87%8Cconda%E7%8E%AF%E5%A2%83%E9%94%99%E4%B9%B1%E4%B9%8B%E4%B8%80%E5%8A%B3%E6%B0%B8%E9%80%B8%E5%8A%9E%E6%B3%95/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/graspit%E5%AE%89%E8%A3%85%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/robotflow-task-zoo/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           RobotFlow Task Zoo | RobotFlow
+       
+  </title>
+  <meta name="title" content="RobotFlow Task Zoo | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "RobotFlow Task Zoo",
+    "headline" : "RobotFlow Task Zoo",
+    "description" : "RobotFlow Task Zoo 本文主要收集主流实验中的manipulation task，并在最后试图让这些task从概念层面总结一下（某种意义上也是meta learning），由此分析出当前task定义的范围和下一步可能的发展。\n眼下的manipulation related benchmark tasks总结 主要参考的文章有meta-world, RLBench, surreal\n各任务具体的任务描述见文末。\n首先，我们先把各benchmark里的task统一地总结起来。\n关于各primitive primitive分两种，接触型primitve和运动型primitve。这里假定完成接触型primitive后手指和物体在一定程度上可以认为是相对静止的。\n grasp：接触型，单指“夹”这个动作，grasp有三个参数，一个是approach pose，一个是物体上的抓点，一个是施加的力。仿真问题一般不考虑力，但为了描述完整还是放这儿。决定这三个参数的叫grasp planner。 push：接触型，有三个参数，一个是approach pose，一个是push type（有用指侧推，有用指尖推，也有两指并拢推），一个是力。决定这三个参数的叫push planner。 move：运动型，是指手臂上的运动，无论是带物体还是不带物体。move的轨迹主要来自plan，约束是planner综合当前的可运动空间（避障）和物体的knowledge，以及对task的理解（物体和物体之间的关系对task的作用）考虑的，随着任务越多需要考虑的越复杂，不过这个是planner的问题，对于move来说它只用接受关于trajectory的指令。  reach是所有任务第一步都要做的，所以在动作序列里，除了只做reach操作以外的，都去掉了reach 常见的特殊move轨迹有：  rotate slide hit pour 铲     insert：运动型，这个动作包含peg in hole和hole out peg。理论上如果一切都很准，那么直接move就完事了，但之所以把insert拧出来，是因为解决距离洞口的误差是这个primitive的精髓所在，有点后处理的意思。  单纯任务    动作序列 任务名称 考虑物-物\/环境关系     move reach; reach with wall    grasp -\u0026gt; move turn on faucet; turn off faucet;turn dial; pull handle;turn on faucet; turn off faucet;turn dial; pull handle;get coffee; pull handle side;basketball; pull with stick; disassemble nut; hammer;slide plate side; retrieve plate side;pull mug; unplug peg; close window; open window; open door; open drawer;beat the buzz; change clock;hockey; open fridge;open microwave; open oven;open wine bottle; pick and lift;pick up cup; play jenga;pour from cup to cup; scoop with spatula;straghten rope; sweep to dustpan;take umbrella out of umbrella stand; take usb out of computer;turn oven on; turn tap; unplug charger;water plants; wipe desk √   grasp -\u0026gt; move -\u0026gt; release stack; unstack; place onto shelf;pick \u0026amp; place; open box; close box; pick bin; get ice from fridge; meat off grill; meat on grill;move hanger; phone on base;place hanger on rack; put books on bookshelf;put bottle in fridge; put groceries in cupboard;put item in drawer; put knife on chopping board;put money in safe; put plate in colored dish rack;put rubbish in bin; put umbrella in umbrella stand;remove cups; setup checkers;set the table; stack cups; stack wine; take frame off hanger;take lid off saucepan; take item out of drawer;take money out safe; take off weighing scales;take plate off colored dish rack; take toilet roll off stand;weighing scales √   grasp -\u0026gt; move -\u0026gt; insert insert peg side; hang frame on hanger;hannoi square; insert usb in computer;place cups; place shape in shape sorter;plug charger in power supply; put knife in knife block;put toilet roll on stand; √   push -\u0026gt; move sweep; push; push back; press handle side; press handle;press button top; press button;lock door; unlock door; press switch    push -\u0026gt; move push with stick; sweep into hole; push mug; slide plate;soccer; retrieve plate; close drawer; close door; close\/open box2;close fridge; close\/open grill;close laptop lid; close microwave;lamp off; lamp on;toilet seat down; toilet seat up √    复合任务    任务名称 组合     press button wall reach with wall \u002b press botton   press button top w\/ wall reach with wall \u002b press botton top   push with wall push \u002b reach with wall   pick \u0026amp; place w\/ wall pick \u0026amp; place \u002b reach with wall   block pyramid stack * N   change channel pick \u0026amp; place \u002b press botton   TV off pick \u0026amp; place \u002b press botton   TV on pick \u0026amp; place \u002b press botton   close door2 close door \u002b press handle side   close jar pick \u0026amp; place \u002b change clock   empty container pick \u0026amp; place * N   empty dishwasher open door \u002b press handle \u002b push back \u002b pick \u0026amp; place   hit ball with queue pull handle \u002b reach   light bulb in pick \u0026amp; place \u002b change clock   light buib out change clock \u002b pick \u0026amp; place   open door2 press handle \u002b open door   open jar change clock \u002b pick \u0026amp; place   open window2 change clock \u002b push   put shoes in box open box2 \u002b pick \u0026amp; place   put tray in oven open oven \u002b pick \u0026amp; place   screw nail insert peg side \u002b change clock   slide cabinet open and place cups open window \u002b pick \u0026amp; place   solve puzzle pick \u0026amp; place * N   take cup out from cabinet open window \u002b pick \u0026amp; place   take shoes out of box open box2 \u002b pick \u0026amp; place   take tray out of oven open oven \u002b pick \u0026amp; place    双手任务    任务名称 左手 右手     bimanual lifting lift lift   bimanual peg-in-hole insert peg side grasp    简评当前设计的benchmark task 如上所述，我把目前的152种benchmark task根据primitive的序列分成6大类，涉及到的primitive只有4种。我们可以从中得到几点启示：",
+    "inLanguage" : "en-us",
+    "author" : "徐文强",
+    "creator" : "徐文强",
+    "publisher": "徐文强",
+    "accountablePerson" : "徐文强",
+    "copyrightHolder" : "徐文强",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-06-21 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2020-06-21 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/robotflow-task-zoo\/",
+    "wordCount" : "1068",
+    "keywords" : [ "robotflow","task", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">RobotFlow Task Zoo</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">徐文强</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-06-21 itemprop="datePublished">June 21, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/robotflow/"> robotflow </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="robotflow-task-zoo">RobotFlow Task Zoo</h1>
+<p>本文主要收集主流实验中的manipulation task，并在最后试图让这些task从概念层面总结一下（某种意义上也是meta learning），由此分析出当前task定义的范围和下一步可能的发展。</p>
+<h2 id="眼下的manipulation-related-benchmark-tasks总结">眼下的manipulation related benchmark tasks总结</h2>
+<p>主要参考的文章有<a href="https://meta-world.github.io/">meta-world</a>, <a href="https://sites.google.com/view/rlbench">RLBench</a>, <a href="https://surreal.stanford.edu/">surreal</a></p>
+<p>各任务具体的任务描述见文末。</p>
+<p>首先，我们先把各benchmark里的task统一地总结起来。</p>
+<h3 id="关于各primitive">关于各primitive</h3>
+<p>primitive分两种，接触型primitve和运动型primitve。这里假定完成接触型primitive后手指和物体在一定程度上可以认为是相对静止的。</p>
+<ul>
+<li>grasp：接触型，单指“夹”这个动作，grasp有三个参数，一个是approach pose，一个是物体上的抓点，一个是施加的力。仿真问题一般不考虑力，但为了描述完整还是放这儿。决定这三个参数的叫grasp planner。</li>
+<li>push：接触型，有三个参数，一个是approach pose，一个是push type（有用指侧推，有用指尖推，也有两指并拢推），一个是力。决定这三个参数的叫push planner。</li>
+<li>move：运动型，是指手臂上的运动，无论是带物体还是不带物体。move的轨迹主要来自plan，约束是planner综合当前的可运动空间（避障）和物体的knowledge，以及对task的理解（物体和物体之间的关系对task的作用）考虑的，随着任务越多需要考虑的越复杂，不过这个是planner的问题，对于move来说它只用接受关于trajectory的指令。
+<ul>
+<li>reach是所有任务第一步都要做的，所以在动作序列里，除了只做reach操作以外的，都去掉了reach</li>
+<li>常见的特殊move轨迹有：
+<ul>
+<li>rotate</li>
+<li>slide</li>
+<li>hit</li>
+<li>pour</li>
+<li>铲</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>insert：运动型，这个动作包含peg in hole和hole out peg。理论上如果一切都很准，那么直接move就完事了，但之所以把insert拧出来，是因为解决距离洞口的误差是这个primitive的精髓所在，有点后处理的意思。</li>
+</ul>
+<h3 id="单纯任务">单纯任务</h3>
+<table>
+<thead>
+<tr>
+<th>动作序列</th>
+<th>任务名称</th>
+<th>考虑物-物/环境关系</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>move</td>
+<td>reach; reach with wall</td>
+<td></td>
+</tr>
+<tr>
+<td>grasp -&gt; move</td>
+<td>turn on faucet; turn off faucet;<!-- raw HTML omitted --> turn dial; pull handle;turn on faucet; turn off faucet;<!-- raw HTML omitted --> turn dial; pull handle;get coffee; pull handle side;<!-- raw HTML omitted --> basketball; pull with stick; <!-- raw HTML omitted -->disassemble nut; hammer;<!-- raw HTML omitted --> slide plate side; retrieve plate side;<!-- raw HTML omitted --> pull mug; unplug peg; <!-- raw HTML omitted -->close window; open window; <!-- raw HTML omitted -->open door; open drawer;<!-- raw HTML omitted -->beat the buzz; change clock;<!-- raw HTML omitted -->hockey; open fridge;<!-- raw HTML omitted -->open microwave; open oven;<!-- raw HTML omitted -->open wine bottle; pick and lift;<!-- raw HTML omitted -->pick up cup; play jenga;<!-- raw HTML omitted -->pour from cup to cup; scoop with spatula;<!-- raw HTML omitted -->straghten rope; sweep to dustpan;<!-- raw HTML omitted -->take umbrella out of umbrella stand; take usb out of computer;<!-- raw HTML omitted -->turn oven on; turn tap; unplug charger;<!-- raw HTML omitted -->water plants; wipe desk</td>
+<td>√</td>
+</tr>
+<tr>
+<td>grasp -&gt; move -&gt; release</td>
+<td>stack; unstack; place onto shelf;<!-- raw HTML omitted -->pick &amp; place; open box; close box; <!-- raw HTML omitted -->pick bin; get ice from fridge; <!-- raw HTML omitted -->meat off grill; meat on grill;<!-- raw HTML omitted -->move hanger; phone on base;<!-- raw HTML omitted -->place hanger on rack; put books on bookshelf;<!-- raw HTML omitted -->put bottle in fridge; put groceries in cupboard;<!-- raw HTML omitted -->put item in drawer; put knife on chopping board;<!-- raw HTML omitted -->put money in safe; put plate in colored dish rack;<!-- raw HTML omitted -->put rubbish in bin; put umbrella in umbrella stand;<!-- raw HTML omitted --> remove cups; setup checkers;<!-- raw HTML omitted -->set the table; stack cups; <!-- raw HTML omitted -->stack wine; take frame off hanger;<!-- raw HTML omitted -->take lid off saucepan; take item out of drawer;<!-- raw HTML omitted -->take money out safe; take off weighing scales;<!-- raw HTML omitted -->take plate off colored dish rack; take toilet roll off stand;<!-- raw HTML omitted --> weighing scales</td>
+<td>√</td>
+</tr>
+<tr>
+<td>grasp -&gt; move -&gt; insert</td>
+<td>insert peg side; hang frame on hanger;<!-- raw HTML omitted -->hannoi square; insert usb in computer;<!-- raw HTML omitted -->place cups; place shape in shape sorter;<!-- raw HTML omitted -->plug charger in power supply; put knife in knife block;<!-- raw HTML omitted -->put toilet roll on stand;</td>
+<td>√</td>
+</tr>
+<tr>
+<td>push -&gt; move</td>
+<td>sweep; push; push back; <!-- raw HTML omitted -->press handle side; press handle;<!-- raw HTML omitted --> press button top; press button;<!-- raw HTML omitted --> lock door; unlock door; press switch</td>
+<td></td>
+</tr>
+<tr>
+<td>push -&gt; move</td>
+<td>push with stick; sweep into hole; <!-- raw HTML omitted -->push mug; slide plate;<!-- raw HTML omitted --> soccer; retrieve plate; <!-- raw HTML omitted -->close drawer; close door; close/open box2;<!-- raw HTML omitted -->close fridge; close/open grill;<!-- raw HTML omitted -->close laptop lid; close microwave;<!-- raw HTML omitted --> lamp off; lamp on;<!-- raw HTML omitted -->toilet seat down; toilet seat up</td>
+<td>√</td>
+</tr>
+</tbody>
+</table>
+<h3 id="复合任务">复合任务</h3>
+<table>
+<thead>
+<tr>
+<th>任务名称</th>
+<th>组合</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>press button wall</td>
+<td>reach with wall + press botton</td>
+</tr>
+<tr>
+<td>press button top w/ wall</td>
+<td>reach with wall + press botton top</td>
+</tr>
+<tr>
+<td>push with wall</td>
+<td>push + reach with wall</td>
+</tr>
+<tr>
+<td>pick &amp; place w/ wall</td>
+<td>pick &amp; place + reach with wall</td>
+</tr>
+<tr>
+<td>block pyramid</td>
+<td>stack * N</td>
+</tr>
+<tr>
+<td>change channel</td>
+<td>pick &amp; place + press botton</td>
+</tr>
+<tr>
+<td>TV off</td>
+<td>pick &amp; place + press botton</td>
+</tr>
+<tr>
+<td>TV on</td>
+<td>pick &amp; place + press botton</td>
+</tr>
+<tr>
+<td>close door2</td>
+<td>close door + press handle side</td>
+</tr>
+<tr>
+<td>close jar</td>
+<td>pick &amp; place + change clock</td>
+</tr>
+<tr>
+<td>empty container</td>
+<td>pick &amp; place * N</td>
+</tr>
+<tr>
+<td>empty dishwasher</td>
+<td>open door + press handle + push back + pick &amp; place</td>
+</tr>
+<tr>
+<td>hit ball with queue</td>
+<td>pull handle + reach</td>
+</tr>
+<tr>
+<td>light bulb in</td>
+<td>pick &amp; place + change clock</td>
+</tr>
+<tr>
+<td>light buib out</td>
+<td>change clock + pick &amp; place</td>
+</tr>
+<tr>
+<td>open door2</td>
+<td>press handle + open door</td>
+</tr>
+<tr>
+<td>open jar</td>
+<td>change clock + pick &amp; place</td>
+</tr>
+<tr>
+<td>open window2</td>
+<td>change clock + push</td>
+</tr>
+<tr>
+<td>put shoes in box</td>
+<td>open box2 + pick &amp; place</td>
+</tr>
+<tr>
+<td>put tray in oven</td>
+<td>open oven + pick &amp; place</td>
+</tr>
+<tr>
+<td>screw nail</td>
+<td>insert peg side + change clock</td>
+</tr>
+<tr>
+<td>slide cabinet open and place cups</td>
+<td>open window + pick &amp; place</td>
+</tr>
+<tr>
+<td>solve puzzle</td>
+<td>pick &amp; place * N</td>
+</tr>
+<tr>
+<td>take cup out from cabinet</td>
+<td>open window + pick &amp; place</td>
+</tr>
+<tr>
+<td>take shoes out of box</td>
+<td>open box2 + pick &amp; place</td>
+</tr>
+<tr>
+<td>take tray out of oven</td>
+<td>open oven + pick &amp; place</td>
+</tr>
+</tbody>
+</table>
+<h3 id="双手任务">双手任务</h3>
+<table>
+<thead>
+<tr>
+<th>任务名称</th>
+<th>左手</th>
+<th>右手</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bimanual lifting</td>
+<td>lift</td>
+<td>lift</td>
+</tr>
+<tr>
+<td>bimanual peg-in-hole</td>
+<td>insert peg side</td>
+<td>grasp</td>
+</tr>
+</tbody>
+</table>
+<h2 id="简评当前设计的benchmark-task">简评当前设计的benchmark task</h2>
+<p>如上所述，我把目前的152种benchmark task根据primitive的序列分成6大类，涉及到的primitive只有4种。我们可以从中得到几点启示：</p>
+<ol>
+<li>基于两爪的gripper能涉及到的primitive就这么些了，如果要想扩展primitive，只能往dexterous hand/manipulation演进。把一些更复杂的primitive囊括进来。如果不走dexterous hand的路线，那primitive就结束了。
+<ul>
+<li>primitive中，move非常特殊，因为它根据运动的pattern也能总结出一些特化的pattern，从而在使用中也可以认为是primitive</li>
+</ul>
+</li>
+<li>在primitive有限的情况下任务的复杂性源于物体的形状多样性，材质的多样性，plan的复杂性
+<ul>
+<li>data-driven的方法是希望用数据来爆掉这些个复杂性，学出common structure</li>
+<li>如果我们不走这条路（因为做不过别人），那么就还是要往物体的建模，知识，plan上面去靠。</li>
+</ul>
+</li>
+<li>具体的说，现在的benchmark
+<ul>
+<li>重复性设计较多，有一些task名字不一样，但任务空间相似（当然，这个从服务meta-learning的角度不算坏事）</li>
+<li>受限于仿真环境中，对物体，对contact动力学的建模精度，task的复杂程度比较受限。任务的复杂性体现在，物体数量，物体position等。</li>
+<li>双手task关注较少</li>
+<li>关于叠衣服这种柔性物体为对象的task一般都是单独作为topic讨论的。</li>
+</ul>
+</li>
+</ol>
+<h2 id="我们的task-zoo">我们的task zoo</h2>
+<p>TODO</p>
+<h2 id="task-list详细清单">Task list详细清单</h2>
+<blockquote>
+<p>单手任务1-50来自meta-world，51-150来自RLBench，双手任务来自surreal。前50和后100个中有部分任务是重合的。</p>
+<p>根据后100个任务的定义，我推理出一个task定义的方式，就是大规模让人记录自己一天的生活，然后从中总结出理想中可以被机器人代替的，再看哪些容易被仿真，过滤掉一部分。流水账式日记是一个路子。</p>
+</blockquote>
+<h3 id="单手">单手：</h3>
+<ol>
+<li>turn on faucet</li>
+</ol>
+<ul>
+<li>任务描述：打开水龙头（旋转式）</li>
+<li>期望动作：
+<ul>
+<li>夹住faucet，完成faucet的旋转：grasp -&gt; move(Constraint$_{traj}$)</li>
+<li>从faucet的一侧，推的过程中完成旋转: push -&gt; move(Constraint$_{traj}$)</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li>sweep：物体在桌面上，沿着桌面推动</li>
+<li>stack：把一个物体（小块）叠放到另一个小块上</li>
+<li>unstack：从一个物体上，把目标物体移动到目标位置</li>
+<li>turn off faucet：关上水龙头（旋转式）</li>
+</ol>
+<ul>
+<li>期望动作：
+<ul>
+<li>反方向转回来</li>
+</ul>
+</li>
+</ul>
+<ol start="6">
+<li>push back：把一个物体往回推到指定位置</li>
+<li>pull lever：推杆，把杆拉起</li>
+</ol>
+<ul>
+<li>期望动作：从演示gif里看不出来这个task在干什么（也可以看出仿真有多不准了）</li>
+</ul>
+<ol start="8">
+<li>turn dial：旋钮</li>
+</ol>
+<ul>
+<li>期望动作：夹住旋钮，旋转</li>
+</ul>
+<ol start="9">
+<li>push with stick：通过推棍子，把物体间接地推到指定位置</li>
+<li>get coffee：把咖啡机下的杯子拿起来</li>
+<li>pull handle side：夹住handle，拉</li>
+<li>basketball：夹起一个小球，放入篮筐里（不是投球）</li>
+<li>pull with stick：通过拉棍子，把物体间接地拉到指定位置</li>
+<li>sweep into hole：sweep但物体要进洞，洞口会遇到insert类似的问题</li>
+<li>disassemble nut：把一个套圈从被套物边取出来。（解套）</li>
+<li>place onto shelf：把物体拿起，放架子上</li>
+<li>push mug：把杯子推到咖啡机下面（能接水的位置）</li>
+<li>press handle side：从handle的一侧，往下按</li>
+<li>hammer：抓起锤子锤钉子
+<ul>
+<li>仿真里的设定是钉子一推就进去</li>
+</ul>
+</li>
+<li>slide plate：从盘子一侧，推进目标区域</li>
+<li>slide plate side：夹着盘子两侧，推进目标区域</li>
+<li>press button wall：绕过墙，按墙后面的按钮</li>
+<li>press handle：从handle得一侧，往下按。这个动作和press handle side的区别是，side这个是两爪并拢，这个是单指下按。</li>
+<li>pull handle：把handle拉起来</li>
+<li>soccer：把一个球推进目标区域</li>
+<li>retrieve plate side：用两边夹的方式，把盘子从放盘区域取出来</li>
+<li>retrieve plate：用按着拉的方式，把盘子从放盘区域拉出来</li>
+<li>close drawer：通过handle把抽屉推进去</li>
+<li>press button top：从上往下按按钮</li>
+<li>reach：爪子没有东西，移动到指定位置</li>
+<li>press button top w/ wall：绕过墙，从上往下按按钮</li>
+<li>reach with wall：绕过墙到达指定位置</li>
+<li>insert peg side：用两端夹住棒子，插入洞中</li>
+<li>push：夹住推</li>
+<li>push with wall：夹住，绕墙推</li>
+<li>pick &amp; place w/ wall：抓起物体，过墙，放下</li>
+<li>press button：向前推button，和前面向下推button有区别</li>
+<li>pick &amp; place：抓起物体，到指定位置放下</li>
+<li>pull mug：把杯子从咖啡机下面拉出来</li>
+<li>unplug peg：把peg从孔位抽出</li>
+<li>close window：window上有handle，本质上还是抓着handle移动</li>
+<li>open window：window上有handle，本质上还是抓着handle移动</li>
+<li>open door：handle是hinge的，抓住拉开门</li>
+<li>close door：抓住门把手推</li>
+<li>open drawer：抓住handle，拉开抽屉</li>
+<li>open box：盒子的盖子上有一个handle，提起来就可打开盒子</li>
+<li>close box：把盖子放上box</li>
+<li>lock door：按一下门栓</li>
+<li>unlock door：把门栓抬起来</li>
+<li>pick bin：从一个bin里抓起物体，放到另一个bin里</li>
+<li>beat the buzz：一个带电的架子，举着一个带handle的环，从架子的一头到另一头，环不能碰到架子，否则就buzz</li>
+<li>block pyramid：stack的进阶版，涉及多个物体，叠多层</li>
+<li>change channel：把遥控器抓起来，调整到合适的方向（对准电视机），放下，按下换台按钮</li>
+<li>change clock：拧机械钟背后的发条</li>
+<li>close box2：这是一个掀盖的盒子，所以关上盒子就是把盖子翻转</li>
+<li>close door2：这个门是旋把式的门，抓起门把，关上</li>
+<li>close drawer，同28</li>
+<li>close fridge：推冰箱门，直到关上</li>
+<li>close grill：把烤箱盖子关上，动作上和55一样</li>
+<li>close jar：把盖子从旁边抓起来，放到jar上，旋转拧上</li>
+<li>close laptop lid：合上笔记本电脑的盖子</li>
+<li>close microwave：关上微波炉的门</li>
+<li>empty container：挨个把container/bin中的物体抓出来</li>
+<li>empty dishwasher：把洗碗机的门拉开，按倒合适的位置，把放碗碟的架子拉出来，把碗碟夹走</li>
+<li>get ice from fridge：把准备装冰的杯子放到冰箱门上的对应位置（可能这个冰箱能放冰？）</li>
+<li>hang frame on hanger：把相框挂在墙上的支出来的棍子/钉子上</li>
+<li>hannoi square：方形的套，套进柱子里</li>
+<li>hit ball with queue：用球杆打球，打进指定区域（台球）</li>
+<li>hockey：用hockey球杆把球推进指定区域</li>
+<li>insert usb in computer：抓起usb，插入台式机箱</li>
+<li>lamp off：按按钮</li>
+<li>lamp on：按按钮</li>
+<li>light bulb in：拿起灯泡，插入合适的位置，旋转</li>
+<li>light buib out：卸灯泡，73的反过程</li>
+<li>meat off grill：从烤肉架上把肉取出来，放旁边盘子里</li>
+<li>meat on grill：把肉放到烤架上</li>
+<li>move hanger：把挂着的衣架，从一个地方，移到另一个地方挂着</li>
+<li>open box2：55的反动作，把盖子掀开</li>
+<li>open door2：56的反动作，先按一下，再拉开门</li>
+<li>open drawer：同45</li>
+<li>open fridge：58的反动作</li>
+<li>open grill：59的反动作</li>
+<li>open jar：60的反动作</li>
+<li>open microwave：62的反动作</li>
+<li>open oven：抓住oven门上的handle，拉下来</li>
+<li>open window2：window上有个旋把，转一下推开</li>
+<li>open wine bottle：开瓶盖（讲道理这是一个双手任务，不过这里假设瓶身已经固定了）</li>
+<li>phone on base：座机，把电话放回座机上。</li>
+<li>pick and lift：抓起来，向上，不放</li>
+<li>pick up cup：把杯子抓起来，方向朝上</li>
+<li>place cups：茶杯放到茶杯架上，杯口倒挂</li>
+<li>place hanger on rack：把衣架挂到晾衣竿上</li>
+<li>place shape in shape sorter：有很多小形状，有一个板子，板子上是对应形状的凹槽。需要形状匹配的peg in hole</li>
+<li>play jenga：从一堆木块中抽出一个，木块堆不倒</li>
+<li>plug charger in power supply：把插头插入插座</li>
+<li>pour from cup to cup：从一个杯中把东西倒入另一个杯中</li>
+<li>press switch：开关时拨动式开关，往一侧拨是开</li>
+<li>push button：同29</li>
+<li>push buttons：29重复多次，按很多按钮</li>
+<li>put books on bookshelf：把几本书放进书架</li>
+<li>put bottle in fridge：把瓶子放进冰箱</li>
+<li>put groceries in cupboard：把物体放进橱柜</li>
+<li>put item in drawer：把东西放进抽屉</li>
+<li>put knife in knife block：把刀插进刀架</li>
+<li>put knife on chopping board：把刀放到菜板</li>
+<li>put money in safe：把钱放进保险柜</li>
+<li>put plate in colored dish rack：把盘子插入盘子架</li>
+<li>put rubbish in bin：扔垃圾</li>
+<li>put shoes in box：把鞋盒子打开，把鞋装进去。盒子还是掀盖式的</li>
+<li>put toilet roll on stand：把卫生纸卷插入卫生纸架</li>
+<li>put tray in oven：打开烤箱，把盘子放进去</li>
+<li>put umbrella in umbrella stand：把雨伞插入雨伞架</li>
+<li>reach and drag：夹住，拖</li>
+<li>reach target：同30</li>
+<li>remove cups：91的反操作</li>
+<li>scoop with spatula：铲起目标物</li>
+<li>screw nail：拿起螺丝刀拧螺丝</li>
+<li>set the table：摆盘，布置好刀叉盘</li>
+<li>setup checkers：摆棋盘，类似中国象棋初始位</li>
+<li>slide block to target：同2</li>
+<li>slide cabinet open：同42</li>
+<li>slide cabinet open and place cups：把储藏箱滑动打开，把杯子放箱子里</li>
+<li>solve puzzle：拼图</li>
+<li>stack blocks：同3</li>
+<li>stack cups：杯子套杯子</li>
+<li>stack wine：把红酒放到红酒架上</li>
+<li>straghten rope：把绳子弄直</li>
+<li>sweep to dustpan：把垃圾扫入畚箕</li>
+<li>take cup out from cabinet：拉开储藏室，取出杯子</li>
+<li>take frame off hanger：66的反动作</li>
+<li>take item out of drawer：103的反动作</li>
+<li>take lid off saucepan：揭开锅盖</li>
+<li>take money out safe：106的反动作</li>
+<li>take off weighing scales：从称上把东西拿走</li>
+<li>take plate off colored dish rack：107的反动作</li>
+<li>take shoes out of box：109的反动作</li>
+<li>take toilet roll off stand：110的反动作</li>
+<li>take tray out of oven：111的反动作</li>
+<li>take umbrella out of umbrella stand：112的反动作</li>
+<li>take usb out of computer：70的反动作</li>
+<li>toilet seat down：把马桶盖翻下来</li>
+<li>toilet seat up：141的反动作</li>
+<li>turn oven on：旋钮</li>
+<li>turn tap：旋钮式水龙头，旁边有阀门的，和1中的旋转式水龙头不一样</li>
+<li>tv off：遥控器关机</li>
+<li>tv on：遥控器开机</li>
+<li>unplug charger：95的反动作</li>
+<li>water plants：给盆栽浇水</li>
+<li>weighing scales：把物体放到称上去</li>
+<li>wipe desk：拿海绵/刷子擦桌子上不干净的地方</li>
+</ol>
+<h3 id="双手">双手</h3>
+<ol>
+<li>bimanual lifting：双手抬</li>
+<li>bimanual peg-in-hole：一手拿棒，一手拿带孔的板，在运动中插入孔中。</li>
+</ol>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/robotflow-task-zoo/>http://mvig.sjtu.edu.cn/robotflow/article/robotflow-task-zoo/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/robotflow/">
+                    #robotflow</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/task/">
+                    #task</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/%E6%9D%9C%E7%BB%9Dtmux%E9%87%8Cconda%E7%8E%AF%E5%A2%83%E9%94%99%E4%B9%B1%E4%B9%8B%E4%B8%80%E5%8A%B3%E6%B0%B8%E9%80%B8%E5%8A%9E%E6%B3%95/" class="prev" rel="prev" title="杜绝 tmux 中 conda 环境错乱之一劳永逸办法"><i class="iconfont icon-left"></i>&nbsp;杜绝 tmux 中 conda 环境错乱之一劳永逸办法</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/graspit%E5%AE%89%E8%A3%85%E8%B8%A9%E5%9D%91%E7%BB%8F%E9%AA%8C/" class="next" rel="next" title="GraspIt安装踩坑经验">GraspIt安装踩坑经验&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

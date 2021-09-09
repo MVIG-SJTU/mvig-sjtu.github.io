@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/robotflow%E5%B7%A5%E7%A8%8Btrack%E4%B8%80%E6%9C%9F/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/%E5%BD%93%E6%88%91%E4%BB%AC%E5%9C%A8%E8%B0%88%E8%AE%BAmotion-primitive%E7%9A%84%E6%97%B6%E5%80%99%E7%A9%B6%E7%AB%9F%E5%9C%A8%E8%B0%88%E8%AE%BA%E4%BB%80%E4%B9%88/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%9713d%E6%89%AB%E6%8F%8F%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2%E4%B8%BA-cad%E6%A8%A1%E5%9E%8Bpart-level_v5/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Articulation入库系列1——从3D扫描数据生成CAD模型（part-level）, 5th edition | RobotFlow
+       
+  </title>
+  <meta name="title" content="Articulation入库系列1——从3D扫描数据生成CAD模型（part-level）, 5th edition | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "Articulation入库系列1——从3D扫描数据生成CAD模型（part-level）, 5th edition",
+    "headline" : "Articulation入库系列1——从3D扫描数据生成CAD模型（part-level）, 5th edition",
+    "description" : "从3D扫描数据生成CAD模型（part-level） 所需软件  ExScan Pro 3X 2020（3D扫描仪自带的软件） Geomagic Deisign X 2019（逆向工程软件，可以用于把3D点云变为CAD模型）基本使用方法可见教程（只需要看前面6节视频）  操作步骤概要   标定手持扫描仪相机。   使用手持扫描仪进行扫描。   使用ExScan软件进行后处理（补洞、拼接等），并封装模型，生成点云模型(.asc)和面片模型(.obj)。   使用Design X软件对物体的整体面片模型(.obj)和点云模型(.asc)对齐坐标轴，具体操作步骤如下：   更改默认测量单位(mm-\u0026gt;m)。\n  （可选）对面片模型进行优化，进行加强形状、填孔等。\n  进行自动领域分割，根据情况微调（合并、重分块，调整几何类型等）。\n  创建参考平面、面片草图、草图等，为接下来的手动对齐提供参考。\n  手动对齐（同时对齐点云和面片），确定坐标轴的位置和方向。\n  导出对齐后的整体面片模型(.obj)和点云模型(.asc)。\n    使用Design X软件导出Joint（旋转轴、平移轴），具体操作步骤如下：  创建参考平面、面片草图、草图等，为画出Joint提供参考。 利用直线工具画出各个Joint，可以根据需要手动微调。 导出Joint对应的直线信息（.txt）。    使用Design X软件分割物体，具体操作步骤如下：  把点云分割成多个part。 利用每个part的点云自动生成面片，并把之前的整体面片模型的纹理复制上去，得到每个part的面片模型。 修改每个part的面片模型(.obj)的材质，使每个part的材质都是一样的。 导出每个part的面片模型(.obj)和点云模型(.asc)。    （？？？暂时可以省略）使用Design X软件对每个part的面片模型(.obj)和点云模型(.asc)对齐坐标轴，具体操作步骤如下：   为每个part创建新工程，导入步骤6中生成的面片模型和点云模型。",
+    "inLanguage" : "en-us",
+    "author" : "薛寒",
+    "creator" : "薛寒",
+    "publisher": "薛寒",
+    "accountablePerson" : "薛寒",
+    "copyrightHolder" : "薛寒",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-08-03 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2020-08-03 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%9713d%E6%89%AB%E6%8F%8F%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2%E4%B8%BA-cad%E6%A8%A1%E5%9E%8Bpart-level_v5\/",
+    "wordCount" : "156",
+    "keywords" : [ "3D", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Articulation入库系列1——从3D扫描数据生成CAD模型（part-level）, 5th edition</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">薛寒</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-08-03 itemprop="datePublished">August 3, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="从3d扫描数据生成cad模型part-level">从3D扫描数据生成CAD模型（part-level）</h1>
+<h2 id="所需软件">所需软件</h2>
+<ul>
+<li>ExScan Pro 3X 2020（3D扫描仪自带的软件）</li>
+<li>Geomagic Deisign X 2019（逆向工程软件，可以用于把3D点云变为CAD模型）基本使用方法可见<a href="https://www.bilibili.com/video/BV1WE411e7Mi">教程</a>（只需要看前面6节视频）</li>
+</ul>
+<h2 id="操作步骤概要">操作步骤概要</h2>
+<ol>
+<li>
+<h4 id="标定手持扫描仪相机">标定手持扫描仪相机。</h4>
+</li>
+<li>
+<h4 id="使用手持扫描仪进行扫描">使用手持扫描仪进行扫描。</h4>
+</li>
+<li>
+<h4 id="使用exscan软件进行后处理补洞拼接等并封装模型生成点云模型asc和面片模型obj">使用ExScan软件进行后处理（补洞、拼接等），并封装模型，生成点云模型(.asc)和面片模型(.obj)。</h4>
+</li>
+<li>
+<h4 id="使用design-x软件对物体的整体面片模型obj和点云模型asc对齐坐标轴具体操作步骤如下">使用Design X软件对物体的整体面片模型(.obj)和点云模型(.asc)对齐坐标轴，具体操作步骤如下：</h4>
+<ul>
+<li>
+<p>更改默认测量单位(mm-&gt;m)。</p>
+</li>
+<li>
+<p>（可选）对面片模型进行优化，进行加强形状、填孔等。</p>
+</li>
+<li>
+<p>进行自动领域分割，根据情况微调（合并、重分块，调整几何类型等）。</p>
+</li>
+<li>
+<p>创建参考平面、面片草图、草图等，为接下来的手动对齐提供参考。</p>
+</li>
+<li>
+<p>手动对齐（同时对齐点云和面片），确定坐标轴的位置和方向。</p>
+</li>
+<li>
+<p>导出对齐后的整体面片模型(.obj)和点云模型(.asc)。</p>
+</li>
+</ul>
+</li>
+<li>
+<h4 id="使用design-x软件导出joint旋转轴平移轴具体操作步骤如下">使用Design X软件导出Joint（旋转轴、平移轴），具体操作步骤如下：</h4>
+<ul>
+<li>创建参考平面、面片草图、草图等，为画出Joint提供参考。</li>
+<li>利用直线工具画出各个Joint，可以根据需要手动微调。</li>
+<li>导出Joint对应的直线信息（.txt）。</li>
+</ul>
+</li>
+<li>
+<h4 id="使用design-x软件分割物体具体操作步骤如下">使用Design X软件分割物体，具体操作步骤如下：</h4>
+<ul>
+<li>把点云分割成多个part。</li>
+<li>利用每个part的点云自动生成面片，并把之前的整体面片模型的纹理复制上去，得到每个part的面片模型。</li>
+<li>修改每个part的面片模型(.obj)的材质，使每个part的材质都是一样的。</li>
+<li>导出每个part的面片模型(.obj)和点云模型(.asc)。</li>
+</ul>
+</li>
+<li>
+<h4 id="暂时可以省略使用design-x软件对每个part的面片模型obj和点云模型asc对齐坐标轴具体操作步骤如下">（？？？暂时可以省略）使用Design X软件对每个part的面片模型(.obj)和点云模型(.asc)对齐坐标轴，具体操作步骤如下：</h4>
+<ul>
+<li>
+<p>为每个part创建新工程，导入步骤6中生成的面片模型和点云模型。</p>
+</li>
+<li>
+<p>进行自动领域分割，根据情况微调（合并、重分块，调整几何类型等）。</p>
+</li>
+<li>
+<p>创建参考平面、面片草图、草图等，为接下来的手动对齐提供参考。</p>
+</li>
+<li>
+<p>手动对齐（同时对齐点云和面片），确定坐标轴的位置和方向。</p>
+</li>
+<li>
+<p>导出对齐后的part面片模型(.obj)和点云模型(.asc)。</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>最终我们需要的得到如下文件：</p>
+<ul>
+<li>物体<strong>整体的面片模型(.obj)和点云模型(.asc)</strong>，并且已经对齐坐标轴。</li>
+<li>物体的所有<strong>旋转轴和平移轴信息(.txt)</strong>。</li>
+<li>物体的每个<strong>part的面片模型(.obj)和点云模型(.asc)</strong>，并且已经对齐坐标轴（？？？暂时与整体的坐标轴一致）。</li>
+</ul>
+<h2 id="标定相机">标定相机</h2>
+<ol>
+<li>如软件中视频所示所示，进行5步标定。</li>
+</ol>
+<p><img src="../assets/cad_assets/1596104946107.png" alt="1596104946107"></p>
+<ol start="2">
+<li>进行白平衡标定，如标定失败，请参考RobotFlow技术文档中的&quot;EinScan Pro 2X 2020版白平衡校准失败原因与方案&rdquo;。</li>
+</ol>
+<p><img src="../assets/cad_assets/1596106762647.png" alt="1596106762647"></p>
+<h2 id="选择扫描模式">选择扫描模式</h2>
+<ol>
+<li>选择<strong>手持快速扫描</strong>。</li>
+</ol>
+<p><img src="../assets/cad_assets/1596107197424.png" alt="1596107197424">2. 这里可以选择<strong>新建解决方案</strong>，也可以打开之前保存的解决方案。</p>
+<p><img src="../assets/cad_assets/1596107244806.png" alt="1596107244806"></p>
+<ol start="3">
+<li>选择<strong>纹理扫描</strong>，拼接模式选择<strong>标志点拼接</strong>（适合纹理较少的物体，可在物体下方的平面上贴标志点）或者<strong>纹理拼接</strong>（适合纹理较多的物体），操作模型选择<strong>快速</strong>，分辨率默认是<strong>中细节</strong>，若扫描较大的物体可选择<strong>低细节</strong>。</li>
+</ol>
+<p><img src="../assets/cad_assets/1596108436151.png" alt="1596108436151"></p>
+<h2 id="扫描物体与封装模型">扫描物体与封装模型</h2>
+<ol>
+<li>首先按一下设备上的<strong>开始键</strong>，进入预览模式。若识别到标志点，则标志点会显示为红色。连续按两下<strong>开始键</strong>，进入亮度调节模式，单击设备上的<strong>+</strong>或**-**按钮调节亮度使得左上角的模板图案清晰，物体微微泛红，并让主视野中的绿色点尽可能多。亮度调节完成后，连续按两下**开始键**退出亮度调节模式。</li>
+</ol>
+<p><img src="../assets/cad_assets/1596108872848.png" alt="1596108872848"></p>
+<ol start="2">
+<li>单击设备上的<strong>开始键</strong>进入正式扫描模式。手持扫描仪<strong>缓慢</strong>围绕物体移动，注意控制距离，若屏幕显示跟踪丢失，则需要移动到最近的已扫描区域重新扫描。若使用特征点拼接模式，需要使得扫描仪视野中至少有4个特征点（下图中的红点）c。在扫描过程中软件会自动对已扫描部分进行建模，其中蓝色的点代表纹理缺失，该部分可以重新扫描来补充纹理。（<em>小技巧1</em>：若想要的某个扫描视角一直显示跟踪丢失，可以先单击一下<strong>开始键</strong>结束扫描，然后把扫描仪放到新的扫描视角，再单击<strong>开始键</strong>重新开始扫描）（<em>小技巧2</em>：黑色或者金属的物体会比较难扫描。黑色的物体可以调高亮度，金属物体可以撒一些DPT-5显像剂，只喷金属部分就好）</li>
+</ol>
+<p><img src="../assets/cad_assets/1596110281454.png" alt="1596110281454"></p>
+<ol start="3">
+<li>单击设备上的<strong>开始键</strong>结束扫描，会显示目前构建的模型，其中蓝色的部分是纹理缺失的部分（如果有大块的缺失，建议对那个部位重新扫描一下）。可以使用鼠标旋转、拖动模型、缩放等。此时可以选择并删除一部分多余的点云（比如放置物体的桌面），按住shift并用鼠标拖动选择想要删除的点云区域，如下图红色部分所示，然后单击右侧的<strong>删除所选</strong>按钮。删除完成后点击右下角的<strong>√</strong>按钮完成编辑。（<em>小技巧3</em>：扫描的时候在物体下面垫一个黑色或者透明的东西，再删点云的时候一笔划结束，会非常干净）</li>
+</ol>
+<p><img src="../assets/cad_assets/1596111206395.png" alt="1596111206395"></p>
+<ol start="4">
+<li>通常来说我们很难一次扫描就把整个物体完全建模（比如上图这个箱子的底部就扫描不到），所以我们可能要换一下物体的摆放位置，重新扫描一下，生成第二个模型，并把这两个模型拼接到一起。如下图所示，我们现在已经扫描完成的第一个模型被<strong>Project1</strong>，为了生成第二个模型，现在我们要新建一个工程，单击左侧的<strong>新建工程</strong>。接下来重复步骤1-3，生成第二个模型。</li>
+</ol>
+<p><img src="../assets/cad_assets/1596111248097.png" alt="1596111248097"></p>
+<ol start="5">
+<li>第二个模型也生成完毕后，界面看起来会如下图所示，左侧可以看到<strong>Project1</strong>（盒子的顶部）和<strong>Project2</strong>（盒子的底部），此时这两个模型混在了一起，并且没有对齐，此时我们要点击右侧的<strong>拼接</strong>按钮把这两个模型对齐并拼接到一起。</li>
+</ol>
+<p><img src="../assets/cad_assets/1596111714084.png" alt="1596111714084"></p>
+<ol start="6">
+<li>首先我们把左侧的<strong>Project1</strong>和<strong>Project2</strong>分别用鼠标拖拽到固定和浮动视口中，然后使用<strong>shift+鼠标单击</strong>选择三个对应特征点。拼接完成后的模型会被显示出来。拼接完成后单击左下角的<strong>完成</strong>。</li>
+</ol>
+<p><img src="../assets/cad_assets/1596111839445.png" alt="1596111839445"></p>
+<ol start="7">
+<li>类似步骤3，我们可以对拼接完成后的点云进行编辑，删除多余的部分。</li>
+</ol>
+<p><img src="../assets/cad_assets/1596112126714.png" alt="1596112126714"></p>
+<ol start="8">
+<li>编辑完成后，如下图所示<strong>生成点云</strong>，更新工程文件数据(每个工程都要更新)。</li>
+</ol>
+<p><img src="../assets/cad_assets/1596112219562.png" alt="1596112219562"></p>
+<ol start="9">
+<li>点击右侧的<strong>保存数据</strong>保存当前工程文件数据。</li>
+</ol>
+<p><img src="../assets/cad_assets/1596112240116.png" alt="1596112240116"></p>
+<ol start="10">
+<li>对模型进行封装，即生成面片(mesh)模型，点击右侧<strong>封装模型</strong>，并在弹出的窗口中选择<strong>封闭模型</strong>。封装模型的时间可能耗时较长，且需要较大的内存，若中间出现报错内存不足，可以点击确定，然后稍等一段时间，也可以成功。</li>
+</ol>
+<p><img src="../assets/cad_assets/1596113605866.png" alt="1596113605866"></p>
+<ol start="11">
+<li>封装模型完成后有时会弹出如下窗口，该步骤是可选的（可以略过），若生成的mesh模型过大，可能需要较长时间和较大内存才能成功进行纹理融合。若中间出现报错内存不足，可以点击确定，然后稍等一段时间，也可以成功。</li>
+</ol>
+<p><img src="../assets/cad_assets/1596114170008.png" alt="1596114170008"></p>
+<ol start="12">
+<li>接下来我们要对生成的模型进行补洞处理，首先我们进行自动补洞，单击右侧的<strong>自动补洞</strong>按钮。</li>
+</ol>
+<p><img src="../assets/cad_assets/1596114226497.png" alt="1596114226497"></p>
+<p>自动补洞的默认设置如下图所示，也可以根据模型的特点进行略微调整。</p>
+<p><img src="../assets/cad_assets/1596114245058.png" alt="1596114245058"></p>
+<ol start="13">
+<li>若对自动补洞结果不满意，可以选择手动补洞，单击右侧的<strong>手动补洞</strong>按钮。</li>
+</ol>
+<p><img src="../assets/cad_assets/1596114347662.png" alt="1596114347662"></p>
+<p>下图中绿色的部分即为可以选择的洞，鼠标单击选择要补的洞（会变成红色）进行手动补洞。</p>
+<p><img src="../assets/cad_assets/1596171778880.png" alt="1596171778880"></p>
+<ol start="14">
+<li>若生成的mesh文件过大，也可对模型进行简化，如下图所示：</li>
+</ol>
+<p><img src="../assets/cad_assets/1596171944711.png" alt="1596171944711"></p>
+<ol start="15">
+<li>
+<p>对生成的模型(.obj)和点云(.asc)进行保存。点击右边的<strong>保存</strong>按钮。</p>
+<p><img src="../assets/cad_assets/1596198118563.png" alt="1596198118563"></p>
+</li>
+</ol>
+<p>保存的时候注意要同时勾选**.asc**和**.obj**，同时保存点云数据和面片数据。</p>
+<p><img src="../assets/cad_assets/1596198145175.png" alt="1596198145175"></p>
+<h2 id="整体对齐坐标轴">整体对齐坐标轴</h2>
+<ol>
+<li>
+<p>打开Design X软件，导入点云(.asc)和面片(.obj)模型。<img src="../assets/cad_assets/1596199594134.png" alt="1596199594134"></p>
+<p><img src="../assets/cad_assets/1596199621803.png" alt="1596199621803"></p>
+<p><img src="../assets/cad_assets/1596199761387.png" alt="1596199761387"></p>
+<p>若导入时出现如下窗口，单位选择<strong>mm</strong>即可。</p>
+<p><img src="../assets/cad_assets/1599185237921.png" alt="1599185237921"></p>
+</li>
+<li>
+<p>更改Design X的<strong>默认测量单位</strong>，点击左上角的<strong>设置</strong>按钮，将<strong>默认测量单位</strong>的<strong>长度</strong>改为<strong>m</strong>，点击<strong>确定</strong>，如下图所示：</p>
+<p><img src="../assets/cad_assets/1599184958096.png" alt="1599184958096"></p>
+</li>
+<li>
+<p>（可选）对多边形面片模型进行优化，进行<strong>加强形状</strong>（<strong>建议使用</strong>，可以增加平面的光滑度）、<strong>填孔</strong>等。这里略去详细步骤。</p>
+<p><img src="../assets/cad_assets/1596246552321.png" alt="1596246552321"></p>
+</li>
+<li>
+<p>对面片模型进行领域分割，为接下来的坐标系对齐提供参考。此时可以把点云数据隐藏，只显示面片数据。点击<strong>自动分割</strong>，如下图所示。可以自己根据情况调整敏感度，一般建议1-30就可以。若对分割结果不满意，可以将左侧的领域组删除，然后重新分割。若要对某个领域进一步分割，可以点击<strong>重分块</strong>按钮。</p>
+<p><img src="../assets/cad_assets/1596200144610.png" alt="1596200144610"></p>
+<p>接下来建议下方鼠标选择模式变为只选择<strong>领域</strong>和<strong>面片</strong>。</p>
+<p><img src="../assets/cad_assets/1596201467794.png" alt="1596201467794"></p>
+</li>
+<li>
+<p>根据具体情况对分割完成的领域进行合并操作，一般可以把看起来明显在同一个面上面的领域合并，按住<strong>ctrl+鼠标左键</strong>选择多个领域，然后点击<strong>合并</strong>，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596201686631.png" alt="1596201686631"></p>
+</li>
+<li>
+<p>把一些看起来是平面的大块领域的几何形状类型改为平面，点击某个要作为平面的领域，在右侧的属性列表中找到<strong>几何形状类型</strong>并选择<strong>平面</strong>，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596201881084.png" alt="1596201881084"></p>
+</li>
+<li>
+<p>创建多个参照平面。一般来说创建3个参照平面是好的，分别垂直于x轴，y轴，z轴。若实在难以创建，可以创建1个。点击上方的<strong>平面</strong>按钮，然后创建参照平面。具体的方法在视频教程中也有提到，在这个过程中如果界面中的平面看起来过于杂乱，可以在左侧列表中隐藏一部分。一般来说有两种常用的创建方式：</p>
+<ul>
+<li><strong>方法一</strong>：鼠标左键单击某个几何形状为平面的领域，然后方法选择为<strong>提取</strong>，接下来点击<strong>√</strong>按钮，如下图所示。</li>
+</ul>
+<p><img src="../assets/cad_assets/1596202612873.png" alt="1596202612873"></p>
+<p>​	创建完成后如下图所示，会出现一个新的<strong>平面1</strong>。</p>
+<p><img src="../assets/cad_assets/1596202776260.png" alt="1596202776260"></p>
+<ul>
+<li>
+<p><strong>方法2</strong>：<strong>ctrl+鼠标左键</strong>选择多个平行的领域，方法选择为<strong>平均</strong>，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596203506361.png" alt="1596203506361"></p>
+<p>得到的平面如下图所示：</p>
+<p><img src="../assets/cad_assets/1596203549906.png" alt="1596203549906"></p>
+</li>
+</ul>
+</li>
+<li>
+<p>进行整体的对齐操作，注意同类物体最好采用<strong>相似的对齐方式</strong>！！！<strong>保证z轴对应水平向上！！！</strong>（该部分在视频教程中也有介绍，方法不是唯一的，要根据情况灵活调整！！！）</p>
+<p>接下来我们介绍两种主要的对齐方式：</p>
+<ul>
+<li>
+<p><strong>方法一</strong>：该种方法适合较为对称，且有较多平面的物体（比如方形物体）。</p>
+<p>首先选择上方的手动对齐按钮。</p>
+<p><img src="../assets/cad_assets/1596203730924.png" alt="1596203730924"></p>
+<p>注意需要<strong>同时选择面片模型和点云模型！！！！</strong>，可以按住<strong>ctrl+鼠标左键</strong>在左侧列表中选择，选择完成后点击**-&gt;**按钮，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596202295030.png" alt="1596202295030"></p>
+<p>在<strong>移动</strong>菜单中选择<strong>3-2-1</strong>类型，点击<strong>平面</strong>，然后鼠标左键点击一个平面，这里我们选取与盒子底面平行的平面1，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596247120125.png" alt="1596247120125"></p>
+<p><strong>线</strong>选项我们选择平面3，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596247178226.png" alt="1596247178226"></p>
+<p><strong>位置</strong>选项我们选择平面2，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596247243015.png" alt="1596247243015"></p>
+<p>对齐之后的效果如下图：</p>
+<p><img src="../assets/cad_assets/1596248197451.png" alt="1596248197451"></p>
+</li>
+<li>
+<p><strong>方法2</strong>：该方法适合较不规则的物体。我们用一个扫描不完整的纸箱子的盖子作为示例。首先，我们用方法1中提到的方法创建出一个平面（该平面最好能穿透物体），如下图所示：</p>
+<p><img src="../assets/cad_assets/1596358438269.png" alt="1596358438269"></p>
+<p>接下来我们点击上方的面片草图按钮，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596358602748.png" alt="1596358602748"></p>
+<p>在面片草图的设置选项中，把基准平面选择为刚才画出来的<strong>平面1</strong>， Target选择面片模型（这里叫top1），然后用鼠标拖动屏幕中<strong>大箭头</strong>， 使得平面与面片模型的相交线（显示为浅蓝色）尽可能完整，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596358759171.png" alt="1596358759171"></p>
+<p>接下来我们会进入到面片草图界面，这里可以先把面片模型隐藏掉。然后我们选择上方的<strong>自动草图</strong>，勾选<strong>全部作为曲线</strong>，即可把草图参数化，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596358914467.png" alt="1596358914467"></p>
+<p>接下来我们可以在草图中画直线，作为坐标轴的参考。这里我们画出两条互相垂直的直线（每一条直线画完之后可以按键盘上的Esc键退出），注意垂直时应当出现虚线和垂直符号，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596359120445.png" alt="1596359120445"></p>
+<p>画完之后点击右下角的保存并退出按钮：</p>
+<p><img src="../assets/cad_assets/1596359222484.png" alt="1596359222484"></p>
+<p>选择上方的<strong>手动对齐</strong>按钮，然后<strong>同时</strong>选择<strong>面片模型</strong>和<strong>点云模型</strong>（一定要同时选择！！！）， 如下图所示：</p>
+<p><img src="../assets/cad_assets/1596361492097.png" alt="1596361492097"></p>
+<p>接下来我们进入到手动对齐的下一步，选择<strong>X-Y-Z</strong>对齐模式，依次选择<strong>位置</strong>（坐标原点），<strong>X轴、Y轴、Z轴</strong>（只要选取三个中的两个），分别点击刚才画的草图中那个直线交点和两条垂直的直线，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596361756193.png" alt="1596361756193"></p>
+<p>也可以对某一条轴进行反转操作：</p>
+<p><img src="../assets/cad_assets/1596361803049.png" alt="1596361803049"></p>
+<p>对齐后的效果如下图所示：</p>
+<p><img src="../assets/cad_assets/1596361843330.png" alt="1596361843330"></p>
+</li>
+</ul>
+<p>最后我们也可以对坐标轴的位置进行平移操作，拖动坐标轴的大箭头，把坐标原点移动到合适的位置，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596248507011.png" alt="1596248507011"></p>
+</li>
+<li>
+<p>将对齐之后的整体面片模型（<strong>.obj</strong>）和点云（<strong>.asc</strong>）模型输出（这一步千万不能跳过！！！）。</p>
+<p>首先我们可以把整体点云模型和面片模型的<strong>名称</strong>都改掉，便于辨识，在右侧的属性栏里面修改<strong>名称</strong>，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596632457478.png" alt="1596632457478"></p>
+<p>接下来点击<strong>外观</strong>中的<strong>材质</strong>按钮，将该面片模型的材质增加到材质库里面，点击<strong>增加</strong>按钮，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596676490785.png" alt="1596676490785"></p>
+<p>接下来点击左上角的输出按钮，分别导出点云模型和面片模型。</p>
+<p><img src="../assets/cad_assets/1596356288793.png" alt="1596356288793"></p>
+<p><img src="../assets/cad_assets/1596356827625.png" alt="1596356827625"></p>
+<p><img src="../assets/cad_assets/1596356858165.png" alt="1596356858165"></p>
+</li>
+</ol>
+<h2 id="处理joint旋转轴平移轴">处理Joint（旋转轴、平移轴）</h2>
+<ol>
+<li>
+<p>画出轴(Joint)，这里分为<strong>旋转轴</strong>和<strong>平移轴</strong>。<strong>旋转轴</strong>不仅要确定方向，还要确定位置。<strong>平移轴</strong>只需要确定方向，位置可以随意。注意这里如果旋转视角时有困难，可以<strong>鼠标右键</strong>点击面片模型，选择<strong>实时缩放选择范围</strong>，如下图所示：</p>
+<p><img src="../assets/cad_assets/1598966699892.png" alt="1598966699892"></p>
+<ul>
+<li>
+<p>以下用<strong>旋转轴</strong>作为示例。我们使用<strong>Ctrl+鼠标左键</strong>选择两个平面领域，然后点击上方的<strong>线</strong>按钮，选择<strong>平面相交</strong>方法，即可画出一条直线，代表旋转轴，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596248823658.png" alt="1596248823658"></p>
+<p>若对相交出来的线不满意，可在左边的列表中<strong>鼠标右键</strong>选择该<strong>线1</strong>，点击<strong>编辑</strong>，线属性的方法选择<strong>定义</strong>，然后自定义微调方向和位置，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596250002352.png" alt="1596250002352"></p>
+</li>
+<li>
+<p>以下用<strong>平移轴</strong>作为示例。这个箱子实际上没有平移轴，我们假设存在一个平移轴是与箱子的一个测面垂直的。首先可以选择之前对齐的<strong>平面2</strong> ，然后选择面片草图。</p>
+<p><img src="../assets/cad_assets/1596265389673.png" alt="1596265389673"></p>
+<p>我们可以看到平面2与面片模型相切得到的轨迹，如下图所示（该部分在视频教程中也有介绍）：</p>
+<p><img src="../assets/cad_assets/1596265447567.png" alt="1596265447567"></p>
+<p>选择<strong>自动草图</strong>，选中<strong>全部作为曲线</strong>，会自动把面片草图参数化（该部分在视频教程中也有介绍），如下图所示：</p>
+<p><img src="../assets/cad_assets/1596265611248.png" alt="1596265611248"></p>
+<p>基于这些草图中的直线，我们可以画出一条对应平移轴的直线（视频教程中有类似的操作），当直线垂直时会有垂直符号和虚线出现，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596265871858.png" alt="1596265871858"></p>
+<p>接下来我们左键单击这条画出来的草图直线，然后点击模型中的<strong>直线</strong>，提取出一条模型直线（会变成虚线），如下图所示：</p>
+<p><img src="../assets/cad_assets/1596266134085.png" alt="1596266134085"></p>
+<p>最终效果如下图所示：</p>
+<p><img src="../assets/cad_assets/1596266172954.png" alt="1596266172954"></p>
+</li>
+</ul>
+</li>
+<li>
+<p>画完所有Joint（轴）之后，把这些直线输出，点击左上角的<strong>输出</strong>按钮，Ctrl+鼠标左键选中要输出的直线，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596278497953.png" alt="1596278497953"></p>
+<p>文件格式选择为txt格式：</p>
+<p><img src="../assets/cad_assets/1596278549506.png" alt="1596278549506"></p>
+</li>
+</ol>
+<h2 id="分割物体">分割物体</h2>
+<ol>
+<li>
+<p>分割点云，把物体的每个part分割开来。首先我们把面片模型隐藏，把点云模型显示出来。点击上方的<strong>分割点云</strong>按钮, 选中点云模型，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596278790517.png" alt="1596278790517"></p>
+<p>在分割时建议选择<strong>多段线</strong>模式，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596278912182.png" alt="1596278912182"></p>
+<p>在选择点云之前调整视角，保证所选视角的区域内只有自己想要的部分，使用<strong>鼠标左键</strong>点击几个点包围住所选区域，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596279351962.png" alt="1596279351962"></p>
+<p>单击<strong>鼠标右键</strong>确定所选区域，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596279434169.png" alt="1596279434169"></p>
+<p>接下来点击<strong>新增组</strong>，用同样的方法选取剩下几个part，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596292486226.png" alt="1596292486226"></p>
+</li>
+<li>
+<p>把每个part的点云生成面片模型。点击<strong>三角面片化</strong>按钮，选择每个part的点云，注意<strong>不要</strong>勾选<strong>删除原始数据</strong>，<strong>不要</strong>勾选<strong>生成单个面片</strong>，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596294318327.png" alt="1596294318327"></p>
+<p>最终结果如下图所示：</p>
+<p><img src="../assets/cad_assets/1596293412273.png" alt="1596293412273"></p>
+</li>
+<li>
+<p>为每个生成的面片模型复制纹理。选择上方的<strong>复制纹理</strong>按钮，<strong>对象</strong>选择刚刚生成的没有纹理的part对象（组1），<strong>从复制</strong>选择原始的带纹理的面片模型（默认），如下图所示：</p>
+<p><img src="../assets/cad_assets/1596293623077.png" alt="1596293623077"></p>
+<p>所有part的面片模型都复制纹理之后的效果如下图所示：</p>
+<p><img src="../assets/cad_assets/1596295446782.png" alt="1596295446782"></p>
+</li>
+<li>
+<p>导出每个part的点云数据和面片模型。首先我们可以把每个点云模型和面片模型的<strong>名称</strong>都改掉，便于辨识，在右侧的属性栏里面修改<strong>名称</strong>，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596333167602.png" alt="1596333167602"></p>
+<p>接下来我们把面片模型的<strong>材质</strong>改成与之前的整体面片模型相同的材质，点击<strong>材质</strong>旁的下拉菜单：<img src="../assets/cad_assets/1596632827758.png" alt="1596632827758"></p>
+<p>选择之前保存的材质模型，点击<strong>OK</strong>， 如下图所示：</p>
+<p><img src="../assets/cad_assets/1596676712621.png" alt="1596676712621"></p>
+<p>我们选中所有的点云part模型，点击左上角的<strong>输出</strong>按钮，注意输出格式选择**.asc**，勾选**将每个扫描数据作为单个文件输出**，勾选**使用扫描数据名字**，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596333344146.png" alt="1596333344146"></p>
+<p>接下来用类似的方法把所有part的面片模型也导出，注意输出格式选择<strong>obj</strong>，如下图所示：</p>
+<p><img src="../assets/cad_assets/1596333474323.png" alt="1596333474323"></p>
+</li>
+<li>
+<p>保存当前工程数据，点击左上角的<strong>保存</strong>按钮。</p>
+</li>
+</ol>
+<p><img src="../assets/cad_assets/1596333565882.png" alt="1596333565882"></p>
+<h2 id="part坐标轴对齐暂时可以省略">part坐标轴对齐（？？？暂时可以省略）</h2>
+<ol>
+<li>接下来要为每个part都新建一个工程。</li>
+</ol>
+<p><img src="../assets/cad_assets/1596335671919.png" alt="1596335671919"></p>
+<p>​	导入之前保存的part的点云和面片数据。</p>
+<p><img src="../assets/cad_assets/1596335706601.png" alt="1596335706601"></p>
+<p><img src="../assets/cad_assets/1596335720192.png" alt="1596335720192"></p>
+<ol start="2">
+<li>
+<p>重复与<strong>整体坐标轴对齐</strong>类似的操作，对该part的面片模型和点云模型进行坐标对齐。（记住需要<strong>同时</strong>选择<strong>点云模型</strong>和<strong>面片模型</strong>，再进行对齐！！！）这一部分可以灵活运用<strong>草图</strong>、<strong>面片草图</strong>等工具，快速完成对齐。下图是其中一个part在画出<strong>面片草图</strong>之后，使用X-Y-Z对齐的过程：</p>
+<p><img src="../assets/cad_assets/1596345800186.png" alt="1596345800186"></p>
+<p>对齐之后的效果如下图（尽量让坐标原点处于物体中央）：</p>
+<p><img src="../assets/cad_assets/1596345865597.png" alt="1596345865597"></p>
+</li>
+<li>
+<p>对齐完成后，点击<strong>保存</strong>按钮（可能需要选择工程(<strong>.xrl</strong>)名称和保存位置，用与该part同样的名字就可以），用之前类似的方法把当前对齐坐标系后的**面片模型(.obj)<strong>和</strong>点云模型(.asc)**导出，可以覆盖之前的同名文件。例如下图所示：</p>
+<p><img src="../assets/cad_assets/1596346035775.png" alt="1596346035775"></p>
+<p>全部保存完成后，工程文件夹下应该有如下文件：</p>
+<p><img src="../assets/cad_assets/1596357083827.png" alt="1596357083827"></p>
+<p>到此为止，该物体的part-level逆向建模全部完成。</p>
+</li>
+</ol>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%9713d%E6%89%AB%E6%8F%8F%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2%E4%B8%BA-cad%E6%A8%A1%E5%9E%8Bpart-level_v5/>http://mvig.sjtu.edu.cn/robotflow/article/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%9713d%E6%89%AB%E6%8F%8F%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2%E4%B8%BA-cad%E6%A8%A1%E5%9E%8Bpart-level_v5/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/3d/">
+                    #3D</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/robotflow%E5%B7%A5%E7%A8%8Btrack%E4%B8%80%E6%9C%9F/" class="prev" rel="prev" title="RobotFlow工程track一期"><i class="iconfont icon-left"></i>&nbsp;RobotFlow工程track一期</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/%E5%BD%93%E6%88%91%E4%BB%AC%E5%9C%A8%E8%B0%88%E8%AE%BAmotion-primitive%E7%9A%84%E6%97%B6%E5%80%99%E7%A9%B6%E7%AB%9F%E5%9C%A8%E8%B0%88%E8%AE%BA%E4%BB%80%E4%B9%88/" class="next" rel="next" title="当我们在谈论Motion Primitive的时候究竟在谈论什么">当我们在谈论Motion Primitive的时候究竟在谈论什么&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/robotflow/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

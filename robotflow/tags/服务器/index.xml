@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>服务器 on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/</link>
+    <description>Recent content in 服务器 on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 25 Jun 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>机器搬到新地方配置网络连接</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E6%9C%BA%E5%99%A8%E6%90%AC%E5%88%B0%E6%96%B0%E5%9C%B0%E6%96%B9%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5/</link>
+      <pubDate>Thu, 25 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E6%9C%BA%E5%99%A8%E6%90%AC%E5%88%B0%E6%96%B0%E5%9C%B0%E6%96%B9%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5/</guid>
+      <description> 想办法进入路由器管理页面  有可能这一步会比较麻烦，可能需要装宽带的人的指导   设置静态ip地址，该地址是这台服务器在内网里的地址，通常是192.168开头 设置端口转发，假如端口号是24000，可以设置24000~24999转发到服务器上 可能需要重启服务器 设置ssh  安装 sudo apt install ssh 配置 vim /etc/ssh/sshd_config 把port号改了 sudo systemctl restart ssh    </description>
+    </item>
+    
+  </channel>
+</rss>

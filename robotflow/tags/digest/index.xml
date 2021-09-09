@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>digest on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/digest/</link>
+    <description>Recent content in digest on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 20 Jul 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/digest/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>2020-07-13~2020-07-19 坑多不要怕</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/digest/2020-07-13~2020-07-19-%E5%9D%91%E5%A4%9A%E4%B8%8D%E8%A6%81%E6%80%95/</link>
+      <pubDate>Mon, 20 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/digest/2020-07-13~2020-07-19-%E5%9D%91%E5%A4%9A%E4%B8%8D%E8%A6%81%E6%80%95/</guid>
+      <description>本周简评 本周research有序推进。franka已搭好。
+Object/Scene Modeling小组  近期目标：  刘浏：part level 6d pose 詹欣宇：instance reconstruction的topic 唐屠天：准备two-stream mask guided grasping 叶若琳：instance reconstruction的topic 付昊源：尽快结束手上mesh2vector2mesh的topic 向谨溢：重启individual instance segmentation的topic 刘意（远程实习）：尝试优化单图片3D Reconstruction算法   本周进展：  刘浏：baseline方法在数据集上跑分符合预期；准备逆向建模 詹欣宇：matching + loss的方案不太理想，考虑换一种有序的优化方案 唐屠天：准备two-stream mask guided grasping 叶若琳：想出了一种基于MVS的instance reconstruction思路 付昊源：确定了robotflow第一版API，定出各项规范 陈彦宁：跑mesh-based graph network的baseline 刘意：各环节都实现好了，准备打通训练 向谨溢：熟悉unity，准备渲染数据集   遇到问题： 下周计划：  刘浏：学习design x和solidworks，尝试逆向，并思考如何加速逆向 詹欣宇：验证之前考虑的有序的优化方案。 唐屠天：推进YOLOv3+USD-Seg在mmdet上的实现；推进YOLOv4入库；two-stream mask guided grasping 叶若琳：解决MVS的问题，在线训练跑起来 刘意（远程实习）: 完整的训练跑一遍 付昊源：统一代码风格，项目相关的规范确立。 陈彦宁：熟悉graph network 向谨溢：数据准备完成    Skill Learning小组  近期目标：搭建起记录人手dynamics的平台，打通hand-object manipulation到gripper-object manipulation 本周进展：  杨理欣  写hand-object代码，验证一些non-linear optimization方案   詹欣宇：  刚接手hand-object的topic   张行（远程）  刚接手hand-object的topic     遇到问题：  就当前的设备，有三种记录hand-object dynamic的方式，两种是纯synthetic的，一种是不那么real的real   下周计划：  准备3D打印材料 搞定第三视角标定 探索先建模再渲染覆盖手套以实现markerless标注的思路。 RGB2Hand-Object代码实现    Planning小组  近期目标：PDDLStream熟悉，扩展。打通流程 本周进展：  杜文昕：PDDLStream和Mujoco的结合。   遇到问题： 下周计划：  杜文昕：开始基于pddlstream的研究    Control小组  近期目标：复现一篇基于meta-RL的插拔 本周进展：  徐文强：初步复现meta-RL。   遇到问题： 下周计划：  徐文强：考虑迁移到机器人上。    </description>
+    </item>
+    
+    <item>
+      <title>2020-07-06~2020-07-12 这将是一个丰盛的夏天</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/digest/2020-07-06~2020-07-12-%E8%BF%99%E5%B0%86%E6%98%AF%E4%B8%80%E4%B8%AA%E4%B8%B0%E7%9B%9B%E7%9A%84%E5%A4%8F%E5%A4%A9/</link>
+      <pubDate>Sun, 12 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/digest/2020-07-06~2020-07-12-%E8%BF%99%E5%B0%86%E6%98%AF%E4%B8%80%E4%B8%AA%E4%B8%B0%E7%9B%9B%E7%9A%84%E5%A4%8F%E5%A4%A9/</guid>
+      <description>本周简评 本周每个人手上的事情都分配下去，并进行了评估，定下了CVPR的时间表。
+目前需要的硬件陆陆续续都配齐了，franka还差一个平台架子，在等着定做到位。因此franka相关的调试和配置暂时还不能展开，UR5相关的基本上都已完成。
+Object/Scene Modeling小组  近期目标：  刘浏：part level 6d pose 詹欣宇：尽快结束手上instance reconstruction的topic 唐屠天：准备two-stream mask guided grasping 叶若琳：帮助完成PAMI，instance reconstruction的topic 付昊源：尽快结束手上mesh2vector2mesh的topic 向谨溢：重启individual instance segmentation的topic 刘意（远程实习）：尝试优化单图片3D Reconstruction算法   本周进展：  刘浏：在整理出来的基础数据集上用baseline方法跑分。 詹欣宇：实现了matching + loss；接手了hand-object相关工作 唐屠天：完成YOLOv3入库，准备two-stream mask guided grasping（调研，实验设计） 叶若琳：改amodal实验的bug；熟悉instance reconstruction的数据集 付昊源：尝试mesh上的graph embedding，搞定PDDLStream上的环境建模 刘意： 向谨溢：熟悉unity，准备渲染数据集   遇到问题： 下周计划：  刘浏：1. 考虑build一个real object数据集（物体数量1000个左右），结合扫描和逆向；2. 继续part-level 6d pose 詹欣宇：验证matching + loss是可以行的，一旦验证，可以准备写文章了。 唐屠天：推进YOLOv4入库；two-stream mask guided grasping 叶若琳：跑一个baseline出来 刘意（远程实习）: 完整的训练代码实现 付昊源：搞定densefusion + tracking的入库。    Skill Learning小组  近期目标：搭建起记录人手dynamics的平台，打通hand-object manipulation到gripper-object manipulation 本周进展：  杨理欣  写hand-object代码，验证一些non-linear optimization方案   詹欣宇：  刚接手hand-object的topic   张行（远程）  刚接手hand-object的topic     遇到问题：  就当前的设备，有三种记录hand-object dynamic的方式，两种是纯synthetic的，一种是不那么real的real   下周计划：  准备3D打印材料 搞定第三视角标定 探索先建模再渲染覆盖手套以实现markerless标注的思路。 RGB2Hand-Object代码实现    Planning小组  近期目标：PDDLStream熟悉，扩展。打通流程 本周进展：  杜文昕：PDDLStream和Mujoco的结合。   遇到问题： 下周计划：  杜文昕：开始基于pddlstream的研究    Control小组  近期目标：复现一篇基于meta-RL的插拔 本周进展：  徐文强：初步复现meta-RL。   遇到问题： 下周计划：  徐文强：考虑迁移到机器人上。    </description>
+    </item>
+    
+    <item>
+      <title>2020-06-29~2020-07-05 其实，我们是一个Robotics Lab</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/digest/2020-06-29~2020-07-05-%E5%85%B6%E5%AE%9E%E6%88%91%E4%BB%AC%E6%98%AF%E4%B8%80%E4%B8%AArobotics-lab/</link>
+      <pubDate>Sun, 05 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/digest/2020-06-29~2020-07-05-%E5%85%B6%E5%AE%9E%E6%88%91%E4%BB%AC%E6%98%AF%E4%B8%80%E4%B8%AArobotics-lab/</guid>
+      <description>本周简评 本周几乎所有同学都结束了考试周，除了在外面实习的，基本都已就位。
+目前需要的硬件陆陆续续都配齐了，franka还差一个平台架子，在等着定做到位。因此franka相关的调试和配置暂时还不能展开，UR5相关的基本上都已完成。
+Object/Scene Modeling小组  近期目标：  刘浏：part level 6d pose搞一个基础款 詹欣宇：尽快结束手上instance reconstruction的topic 唐屠天：完成interactive perception相关调研；准备YOLOv3入库 叶若琳：帮助完成PAMI，启动instance reconstruction的topic 付昊源：尽快结束手上mesh2vector2mesh的topic 刘意（远程实习）：尝试优化单图片3D Reconstruction算法   本周进展：  刘浏：复现Category-level Articulated Object Pose Estimation这篇文章完成，整理出基础数据集。 詹欣宇：考试周结束 唐屠天：考试周结束，完成YOLOv3入库 叶若琳：考试周结束，完成PAMI 付昊源：Densefusion入库，代码入库流程规范已更新；尝试mesh上的graph embedding 刘意：实现了分割部分   遇到问题： 下周计划：  刘浏：用baseline方法在基础数据集上跑分。 詹欣宇：继续搞定matching + loss的问题 唐屠天：two-stream mask guided grasping；推进YOLOv4入库 叶若琳：熟悉instance reconstruction相关的数据集 刘意（远程实习）: 把之前讨论的idea实现了。 付昊源：RobotFlow转成用PDDLStream调度。    Skill Learning小组  近期目标：搭建起记录人手dynamics的平台，打通hand-object manipulation到gripper-object manipulation 本周进展：  VR手套系统就位，基本配置完成。 杨理欣  RGB2Hand-Object的初始idea已确立，初步完成代码实现   张行（远程）  帮助实现RGB2Hand-Object的代码     遇到问题：  就当前的设备，有三种记录hand-object dynamic的方式，两种是纯synthetic的，一种是不那么real的real   下周计划：  人手dynamics记录平台搭起来。 探索先建模再渲染覆盖手套以实现markerless标注的思路。 RGB2Hand-Object代码实现。    Planning小组  近期目标：PDDLStream熟悉，扩展。打通流程 本周进展：  杜文昕：PDDLStream和Mujoco的结合。   遇到问题： 下周计划：  杜文昕：开始基于pddlstream的研究    Control小组  近期目标：复现一篇基于meta-RL的插拔 本周进展：  徐文强：初步复现meta-RL。   遇到问题： 下周计划：  徐文强：考虑迁移到机器人上。    </description>
+    </item>
+    
+    <item>
+      <title>2020-06-22~2020-06-28 来不及解释了，快上车</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/digest/2020-06-22~2020-06-28-%E6%9D%A5%E4%B8%8D%E5%8F%8A%E8%A7%A3%E9%87%8A%E4%BA%86%E5%BF%AB%E4%B8%8A%E8%BD%A6/</link>
+      <pubDate>Sun, 28 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/digest/2020-06-22~2020-06-28-%E6%9D%A5%E4%B8%8D%E5%8F%8A%E8%A7%A3%E9%87%8A%E4%BA%86%E5%BF%AB%E4%B8%8A%E8%BD%A6/</guid>
+      <description>本周简评 本周部分同学将结束考试周，至下周，基本所有同学将结束考试周。因此这也是一个过渡周。 但因为负责robotflow工程track的同学已经回归，因此这部分正式启动。因为开发中的项目不适合完全公开，我们将考虑一下这部分怎么表示进展。
+Object/Scene Modeling小组  近期目标：  刘浏：part level 6d pose搞一个基础款 詹欣宇：尽快结束手上instance reconstruction的topic 唐屠天：完成interactive perception相关调研；准备YOLOv3入库 叶若琳：帮助完成PAMI，启动instance reconstruction的topic 付昊源：尽快结束手上mesh2vector2mesh的topic 刘意（远程实习）：尝试优化单图片3D Reconstruction算法   本周进展：  刘浏：articulation数据集用pybullet渲染，目标是搞出同类但part数目不同的数据集；复现Category-level Articulated Object Pose Estimation这篇文章，已实现dataloader部分。大方向是先搞定单物体，再做多物体。 詹欣宇：考试周 唐屠天：考试周 叶若琳：考试周，帮助完成PAMI 付昊源：熟悉robotflow工程track一期的各大框架，完成基本的代码框架设计（包括文档和代码）；尝试mesh上的graph embedding 刘意：实现了分割部分。   遇到问题：  刘浏：如何聪明的用上depth（老问题）   下周计划：  刘浏：复现完Category-level articulated object pose estimation这篇文章，改成适应不同part数量的版本 詹欣宇：继续搞定matching + loss的问题 唐屠天：继续调研interactive perception相关的topic 叶若琳：熟悉instance reconstruction相关的数据集 刘意（远程实习）: 把之前讨论的idea实现了。 付昊源：densefusion统一风格并入库，磨合代码入库流程和规则    Skill Learning小组  近期目标：搭建起记录人手dynamics的平台 本周进展：  VR手套已走完财务流程，等待发货 RGB2Hand in the wild因为idea层面的novelty决定弃坑 RGB2Hand-Object的初始idea已确立，可以准备基本代码实现   遇到问题：  不确定当前选定的记录平台是否有坑   下周计划：  VR平台搭起来 RGB2Hand-Object代码实现。    Planning小组  近期目标：PDDLStream熟悉，扩展。打通流程 本周进展：  钱苏澄：完成基于PDDLStream的基本的抓取流程 杜文昕：熟悉相关框架完成   遇到问题： 下周计划：  钱苏澄：将暂时离队，半年后归。 杜文昕：开始基于pddlstream的研究    Control小组  近期目标：复现一篇基于meta-RL的插拔 本周进展：  徐文强：正在复现meta-RL的插拔   遇到问题： 下周计划：  徐文强：继续调试    </description>
+    </item>
+    
+    <item>
+      <title>2020-06-15~2020-06-21 平平无奇的一周，清理零碎事情为主</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/digest/2020-06-15~2020-06-21-%E5%B9%B3%E5%B9%B3%E6%97%A0%E5%A5%87%E7%9A%84%E4%B8%80%E5%91%A8%E6%B8%85%E7%90%86%E9%9B%B6%E7%A2%8E%E4%BA%8B%E6%83%85%E4%B8%BA%E4%B8%BB/</link>
+      <pubDate>Sun, 21 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/digest/2020-06-15~2020-06-21-%E5%B9%B3%E5%B9%B3%E6%97%A0%E5%A5%87%E7%9A%84%E4%B8%80%E5%91%A8%E6%B8%85%E7%90%86%E9%9B%B6%E7%A2%8E%E4%BA%8B%E6%83%85%E4%B8%BA%E4%B8%BB/</guid>
+      <description>本周简评 本周因为大量的同学都进入考试周，本周，下周都将以课程为主。因此很多课题上最近预计是不会有大的进展。
+Object/Scene Modeling小组  近期目标：  刘浏：启动part level 6d pose的research 詹欣宇：尽快结束手上instance reconstruction的topic 唐屠天：完成interactive perception相关调研；准备YOLOv3入库 叶若琳：帮助完成PAMI，启动instance reconstruction的topic 付昊源：尽快结束手上mesh2vector2mesh的topic 刘意（远程实习）：尝试优化单图片3D Reconstruction算法   本周进展：  刘浏：已返回，完成了数据集调研，初步的方案成型 詹欣宇：考试周 唐屠天：考试周 叶若琳：考试周，帮助完成了PAMI 付昊源：考试周 刘意：   遇到问题： 下周计划：  刘浏：开始实现代码 詹欣宇：继续搞定matching + loss的问题 唐屠天：继续调研interactive perception相关的topic 叶若琳：熟悉instance reconstruction相关的数据集 刘意（远程实习）: 把之前讨论的idea实现了。    Skill Learning小组  近期目标：搭建起记录人手dynamics的平台 本周进展：  VR手套因为财务流程进入等待期 紫竹办公室空间已经腾出来 RGB2Hand in the wild可以进入代码验证和跑分环节 RGB2Hand-Object的初始idea已确立，可以准备基本代码实现   遇到问题：  不确定当前选定的记录平台是否有坑   下周计划：  因为财务流程的关系，继续等待VR手套 RGB2Hand in the wild初步看一下结果，如果可以，则准备跑分 RGB2Hand-Object训练代码跑通。    Planning小组  近期目标：PDDLStream熟悉，扩展。打通流程 本周进展：  钱苏澄：完成基于PDDLStream的基本的抓取流程 杜文昕：熟悉相关框架   遇到问题： 下周计划：  钱苏澄：加入tracking 杜文昕：继续熟悉，尽快加入    Control小组  近期目标：复现一篇基于meta-RL的插拔 本周进展：  徐文强：正在复现meta-RL的插拔   遇到问题： 下周计划：  徐文强：继续调试    </description>
+    </item>
+    
+    <item>
+      <title>2020-06-08~2020-06-14 各组逐步启动，主要负责人就位</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/digest/2020-06-08~2020-06-14-%E5%90%84%E7%BB%84%E9%80%90%E6%AD%A5%E5%90%AF%E5%8A%A8%E4%B8%BB%E8%A6%81%E8%B4%9F%E8%B4%A3%E4%BA%BA%E5%B0%B1%E4%BD%8D/</link>
+      <pubDate>Mon, 15 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/digest/2020-06-08~2020-06-14-%E5%90%84%E7%BB%84%E9%80%90%E6%AD%A5%E5%90%AF%E5%8A%A8%E4%B8%BB%E8%A6%81%E8%B4%9F%E8%B4%A3%E4%BA%BA%E5%B0%B1%E4%BD%8D/</guid>
+      <description>本周简评 本周召开了第一次以RobotFlow为名义的research track小组会，以此为标志，整个项目正式启动。目前的整体情况是，设备和人员均不完全到位。因此，准备期的阵痛我们还要忍上一段时间。
+工程track预计从6.22开始正式启动，相关的项目进度会随research track播报，但代码和文档暂时不开源（点首页的那个walle链接的就是工程文档，暂时不开放。）工程track第一阶段的目标是把USD-Seg with YOLOv3/4 + DenseFusion + tracking + PDDLStream + UR5 control整合到一起。
+Object/Scene Modeling小组  近期目标：  刘浏：启动part level 6d pose的research 詹欣宇：尽快结束手上instance reconstruction的topic 唐屠天：完成interactive perception相关调研；准备YOLOv3入库 叶若琳：帮助完成PAMI，启动instance reconstruction的topic 付昊源：尽快结束手上mesh2vector2mesh的topic 刘意（远程实习）：尝试优化单图片3D Reconstruction算法   本周进展：  刘浏：在返回上海的途中 詹欣宇：正在搞定matching + loss的问题 唐屠天：/ 叶若琳：/ 付昊源：/   遇到问题：  本科生陷于期末，时间有限。   下周计划：  刘浏：考察当前数据集，选择合适的数据集，初步的方案成型 詹欣宇：继续搞定matching + loss的问题 唐屠天：继续调研interactive perception相关的topic 叶若琳：完成PAMI，熟悉instance reconstruction相关的数据集 刘意（远程实习）: 把之前讨论的idea实现了。    Skill Learning小组  近期目标：搭建起记录人手dynamics的平台 本周进展：  初步确定了记录平台   遇到问题：  不确定当前选定的记录平台是否有坑   下周计划：  拆掉紫竹办公室部分办公桌，为hand recording和其他可能到来的设备留出空间 买入，并搭起记录人手dynamics的平台，初步实现手部分的记录流程 考虑如何实现第三方摄像头的calibration，为记录物体的dynamics做准备    Planning小组  近期目标：PDDLStream熟悉，扩展。打通流程 本周进展：  钱苏澄：搞定了densefusion 杜文昕：熟悉相关基础知识   遇到问题： 下周计划：  钱苏澄：把densefusion后续的tracking也加进去 杜文昕：继续熟悉，尽快加入    Control小组  近期目标：复现一篇基于meta-RL的插拔 本周进展：  徐文强：学习RL，熟悉MuJoCo   遇到问题： 下周计划：  徐文强：开始准备复现    </description>
+    </item>
+    
+  </channel>
+</rss>

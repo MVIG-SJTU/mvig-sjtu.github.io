@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/%E5%BD%93%E6%88%91%E4%BB%AC%E5%9C%A8%E8%B0%88%E8%AE%BAmotion-primitive%E7%9A%84%E6%97%B6%E5%80%99%E7%A9%B6%E7%AB%9F%E5%9C%A8%E8%B0%88%E8%AE%BA%E4%BB%80%E4%B9%88/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%971%E5%AF%BC%E5%85%A5%E6%88%96%E5%88%9B%E5%BB%BA%E6%A8%A1%E5%9E%8B/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%972cad%E6%A8%A1%E5%9E%8Bpart-level%E8%BD%AC%E6%8D%A2%E4%B8%BAurdf%E6%A0%BC%E5%BC%8F_v2/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Articulation入库系列2——CAD模型（part-level）转换为URDF格式, 2nd edition | RobotFlow
+       
+  </title>
+  <meta name="title" content="Articulation入库系列2——CAD模型（part-level）转换为URDF格式, 2nd edition | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "Articulation入库系列2——CAD模型（part-level）转换为URDF格式, 2nd edition",
+    "headline" : "Articulation入库系列2——CAD模型（part-level）转换为URDF格式, 2nd edition",
+    "description" : "CAD模型(part-level)转换为URDF格式 所需软件   Unity 2020.1.0f1c1（也可以使用低一点的Unity版本，但是流程未经验证，推荐使用该版本）\n  下载链接 https:\/\/unity.cn\/releases 建议从Unity Hub下载安装。\n  Unity入门视频教程 https:\/\/www.bilibili.com\/video\/BV1B7411L74W 只需要看[P1, P3, P13]，了解最基本的编辑器操作即可。\n  使用ROS #插件创建和导出URDF视频教程（作为参考）https:\/\/youtu.be\/07q2mGxD2j8\n    Blender 2.80 （建议使用该版本）\n 下载链接 https:\/\/download.blender.org\/release\/Blender2.80\/    详细步骤 准备工作   创建新项目（不同的物体可以共用一个项目，只要创建一次项目就可以）。（注意Unity可能每天都要手动激活一次）选择3D项目，如下图所示：\n  将ROS#插件添加到Unity的资源中。\n在Unity的Package Manager中找到ROS#插件，选择Import（若第一次使用需点击Download）。\n在弹出的窗口中继续点击Import，导入所有代码。\n  转换面片模型(.obj -\u0026gt; .fbx)   打开Blender，鼠标左键选择默认的Collection，鼠标右键选择Delete Hierarchy，把系统默认自带的物体都删除。\n  在File菜单中选择Import-\u0026gt;Wavefront(.obj)，并选择想要导入的文件。\n  导入之后可以使用鼠标滚轮放缩物体，此时我们可以看到物体还没有纹理，按下Z选择Rendered模式显示纹理。在右侧的材质选项中还可以调节具体参数（可选）。如下图所示：\n  更改物体名字和material名字，如下图所示：\n  在右侧选中该物体，选择File-\u0026gt;Export-\u0026gt;FBX(.fbx)\n建议只选中左下角的Mesh，选择FBX Units Scale，同时选择Selected Objects，然后点击右上角的Export FBX。",
+    "inLanguage" : "en-us",
+    "author" : "薛寒",
+    "creator" : "薛寒",
+    "publisher": "薛寒",
+    "accountablePerson" : "薛寒",
+    "copyrightHolder" : "薛寒",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-08-04 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2020-08-04 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%972cad%E6%A8%A1%E5%9E%8Bpart-level%E8%BD%AC%E6%8D%A2%E4%B8%BAurdf%E6%A0%BC%E5%BC%8F_v2\/",
+    "wordCount" : "125",
+    "keywords" : [ "3D", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Articulation入库系列2——CAD模型（part-level）转换为URDF格式, 2nd edition</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">薛寒</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-08-04 itemprop="datePublished">August 4, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/dev/"> dev </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="cad模型part-level转换为urdf格式">CAD模型(part-level)转换为URDF格式</h1>
+<h2 id="所需软件">所需软件</h2>
+<ol>
+<li>
+<p><strong>Unity 2020.1.0f1c1</strong>（也可以使用低一点的Unity版本，但是流程未经验证，推荐使用该版本）</p>
+<ul>
+<li>
+<p>下载链接 <a href="https://unity.cn/releases">https://unity.cn/releases</a> 建议从Unity Hub下载安装。</p>
+</li>
+<li>
+<p>Unity入门视频教程 <a href="https://www.bilibili.com/video/BV1B7411L74W">https://www.bilibili.com/video/BV1B7411L74W</a> 只需要看[P1, P3, P13]，了解最基本的编辑器操作即可。</p>
+</li>
+<li>
+<p>使用ROS #插件创建和导出URDF视频教程（作为参考）https://youtu.be/07q2mGxD2j8</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Blender 2.80</strong> （建议使用该版本）</p>
+<ul>
+<li>下载链接 <a href="https://download.blender.org/release/Blender2.80/">https://download.blender.org/release/Blender2.80/</a></li>
+</ul>
+</li>
+</ol>
+<h2 id="详细步骤">详细步骤</h2>
+<h3 id="准备工作">准备工作</h3>
+<ol>
+<li>
+<p>创建新项目（不同的物体可以共用一个项目，只要创建一次项目就可以）。（注意Unity可能每天都要手动激活一次）选择<strong>3D</strong>项目，如下图所示：</p>
+<p><img src="../assets/cad_assets/1598274506720.png" alt="1598274506720"></p>
+</li>
+<li>
+<p>将<a href="https://assets/cad_assetstore.unity.com/packages/tools/physics/ros-107085">ROS#</a>插件添加到Unity的资源中。</p>
+<p><img src="../assets/cad_assets/1598275620063.png" alt="1598275620063"></p>
+<p>在Unity的Package Manager中找到ROS#插件，选择<strong>Import</strong>（若第一次使用需点击<strong>Download</strong>）。</p>
+<p><img src="../assets/cad_assets/1598275811905.png" alt="1598275811905"></p>
+<p>在弹出的窗口中继续点击<strong>Import</strong>，导入所有代码。</p>
+<p><img src="../assets/cad_assets/1598275861411.png" alt="1598275861411"></p>
+</li>
+</ol>
+<h3 id="转换面片模型obj---fbx">转换面片模型(.obj -&gt; .fbx)</h3>
+<ol>
+<li>
+<p>打开Blender，鼠标左键选择默认的<strong>Collection</strong>，<strong>鼠标右键</strong>选择<strong>Delete Hierarchy</strong>，把系统默认自带的物体都删除。</p>
+<p><img src="../assets/cad_assets/1599398010802.png" alt="1599398010802"></p>
+</li>
+<li>
+<p>在<strong>File</strong>菜单中选择<strong>Import</strong>-&gt;<strong>Wavefront(.obj)</strong>，并选择想要导入的文件。</p>
+<p><img src="../assets/cad_assets/1599398049884.png" alt="1599398049884"></p>
+<p><img src="../assets/cad_assets/1599398087984.png" alt="1599398087984"></p>
+</li>
+<li>
+<p>导入之后可以使用<strong>鼠标滚轮</strong>放缩物体，此时我们可以看到物体还没有纹理，按下<strong>Z</strong>选择<strong>Rendered</strong>模式显示纹理。在右侧的材质选项中还可以调节具体参数（可选）。如下图所示：</p>
+<p><img src="../assets/cad_assets/1599398366474.png" alt="1599398366474"></p>
+</li>
+<li>
+<p>更改物体名字和material名字，如下图所示：</p>
+<p><img src="../assets/cad_assets/1602318304654.png" alt="1602318304654"></p>
+</li>
+<li>
+<p>在右侧选中该物体，选择<strong>File</strong>-&gt;<strong>Export</strong>-&gt;<strong>FBX(.fbx)</strong></p>
+<p><img src="../assets/cad_assets/1599398430702.png" alt="1599398430702"></p>
+<p>建议只选中左下角的<strong>Mesh</strong>，选择<strong>FBX Units Scale</strong>，同时选择<strong>Selected Objects</strong>，然后点击右上角的<strong>Export FBX</strong>。</p>
+<p><img src="../assets/cad_assets/1599790828376.png" alt="1599790828376"></p>
+</li>
+</ol>
+<h3 id="创建urdf模型">创建URDF模型</h3>
+<ol>
+<li>
+<p>使用Unity导入目标物体各个part的CAD模型(.obj, .mtl, .jpg)，放到<strong>assets/cad_assets</strong>管理器中（建议新建一个Models文件夹，放在里面）。以下用一个可以旋转的快递盒子作为示例（分为两个部分，底部bottom和顶部up），如下图所示：</p>
+<p><img src="../assets/cad_assets/1598495364057.png" alt="1598495364057"></p>
+</li>
+<li>
+<p>在<strong>Hierarchy</strong>界面中点击鼠标<strong>右键</strong>，选择<strong>3D Object</strong>-&gt;<strong>URDF Model(new)</strong>。创建一个新的空白URDF Model。</p>
+<p><img src="../assets/cad_assets/1598435331819.png" alt="1598435331819"></p>
+</li>
+<li>
+<p>为<strong>base_link</strong>创建<strong>Visuals</strong>: 点击刚刚创建的URDF Object，选择<strong>base_link</strong>中的<strong>Visuals</strong>，在属性的<strong>Type of Visuals</strong>中选择<strong>mesh</strong>，点击<strong>Add visual</strong>。</p>
+<p><img src="../assets/cad_assets/1598494590961.png" alt="1598494590961"></p>
+<p>接下来在<strong>Visuals</strong>下面会创建一个名为<strong>unamed</strong>的子物体（也可以改成其他名字），将其中一个part的mesh模型(.obj)拖动到该子物体上面，如下图所示：</p>
+<p><img src="../assets/cad_assets/1598495533609.png" alt="1598495533609"></p>
+</li>
+<li>
+<p>为<strong>base_link</strong>创建<strong>Collisions</strong>: 我们可以先把<strong>Visuals</strong>下的<strong>unamed</strong>子物体改名，并点击属性栏的<strong>Add collision to match visual</strong>来根据，如下图所示：</p>
+<p><img src="../assets/cad_assets/1598495801805.png" alt="1598495801805"></p>
+<p>接下来我们会在<strong>Collisions</strong>下面看到一个<strong>unamed</strong>物体，点击该物体在编辑器中可以显示出来（绿色的线包裹住了物体），如下图所示：</p>
+<p><img src="../assets/cad_assets/1598496085645.png" alt="1598496085645"></p>
+</li>
+<li>
+<p>新建link：选中<strong>base_link</strong>，在右侧属性栏中的<strong>Child Joint Type</strong>选择Joint类型，这里我们选择<strong>Revolute</strong>(也可以根据情况选择<strong>Prismatic</strong>)，然后点击<strong>Add child link(with joint)</strong>，如下图所示：</p>
+<p><img src="../assets/cad_assets/1598496263579.png" alt="1598496263579"></p>
+<p>这时我们可以看到<strong>base_link</strong>下面多了一个子<strong>link</strong>，我们可以将它改名，如下图所示：</p>
+<p><img src="../assets/cad_assets/1598496479100.png" alt="1598496479100"></p>
+</li>
+<li>
+<p>类似步骤<strong>3</strong>，我们为新的link创建<strong>Visuals</strong>。创建完成后的效果如下图所示：</p>
+<p><img src="../assets/cad_assets/1599039580658.png" alt="1599039580658"></p>
+</li>
+<li>
+<p>根据Joint信息(.txt)来修改<strong>新建的link1</strong>的<strong>坐标原点位置</strong>（原本是在base_link的原点位置），将其<strong>坐标原点</strong>设置在与<strong>base_link</strong>连接的joint的anchor point位置。同时根据Joint信息修改<strong>新建的link1</strong>的joint的<strong>Axis方向</strong>。</p>
+<p>首先打开储存Joint信息的txt文件，如下图所示：</p>
+<p><img src="../assets/cad_assets/1599040441246.png" alt="1599040441246"></p>
+<p>接下来根据txt中的<strong>Anchor位置</strong>修改<strong>link1</strong>的<strong>position transform</strong>，注意数值与<strong>Anchor位置</strong>的<strong>正负号是相同的！</strong> （有的时候我们还需要手动更改某个方向的正负号，比如z轴）修改完成后，我们可以看到<strong>link1</strong>的坐标原点已经处于了joint的anchor位置上（有的时候anchor位置某个方向的正负号会出错，这时要靠肉眼去人工判断），如下图所示：</p>
+<p><img src="../assets/cad_assets/1599042580652.png" alt="1599042580652"></p>
+<p>接下来我们将<strong>link1</strong>的<strong>Visuals</strong>的<strong>position transform</strong>改成与<strong>link1</strong>相反的数值。此时应当看到part的位置已经恢复正常，如下图所示：</p>
+<p><img src="../assets/cad_assets/1599042799243.png" alt="1599042799243"></p>
+</li>
+<li>
+<p>根据Joint信息(.txt)去修改<strong>link1</strong>的joint的<strong>axis方向</strong>，并且设置<strong>limits</strong>。（注意同一类物体的joint axis方向和joint limits要尽量保持一致！！！！）</p>
+<p>首先选择<strong>link1</strong>，在右侧的<strong>Hinge Joint</strong>组件中设置<strong>Axis</strong>的方向（根据txt中的信息，可能需要适当修改正负号，使得joint的limits在合适的范围内）。</p>
+<p>接下来点击<strong>Edit Angular Limits</strong>，显示joint的limits范围。在右侧的<strong>Hinge Joint Limits Manager</strong>中设置<strong>Large Angle Limit Min</strong>和<strong>Large Angle Limit Max</strong>。（也可以使用<strong>RandomJointStateWriter</strong>来直观判断）</p>
+<p>设置完成后，我们可以在Scene中看到<strong>Joint</strong>（橘黄色的小箭头）以及<strong>Angular limits</strong>（红色的扇形）。</p>
+<p><img src="../assets/cad_assets/1599044021707.png" alt="1599044021707"></p>
+</li>
+<li>
+<p>类似步骤4，为<strong>link1</strong>创建<strong>Collisions</strong>。创建完成之后的效果如下图所示：</p>
+<p><img src="../assets/cad_assets/1599042952098.png" alt="1599042952098"></p>
+</li>
+<li>
+<p>导出URDF模型。选中整个URDF 模型（本例为<strong>Robot</strong>），先点击右侧的<strong>Generate Unique Joint Name</strong>，然后点击<strong>Export robot to URDF file</strong>。如下图所示：</p>
+<p><img src="../assets/cad_assets/1599048157488.png" alt="1599048157488"></p>
+<p>在弹出的界面中选择<strong>Export URDF to root folder</strong>，然后选择导出路径，最后点击<strong>Export</strong>，如下图所示：</p>
+<p><img src="../assets/cad_assets/1599044922081.png" alt="1599044922081"></p>
+</li>
+<li>
+<p>修改导出的URDF文件。使用VSCode等文本编辑器打开导出的urdf文件（VSCode可以装上URDF插件），如下图所示：</p>
+<p><img src="../assets/cad_assets/1599045133109.png" alt="1599045133109"></p>
+<p>把urdf文件中所有的<strong>visual</strong> tag里面的**.stl**全部换成**.fbx**（可以使用VSCode的批量替换功能）。如下图所示：</p>
+<p><img src="../assets/cad_assets/1599741908810.png" alt="1599741908810"></p>
+<p>类似地，把collision tag里面的**.stl**全都换成**.obj**。</p>
+<p>接下来把urdf文件中<strong>material</strong>相关的tag都删除掉。</p>
+<p>然后，把该模型的mesh数据(.fbx)和纹理图片(.jpg)放进<strong>meshes</strong>文件夹内，并把<strong>resources</strong>文件夹删除。</p>
+<p>到此为止，该物体的URDF制作完成。</p>
+</li>
+</ol>
+<h2 id="导入unity">导入Unity</h2>
+<ol>
+<li>导入URDF，修改每一个link的Collision，修改每一个link的Visual的layer，在关节link加入RandomJointStateWriter，然后把总体设成kinematic和not use gravity。如下图所示：</li>
+</ol>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%972cad%E6%A8%A1%E5%9E%8Bpart-level%E8%BD%AC%E6%8D%A2%E4%B8%BAurdf%E6%A0%BC%E5%BC%8F_v2/>http://mvig.sjtu.edu.cn/robotflow/article/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%972cad%E6%A8%A1%E5%9E%8Bpart-level%E8%BD%AC%E6%8D%A2%E4%B8%BAurdf%E6%A0%BC%E5%BC%8F_v2/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/3d/">
+                    #3D</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/%E5%BD%93%E6%88%91%E4%BB%AC%E5%9C%A8%E8%B0%88%E8%AE%BAmotion-primitive%E7%9A%84%E6%97%B6%E5%80%99%E7%A9%B6%E7%AB%9F%E5%9C%A8%E8%B0%88%E8%AE%BA%E4%BB%80%E4%B9%88/" class="prev" rel="prev" title="当我们在谈论Motion Primitive的时候究竟在谈论什么"><i class="iconfont icon-left"></i>&nbsp;当我们在谈论Motion Primitive的时候究竟在谈论什么</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/c-sharp%E7%8E%A9unity%E7%B3%BB%E5%88%971%E5%AF%BC%E5%85%A5%E6%88%96%E5%88%9B%E5%BB%BA%E6%A8%A1%E5%9E%8B/" class="next" rel="next" title="C Sharp玩unity系列1——导入或创建模型">C Sharp玩unity系列1——导入或创建模型&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/robotflow/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>github on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/github/</link>
+    <description>Recent content in github on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 06 Jul 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/github/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>open-mmlab contribute 的 workflow</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/open-mmlab-contribute-%E7%9A%84-workflow/</link>
+      <pubDate>Mon, 06 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/open-mmlab-contribute-%E7%9A%84-workflow/</guid>
+      <description>open-mmlab contribute 的 workflow 提交 PR 前，contributor-side 的准备工作 参考资料：https://github.com/open-mmlab/mmdetection/blob/master/.github/CONTRIBUTING.md
+What kind of contributions? All kinds of contributions are welcome, including but not limited to the following.
+ Fixes (typo, bugs) New features and components  Workflow  fork and pull the latest mmdetection checkout a new branch (do not use master branch for PRs) commit your changes create a PR  Note
+ If you plan to add some new features that involve large changes, it is encouraged to open an issue for discussion first.</description>
+    </item>
+    
+  </channel>
+</rss>

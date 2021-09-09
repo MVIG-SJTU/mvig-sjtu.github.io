@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>crawler on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/crawler/</link>
+    <description>Recent content in crawler on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 23 May 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/crawler/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>如何批量从IEEE上下文章</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E5%A6%82%E4%BD%95%E6%89%B9%E9%87%8F%E4%BB%8Eieee%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AB%A0/</link>
+      <pubDate>Sat, 23 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E5%A6%82%E4%BD%95%E6%89%B9%E9%87%8F%E4%BB%8Eieee%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AB%A0/</guid>
+      <description>以前我们涉足的Vision相关的领域都是崇尚open access的，所以如果需要批量扫文章的时候，把整个会议拖库下下来是很容易的事情。但我们接下来会接触到机器人的领域，这个领域里很多文章版权都在IEEE手上。目前IEEE Xplore下着下着就会限制ip，所以如果需要批量化把一整个会议/期刊的文章都下下来的话，那么就需要费点事情了。
+因为进入新领域，要快速入门，我只有一个笨办法，就是尽可能把所有相关文章遍历一遍。所以第一步需要把文章都收集起来。
+FBI Warning 完整的把一个会议或者期刊的文章从IEEE上拖下来是违反使用条例Term of use的。所以我也不会在文中涉及具体的code，code请见网盘，或找文强要。
+零星的几篇文章下载 通过学校的ip（在校园内，或者走VPN）直接去ieeexplore下载即可。
+大批量(&amp;gt;100)文章下载 根据经验，在一次ip限制里，官方会允许你下载50篇左右的文章，因此，如果量不大的话，请直接走官方渠道，官方也提供一次下载十篇的批量化下载（在网页上找找就能看到啦）。
+那么面对大批量的文章，要怎么做呢？
+ 用selenium + chrome，再通过xpath分析的方式，把网页中title，link都爬下来。因为这部分内容是完全公开的，所以没有任何限制。 使用requests，去请求刚刚爬下来的link，这个link是利用jsp动态获取pdf，所以需要用beautiful soup解析一下request link得到的内容，以得到pdf的地址。 因为用requests还是会被ban，所以最好是每50篇后让进程睡15分钟（经验值）  如果不想让进程sleep？ 因为每50篇就sleep 15分钟，那下得多的话还是要等很久。如果不想sleep，那么就不能走官方渠道。这时候就需要请出sci-hub了。 只需要在官方的链接，比如：https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;amp;arnumber=126246，前加上https://sci-hub.tw/即可。最后得到：https://sci-hub.tw/https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;amp;arnumber=126246
+两个https看上去有点诡异，但绝对work。
+注意，用sci-hub前缀，依然需要学校ip。下多了sci-hub也会封ip，不过它的封禁策略相对比较缓和，基本上等一天就没事了。如果不想等，把当前的校园网断开连接，多刷新几下，再重连，大概率就能继续work，如果还不行，就repeat几次。</description>
+    </item>
+    
+  </channel>
+</rss>

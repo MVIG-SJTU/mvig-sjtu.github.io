@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>xshell on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/xshell/</link>
+    <description>Recent content in xshell on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 25 Sep 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/xshell/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>如何使用XShell将tensorboard转发到本地浏览器</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8xshell%E5%B0%86tensorboard%E8%BD%AC%E5%8F%91%E5%88%B0%E6%9C%AC%E5%9C%B0%E6%B5%8F%E8%A7%88%E5%99%A8/</link>
+      <pubDate>Wed, 25 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8xshell%E5%B0%86tensorboard%E8%BD%AC%E5%8F%91%E5%88%B0%E6%9C%AC%E5%9C%B0%E6%B5%8F%E8%A7%88%E5%99%A8/</guid>
+      <description>如何使用XShell将tensorboard转发到本地浏览器  设置隧道转发 右键单击会话项，选择属性   类别一栏选择“隧道” 点击添加 设置侦听端口与目标端口，这里尽量选择较大的数字像15555，避免使用太简单容易想到的数字，防止大家在服务器上冲突。侦听端口是本地的端口，目标端口是服务器端口。
+设置完成后点击确定，然后重新连接服务器。
+Tensorboard的使用  命令tensorboard &amp;ndash;logdir=/home/you/log &amp;ndash;port=15555 logdir是tensorboard文件所在位置；
+文件通常名为类似events.out.tfevents.1569252962.nonews。这里通常只需要指定到目录即可，如果目录下有多个文件，就会在浏览器上同时显示，然后选择你所需要的即可。 port即为刚刚设置的目标端口，此时会被转发到你的主机上。
+打开浏览器，访问localhost:15555（你刚刚指定的目标端口）</description>
+    </item>
+    
+  </channel>
+</rss>

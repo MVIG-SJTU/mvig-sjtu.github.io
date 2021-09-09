@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/robotflow%E5%B7%A5%E7%A8%8Btrack%E5%8D%8A%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%932020.7~2021.1/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%973urdf%E6%A0%BC%E5%BC%8F%E6%A8%A1%E5%9E%8B%E8%BD%ACfbx%E6%A8%A1%E5%9E%8B/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/moveit-ros%E5%88%87%E9%99%A4%E6%9C%AF1%E6%A0%B8%E5%BF%83planner/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           MoveIt ROS切除术1——核心planner | RobotFlow
+       
+  </title>
+  <meta name="title" content="MoveIt ROS切除术1——核心planner | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "MoveIt ROS切除术1——核心planner",
+    "headline" : "MoveIt ROS切除术1——核心planner",
+    "description" : "MoveIt ROS切除术1——核心planner 目前的RobotFlow-rFUniverse战术体系中不需要ROS，或者说我们在尽可能地减少ROS的影响，在这种情况下，我们要尽可能把原来ROS中的一些核心部件去ROS化。\n如果去不了的，就考虑怎么在不影响RobotFlow体系的情况下共存。\n首先下刀的，就是ROS最重要的库（可能没有）之一MoveIt。根据MoveIt Concepts，整个MoveIt框架里有大量的外层封装与ROS体系适配。因此我们要对MoveIt做切除，一个比较简单的策略是先把里面的规划核心库搬出来。然后参考MoveIt对ROS的封装，自己写一套封装。\n截至2021年1月，MoveIt引入了5种外部规划器插件，其中最重要的是OMPL，别的有CHOMP，SBPL，trajopt，pilz_industrial_motion_planner。\n主要的规划库 —— OMPL OMPL全称是The Open Motion Planning Library，是一个包含了大量sampling-based算法的运动规划库，典型的如RRT，PRM及其变种在里面都有。 OMPL也有大量的实践是不依赖于ROS的，比如有现成的流程和V-REP，OpenRAVE，MORSE等整合。\nOMPL目标是打造一个standalone的规划库，自己不带任何前端和collision detection，但官方的偏好是FCL和PQP。考虑到MoveIt也是用的FCL，那么这一套pipeline就保留下来。\n次要的规划库 —— SBPL SBPL的全称是Search-Based Planning Library，顾名思义，里面有大量search-based的算法，类似A*这样。这个库本身也可以独立于ROS编译。\n特有的规划算法 —— CHOMP CHOMP的论文很容易找到，就不说了，但是它的代码比较难找，因为to the best of my knowledge，论文作者并没有其官方实现，只有在MoveIt里有一个和ROS集成得很紧密的CHOMP实现。因此要把CHOMP拉出来，需要进一步地剥离ROS的痕迹。 这个算法自带碰撞检测，能规避掉障碍物，不过貌似调参可能有坑，可以看看这个issue。\n新加的规划算法 —— trajopt trajopt也是一个基于论文出来的规划算法，论文作者放出了代码，可以独立编译。据说速度比OMPL和CHOMP快。\n面向工业场景的规划库 —— pilz industrial motion planner 这个motion planner是最近加入MoveIt的规划器，不过从它的文档来看，更多的像是一个轨迹生成器。\n围绕planner的接口  仿真环境分为visual environment，以及collision environment。送入planner的是collision environment，这也就要求仿真器能把所有collision的状态都返回回来。 仿真器的规划需要一个规划组，这个规划组的定义可以参考moveit_config，或者直接用（毕竟那个assistent还是比较好用的，而且assistent有了之后也可以暂时不考虑kinematics solver） 有了collision state，机器人的规划组，我们就能使用规划算法了。  ",
+    "inLanguage" : "en-us",
+    "author" : "徐文强",
+    "creator" : "徐文强",
+    "publisher": "徐文强",
+    "accountablePerson" : "徐文强",
+    "copyrightHolder" : "徐文强",
+    "copyrightYear" : "2021",
+    "datePublished": "2021-01-06 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2021-01-06 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/moveit-ros%E5%88%87%E9%99%A4%E6%9C%AF1%E6%A0%B8%E5%BF%83planner\/",
+    "wordCount" : "55",
+    "keywords" : [ "robotflow","rfuniverse","moveit","ros", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">MoveIt ROS切除术1——核心planner</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">徐文强</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2021-01-06 itemprop="datePublished">January 6, 2021</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/robotflow/"> robotflow </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="moveit-ros切除术1核心planner">MoveIt ROS切除术1——核心planner</h1>
+<p>目前的RobotFlow-rFUniverse战术体系中不需要ROS，或者说我们在尽可能地减少ROS的影响，在这种情况下，我们要尽可能把原来ROS中的一些核心部件去ROS化。</p>
+<p>如果去不了的，就考虑怎么在不影响RobotFlow体系的情况下共存。</p>
+<p>首先下刀的，就是ROS最重要的库（可能没有）之一MoveIt。根据<a href="https://moveit.ros.org/documentation/concepts/">MoveIt Concepts</a>，整个MoveIt框架里有大量的外层封装与ROS体系适配。因此我们要对MoveIt做切除，一个比较简单的策略是先把里面的规划核心库搬出来。然后参考MoveIt对ROS的封装，自己写一套封装。</p>
+<p>截至2021年1月，MoveIt引入了5种外部规划器插件，其中最重要的是OMPL，别的有CHOMP，SBPL，trajopt，pilz_industrial_motion_planner。</p>
+<h2 id="主要的规划库--ompl">主要的规划库 —— OMPL</h2>
+<p>OMPL全称是The Open Motion Planning Library，是一个包含了大量sampling-based算法的运动规划库，典型的如RRT，PRM及其变种在里面都有。
+OMPL也有大量的实践是不依赖于ROS的，比如有现成的流程和V-REP，OpenRAVE，MORSE等整合。</p>
+<p>OMPL目标是打造一个standalone的规划库，自己不带任何前端和collision detection，但官方的偏好是<a href="https://github.com/flexible-collision-library/fcl">FCL</a>和PQP。考虑到MoveIt也是用的FCL，那么这一套pipeline就保留下来。</p>
+<h2 id="次要的规划库--sbpl">次要的规划库 —— SBPL</h2>
+<p>SBPL的全称是Search-Based Planning Library，顾名思义，里面有大量search-based的算法，类似A*这样。这个库本身也可以独立于ROS编译。</p>
+<h2 id="特有的规划算法--chomp">特有的规划算法 —— CHOMP</h2>
+<p>CHOMP的论文很容易找到，就不说了，但是它的代码比较难找，因为to the best of my knowledge，论文作者并没有其官方实现，只有在MoveIt里有一个和ROS集成得很紧密的CHOMP实现。因此要把CHOMP拉出来，需要进一步地剥离ROS的痕迹。
+这个算法自带碰撞检测，能规避掉障碍物，不过貌似调参可能有坑，可以看看<a href="https://github.com/ros-planning/moveit/issues/305">这个issue</a>。</p>
+<h2 id="新加的规划算法--trajopt">新加的规划算法 —— trajopt</h2>
+<p>trajopt也是一个基于论文出来的规划算法，论文作者放出了代码，可以独立编译。据说速度比OMPL和CHOMP快。</p>
+<h2 id="面向工业场景的规划库--pilz-industrial-motion-planner">面向工业场景的规划库 —— pilz industrial motion planner</h2>
+<p>这个motion planner是最近加入MoveIt的规划器，不过从它的文档来看，更多的像是一个轨迹生成器。</p>
+<h1 id="围绕planner的接口">围绕planner的接口</h1>
+<ol>
+<li>仿真环境分为visual environment，以及collision environment。送入planner的是collision environment，这也就要求仿真器能把所有collision的状态都返回回来。</li>
+<li>仿真器的规划需要一个规划组，这个规划组的定义可以参考moveit_config，或者直接用（毕竟那个assistent还是比较好用的，而且assistent有了之后也可以暂时不考虑kinematics solver）</li>
+<li>有了collision state，机器人的规划组，我们就能使用规划算法了。</li>
+</ol>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/moveit-ros%E5%88%87%E9%99%A4%E6%9C%AF1%E6%A0%B8%E5%BF%83planner/>http://mvig.sjtu.edu.cn/robotflow/article/moveit-ros%E5%88%87%E9%99%A4%E6%9C%AF1%E6%A0%B8%E5%BF%83planner/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/robotflow/">
+                    #robotflow</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/rfuniverse/">
+                    #rfuniverse</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/moveit/">
+                    #moveit</a></span>
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/ros/">
+                    #ros</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/robotflow%E5%B7%A5%E7%A8%8Btrack%E5%8D%8A%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%932020.7~2021.1/" class="prev" rel="prev" title="RobotFlow工程track半年度总结（2020.7~2021.1）"><i class="iconfont icon-left"></i>&nbsp;RobotFlow工程track半年度总结（2020.7~2021.1）</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%973urdf%E6%A0%BC%E5%BC%8F%E6%A8%A1%E5%9E%8B%E8%BD%ACfbx%E6%A8%A1%E5%9E%8B/" class="next" rel="next" title="Articulation入库系列3——URDF格式的articulation模型转fbx格式">Articulation入库系列3——URDF格式的articulation模型转fbx格式&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

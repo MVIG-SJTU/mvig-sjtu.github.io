@@ -1,0 +1,75 @@
+{
+    "category":"cup",
+    "type": "articulation",
+    "modeling_method":"cad",
+    "sparse_keypoint":[[0.5,1,0.6],[0.7,-1,0.4]],
+    "dense_keypoint":[],
+    "center_of_mass":"",
+    "weight":"",
+    "inertial":"",
+    "part_num":4,
+    "part_cat_num":4,
+    "parts":[
+        {
+            "category":"bar",
+            "part_id":1,
+            "part_path":"",
+            "mass":3,
+            "inertial":[],
+            "location":[],
+            "orientation":[]
+        },
+        {
+            "category":"body",
+            "part_id":2,
+            "part_path":"",
+            "mass":3,
+            "inertial":[],
+            "location":[],
+            "orientation":[]
+        }
+    ],
+    "joint":[
+        {
+            "location":[],
+            "orientation":[],
+            "link_type":"prismatic",
+            "link_id":2,
+            "parent_part_id":2,
+            "child_part_id":3,
+            "range":[0,120],
+            "axis":[]
+        },
+        {
+            "location":[],
+            "orientation":[],
+            "link_type":"revolute",
+            "link_id":3,
+            "parent_part_id":2,
+            "child_part_id":3,
+            "angle_range":[-3.14, 3.14],
+            "axis":[]
+        },
+        {
+            "location":[],
+            "orientation":[],
+            "link_type":"screw",
+            "link_id":4,
+            "parent_part_id":2,
+            "child_part_id":3,
+            "range": [0,10],
+            "angle_ratio": 3.14,
+            "axis":[]
+        },
+        {
+            "location":[],
+            "orientation":[],
+            "link_type":"spherical",
+            "link_id":5,
+            "parent_part_id":2,
+            "child_part_id":3,
+            "angle_range": [[-3.14, 3.14],[-3.14, 3.14],[-3.14, 3.14]],
+            "axis":[]
+        }
+    ]
+}

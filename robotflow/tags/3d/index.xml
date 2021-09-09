@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>3D on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/3d/</link>
+    <description>Recent content in 3D on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 04 Aug 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/3d/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Articulation入库系列2——CAD模型（part-level）转换为URDF格式, 2nd edition</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%972cad%E6%A8%A1%E5%9E%8Bpart-level%E8%BD%AC%E6%8D%A2%E4%B8%BAurdf%E6%A0%BC%E5%BC%8F_v2/</link>
+      <pubDate>Tue, 04 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%972cad%E6%A8%A1%E5%9E%8Bpart-level%E8%BD%AC%E6%8D%A2%E4%B8%BAurdf%E6%A0%BC%E5%BC%8F_v2/</guid>
+      <description>CAD模型(part-level)转换为URDF格式 所需软件   Unity 2020.1.0f1c1（也可以使用低一点的Unity版本，但是流程未经验证，推荐使用该版本）
+  下载链接 https://unity.cn/releases 建议从Unity Hub下载安装。
+  Unity入门视频教程 https://www.bilibili.com/video/BV1B7411L74W 只需要看[P1, P3, P13]，了解最基本的编辑器操作即可。
+  使用ROS #插件创建和导出URDF视频教程（作为参考）https://youtu.be/07q2mGxD2j8
+    Blender 2.80 （建议使用该版本）
+ 下载链接 https://download.blender.org/release/Blender2.80/    详细步骤 准备工作   创建新项目（不同的物体可以共用一个项目，只要创建一次项目就可以）。（注意Unity可能每天都要手动激活一次）选择3D项目，如下图所示：
+  将ROS#插件添加到Unity的资源中。
+在Unity的Package Manager中找到ROS#插件，选择Import（若第一次使用需点击Download）。
+在弹出的窗口中继续点击Import，导入所有代码。
+  转换面片模型(.obj -&amp;gt; .fbx)   打开Blender，鼠标左键选择默认的Collection，鼠标右键选择Delete Hierarchy，把系统默认自带的物体都删除。
+  在File菜单中选择Import-&amp;gt;Wavefront(.obj)，并选择想要导入的文件。
+  导入之后可以使用鼠标滚轮放缩物体，此时我们可以看到物体还没有纹理，按下Z选择Rendered模式显示纹理。在右侧的材质选项中还可以调节具体参数（可选）。如下图所示：
+  更改物体名字和material名字，如下图所示：
+  在右侧选中该物体，选择File-&amp;gt;Export-&amp;gt;FBX(.fbx)
+建议只选中左下角的Mesh，选择FBX Units Scale，同时选择Selected Objects，然后点击右上角的Export FBX。</description>
+    </item>
+    
+    <item>
+      <title>Articulation入库系列1——从3D扫描数据生成CAD模型（part-level）, 5th edition</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%9713d%E6%89%AB%E6%8F%8F%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2%E4%B8%BA-cad%E6%A8%A1%E5%9E%8Bpart-level_v5/</link>
+      <pubDate>Mon, 03 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/articulation%E5%85%A5%E5%BA%93%E7%B3%BB%E5%88%9713d%E6%89%AB%E6%8F%8F%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2%E4%B8%BA-cad%E6%A8%A1%E5%9E%8Bpart-level_v5/</guid>
+      <description>从3D扫描数据生成CAD模型（part-level） 所需软件  ExScan Pro 3X 2020（3D扫描仪自带的软件） Geomagic Deisign X 2019（逆向工程软件，可以用于把3D点云变为CAD模型）基本使用方法可见教程（只需要看前面6节视频）  操作步骤概要   标定手持扫描仪相机。   使用手持扫描仪进行扫描。   使用ExScan软件进行后处理（补洞、拼接等），并封装模型，生成点云模型(.asc)和面片模型(.obj)。   使用Design X软件对物体的整体面片模型(.obj)和点云模型(.asc)对齐坐标轴，具体操作步骤如下：   更改默认测量单位(mm-&amp;gt;m)。
+  （可选）对面片模型进行优化，进行加强形状、填孔等。
+  进行自动领域分割，根据情况微调（合并、重分块，调整几何类型等）。
+  创建参考平面、面片草图、草图等，为接下来的手动对齐提供参考。
+  手动对齐（同时对齐点云和面片），确定坐标轴的位置和方向。
+  导出对齐后的整体面片模型(.obj)和点云模型(.asc)。
+    使用Design X软件导出Joint（旋转轴、平移轴），具体操作步骤如下：  创建参考平面、面片草图、草图等，为画出Joint提供参考。 利用直线工具画出各个Joint，可以根据需要手动微调。 导出Joint对应的直线信息（.txt）。    使用Design X软件分割物体，具体操作步骤如下：  把点云分割成多个part。 利用每个part的点云自动生成面片，并把之前的整体面片模型的纹理复制上去，得到每个part的面片模型。 修改每个part的面片模型(.obj)的材质，使每个part的材质都是一样的。 导出每个part的面片模型(.obj)和点云模型(.asc)。    （？？？暂时可以省略）使用Design X软件对每个part的面片模型(.obj)和点云模型(.asc)对齐坐标轴，具体操作步骤如下：   为每个part创建新工程，导入步骤6中生成的面片模型和点云模型。</description>
+    </item>
+    
+    <item>
+      <title>一文搞懂相机模型</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%9B%B8%E6%9C%BA%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Fri, 17 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%9B%B8%E6%9C%BA%E6%A8%A1%E5%9E%8B/</guid>
+      <description>一文搞懂相机模型 背景 相机模型是2D和3D沟通的桥梁，在2D-&amp;gt;2.5D, 2.5D-&amp;gt;3D, 2D-&amp;gt;3D, 3D-&amp;gt;2D等场合中都会用到它。 虽然它道理比较简单，但随之衍生出了很多工程技巧，稍不注意还是很容易出问题。一旦出问题，不搞懂原理的情况下就很难debug了。
+基本概念 小孔成像和照相机成像 讲道理，小孔成像和照相机成像的原理是不一样的，小孔成像是基于光沿直线传播，成像条件很苛刻。现实中的照相机是采用透镜成像的原理，用凸透镜汇聚光，成像质量取决于孔径（aperture）和透镜质量。
+那么我们为什么拿小孔成像的原理来分析透镜成像的相机模型呢？简单来说，它是真实成像的一阶近似，一般我们知道高阶的分量在一定情况下可以忽略。我们稍后聊distortion的时候，会有一个更直观的认识。
+所以，不是小孔成像这个模型就很对了，只是它大概对了。
+真实的相机中它没办法描述的情况，包括但不限于：
+ geometric distortion 失焦造成的blur 像素的离散性  尽管如此，在大部分的情况下我们不用考虑这些问题，所以用小孔成像的模型就挺好了。
+针孔相机（pinhole camera）建模 针孔相机模型如图所示：
+这里涉及三个转换，真实世界中的一个点 $(x^w, y^w, z^w)$ ，在相机中的坐标 $(x, y, z)$ ，从相机坐标系，投到像平面坐标系 $(x&amp;rsquo;, y&amp;rsquo;)$，从像平面坐标系到像素平面坐标系 $(u,v)$。
+那么具体来说，这是一个怎样的流程呢？
+  世界坐标系到相机坐标系
+世界坐标系可以说是这些坐标系里最不make sense的了，问题在于，这个坐标是谁定的？原点在哪里？ 这个问题很难用一个明确的词来回答，因为它就不是直接定义的，而是间接定义的。
+从世界坐标系到相机坐标系，其转移公式是通过相机外参矩阵$[R, t]$，这个转移是这样进行的：
+$$ \begin{bmatrix} x \\ y \\ z \\ 1 \end{bmatrix} = \begin{bmatrix}R &amp;amp; t \\ 0 &amp;amp; 1\end{bmatrix} \begin{bmatrix} x^w \\ y^w \\ z^w \\ 1\end{bmatrix} $$</description>
+    </item>
+    
+    <item>
+      <title>Minkowski安装过程中的一些坑</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/minkowski%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/</link>
+      <pubDate>Sun, 19 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/minkowski%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/</guid>
+      <description>Requirements and check methods  Ubuntu 14.04 or higher CUDA 10.1 or higher nvcc --version  pytorch 1.3 or higher python import torch torch.__version__  python 3.6 or higher gcc-7 or higher gcc -v g++ -v   Installation The Minkowski engine github page gives three ways to install: pip, anaconda, or on the system directly. Here I strongly recommand installing it using anaconda since our servers are managed based on anaconda environment.</description>
+    </item>
+    
+  </channel>
+</rss>

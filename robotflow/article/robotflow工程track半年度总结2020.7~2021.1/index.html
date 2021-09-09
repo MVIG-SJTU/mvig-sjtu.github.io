@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="MVIG - Robot AI Team">
+  
+  
+  
+  <link rel="prev" href="http://mvig.sjtu.edu.cn/robotflow/article/unity%E7%9A%84%E5%9D%91%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" />
+  <link rel="next" href="http://mvig.sjtu.edu.cn/robotflow/article/moveit-ros%E5%88%87%E9%99%A4%E6%9C%AF1%E6%A0%B8%E5%BF%83planner/" />
+  <link rel="canonical" href="http://mvig.sjtu.edu.cn/robotflow/article/robotflow%E5%B7%A5%E7%A8%8Btrack%E5%8D%8A%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%932020.7~2021.1/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           RobotFlow工程track半年度总结（2020.7~2021.1） | RobotFlow
+       
+  </title>
+  <meta name="title" content="RobotFlow工程track半年度总结（2020.7~2021.1） | RobotFlow">
+    
+  
+  <link rel="stylesheet" href="/robotflow/font/iconfont.css">
+  <link rel="stylesheet" href="/robotflow/css/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "$", right: "$", display: false}
+              ]
+          });
+      });
+  </script>
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/mvig.sjtu.edu.cn\/robotflow\/"
+    },
+    "articleSection" : "article",
+    "name" : "RobotFlow工程track半年度总结（2020.7~2021.1）",
+    "headline" : "RobotFlow工程track半年度总结（2020.7~2021.1）",
+    "description" : "RobotFlow工程track半年度总结（2020.7~2021.1） RobotFlow项目从7月份正式启动到现在也有半年了，中间经历了招工程师，CVPR投稿等拖延进度的事情，还是完成了一些事情。 在大方向不变的情况下，现在的robotflow项目已经和最开始的想法有了不少结构性的调整。现对该方向做一个总结，并对未来做一个简单的规划。\n多级结构 rflib -\u0026gt; rflearner -\u0026gt; perception -\u0026gt; rfplanner -\u0026gt; task env controller\n以上用rf开头的库，之后都会考虑往独立的库发展。特别是rflib。\n rflib：  放各种需编译的代码，其代码编译好后通过pybind被python调用。 放逻辑上偏底层的代码   rflearner：所有learning相关的代码，算法逻辑层 perception：  detector：含目标检测和实例分割 pose estimator：6DoF估计算法 human analyzer：人体\/手检测，重建算法；intent modeling相关算法 action preprocessor：视觉驱动的robot learning算法的前端（这一部分的网络末尾通常是没有loss的，是通过RL的部分来优化的），这部分视具体任务会拆分，不会用这个名字总包所有的模型。   rfplanner  TAMP规划器Rogic MP规划器RFMove   task  分层结构，从单primitive到复合任务，都统归到task里 单primitive时，地位和perception相同 复合任务时，单primitive和perception算法可能都是其子任务   env  提供真实场景的可视化，模拟规划 提供仿真场景的可视化，模拟规划，交互   controller：  提供各种硬件控制器的上层封装：位置控制，速度控制，力控    举个例子：\n 视觉的人视角：pytorch提供基本的conv2d实现；rflib提供注入roialign这样的ops的实现；rflearner提供resnet的实现；detector描述（config）怎么搭一个yolov3的pipeline Robot的人视角：rflib提供各种硬件接口，c\u002b\u002b功能代码；env，controller，rfplanner等提供对应功能的上层封装；task描述一个完整的机器人任务（可以无视觉） Robot Learning的人视角：pytorch功能同上；rflib功能同上；rflearner提供ppo等算法逻辑；perception部分描述（config）robot learning的视觉前端，task部分描述（config）各机器人技能（primitive），并描述（config）视觉前端和各机器人技能该如何串联。模型保存的方式有两种，视觉前端和机器人操作后端分别保存\/统一保持。  去ROS化进程 去ROS化是一直以来的大方针，ROS生态中有很多重要的软件都是基于ROS的通信机制来写的，而且往往是独占。那么在去ROS化的过程中，很重要的一步就是要对这些功能进行替换，这中间会涉及到大量的代码重写和重构。",
+    "inLanguage" : "en-us",
+    "author" : "徐文强",
+    "creator" : "徐文强",
+    "publisher": "徐文强",
+    "accountablePerson" : "徐文强",
+    "copyrightHolder" : "徐文强",
+    "copyrightYear" : "2021",
+    "datePublished": "2021-01-06 00:00:00 \u002b0000 UTC",
+    "dateModified" : "2021-01-06 00:00:00 \u002b0000 UTC",
+    "url" : "http:\/\/mvig.sjtu.edu.cn\/robotflow\/article\/robotflow%E5%B7%A5%E7%A8%8Btrack%E5%8D%8A%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%932020.7~2021.1\/",
+    "wordCount" : "89",
+    "keywords" : [ "robotflow", "RobotFlow"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-robot"></i></a>&nbsp;<a href="http://mvig.sjtu.edu.cn/robotflow/">RobotFlow</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/robotflow/knowledge/" title="">知识图谱</a>
+                
+                <a class="menu-item" href="/robotflow/article/" title="">技术文档</a>
+                
+                <a class="menu-item" href="/robotflow/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/robotflow/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/robotflow/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">RobotFlow工程track半年度总结（2020.7~2021.1）</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://mvig.sjtu.edu.cn/robotflow/" rel="author">徐文强</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2021-01-06 itemprop="datePublished">January 6, 2021</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://mvig.sjtu.edu.cn/robotflow/categories/robotflow/"> robotflow </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="robotflow工程track半年度总结2020720211">RobotFlow工程track半年度总结（2020.7~2021.1）</h1>
+<p>RobotFlow项目从7月份正式启动到现在也有半年了，中间经历了招工程师，CVPR投稿等拖延进度的事情，还是完成了一些事情。
+在大方向不变的情况下，现在的robotflow项目已经和最开始的想法有了不少结构性的调整。现对该方向做一个总结，并对未来做一个简单的规划。</p>
+<h2 id="多级结构">多级结构</h2>
+<p>rflib -&gt; rflearner -&gt; perception 
+-&gt; rfplanner -&gt; task
+env
+controller</p>
+<p>以上用rf开头的库，之后都会考虑往独立的库发展。特别是rflib。</p>
+<ul>
+<li>rflib：
+<ul>
+<li>放各种需编译的代码，其代码编译好后通过pybind被python调用。</li>
+<li>放逻辑上偏底层的代码</li>
+</ul>
+</li>
+<li>rflearner：所有learning相关的代码，算法逻辑层</li>
+<li>perception：
+<ul>
+<li>detector：含目标检测和实例分割</li>
+<li>pose estimator：6DoF估计算法</li>
+<li>human analyzer：人体/手检测，重建算法；intent modeling相关算法</li>
+<li>action preprocessor：视觉驱动的robot learning算法的前端（这一部分的网络末尾通常是没有loss的，是通过RL的部分来优化的），这部分视具体任务会拆分，不会用这个名字总包所有的模型。</li>
+</ul>
+</li>
+<li>rfplanner
+<ul>
+<li>TAMP规划器Rogic</li>
+<li>MP规划器RFMove</li>
+</ul>
+</li>
+<li>task
+<ul>
+<li>分层结构，从单primitive到复合任务，都统归到task里</li>
+<li>单primitive时，地位和perception相同</li>
+<li>复合任务时，单primitive和perception算法可能都是其子任务</li>
+</ul>
+</li>
+<li>env
+<ul>
+<li>提供真实场景的可视化，模拟规划</li>
+<li>提供仿真场景的可视化，模拟规划，交互</li>
+</ul>
+</li>
+<li>controller：
+<ul>
+<li>提供各种硬件控制器的上层封装：位置控制，速度控制，力控</li>
+</ul>
+</li>
+</ul>
+<p>举个例子：</p>
+<ul>
+<li>视觉的人视角：pytorch提供基本的conv2d实现；rflib提供注入roialign这样的ops的实现；rflearner提供resnet的实现；detector描述（config）怎么搭一个yolov3的pipeline</li>
+<li>Robot的人视角：rflib提供各种硬件接口，c++功能代码；env，controller，rfplanner等提供对应功能的上层封装；task描述一个完整的机器人任务（可以无视觉）</li>
+<li>Robot Learning的人视角：pytorch功能同上；rflib功能同上；rflearner提供ppo等算法逻辑；perception部分描述（config）robot learning的视觉前端，task部分描述（config）各机器人技能（primitive），并描述（config）视觉前端和各机器人技能该如何串联。模型保存的方式有两种，视觉前端和机器人操作后端分别保存/统一保持。</li>
+</ul>
+<h2 id="去ros化进程">去ROS化进程</h2>
+<p>去ROS化是一直以来的大方针，ROS生态中有很多重要的软件都是基于ROS的通信机制来写的，而且往往是独占。那么在去ROS化的过程中，很重要的一步就是要对这些功能进行替换，这中间会涉及到大量的代码重写和重构。</p>
+<p>去ROS化的定义是：RobotFlow的主要功能不需要ROS即可运行（简单来说就是installation requirement里没有install ROS这一项）。但有一些前置准备可能还是需要ROS的，比如用moveit生成plan group（所以其实电脑上还是得安装ROS）。若想达到电脑里不需要装ROS就能完全使用RobotFlow，我觉得这不是这两年的任务。</p>
+<p>目前有三个很重要的库需要剥离ROS存在。</p>
+<ol>
+<li>Gazebo -&gt; rFUniverse
+<ul>
+<li>替换方案：直接替换</li>
+<li>原因：实际上现在Gazebo本身就可以独立使用，不过Unity生态更好，可扩展性更强。Unity官方也在大力支持Robot AI的发展，我们可以和官方共同进步。</li>
+<li>隐患：unity不是开源；自带的physx不是最新（锅在Nvidia）；ubuntu下的某些插件有兼容性问题</li>
+</ul>
+</li>
+<li>RViz -&gt; RFViz
+<ul>
+<li>替换方案：去掉ROS外壳，核心功能里的ROS部分需用同等功能的code替换</li>
+<li>原因：接通真实世界的接口</li>
+<li>隐患：工程量比较大，实现是肯定能实现的
+<ul>
+<li>需要修改tf库（这个库只需要去掉ROS外壳，重新封装接口）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>MoveIt -&gt; RFMove
+<ul>
+<li>替换方案：去掉ROS外壳，封装接口。</li>
+<li>原因：需接通rFUniverse和RFViz，这样虚拟和真实场景均可实现可视化规划。</li>
+<li>隐患：暂无，前人已有过嫁接到其他框架的经验</li>
+</ul>
+</li>
+<li>其他软件/sdk
+<ul>
+<li>realsense</li>
+<li>calibration</li>
+<li>各硬件sdk</li>
+</ul>
+</li>
+</ol>
+<h2 id="2021年规划">2021年规划</h2>
+<ol>
+<li>rflib独立化</li>
+<li>rflearner, perception, controller进入常态维护</li>
+<li>rogic（inside rfplanner）, task完成初始化</li>
+<li>env尽快完成rFUniverse和RFViz的开发</li>
+<li>全框架在2021年内完成去ROS化进程</li>
+</ol>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>MVIG - Robot AI Team </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://mvig.sjtu.edu.cn/robotflow/article/robotflow%E5%B7%A5%E7%A8%8Btrack%E5%8D%8A%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%932020.7~2021.1/>http://mvig.sjtu.edu.cn/robotflow/article/robotflow%E5%B7%A5%E7%A8%8Btrack%E5%8D%8A%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%932020.7~2021.1/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://mvig.sjtu.edu.cn/robotflow/tags/robotflow/">
+                    #robotflow</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://mvig.sjtu.edu.cn/robotflow/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/unity%E7%9A%84%E5%9D%91%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" class="prev" rel="prev" title="unity踩坑指南（持续更新）"><i class="iconfont icon-left"></i>&nbsp;unity踩坑指南（持续更新）</a>
+         
+        
+        <a href="http://mvig.sjtu.edu.cn/robotflow/article/moveit-ros%E5%88%87%E9%99%A4%E6%9C%AF1%E6%A0%B8%E5%BF%83planner/" class="next" rel="next" title="MoveIt ROS切除术1——核心planner">MoveIt ROS切除术1——核心planner&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2020 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://mvig.sjtu.edu.cn/robotflow/">MVIG - Robot AI Team</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/robotflow/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>moveit on RobotFlow</title>
+    <link>http://mvig.sjtu.edu.cn/robotflow/tags/moveit/</link>
+    <description>Recent content in moveit on RobotFlow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 06 Jan 2021 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://mvig.sjtu.edu.cn/robotflow/tags/moveit/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>MoveIt ROS切除术1——核心planner</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/moveit-ros%E5%88%87%E9%99%A4%E6%9C%AF1%E6%A0%B8%E5%BF%83planner/</link>
+      <pubDate>Wed, 06 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/moveit-ros%E5%88%87%E9%99%A4%E6%9C%AF1%E6%A0%B8%E5%BF%83planner/</guid>
+      <description>MoveIt ROS切除术1——核心planner 目前的RobotFlow-rFUniverse战术体系中不需要ROS，或者说我们在尽可能地减少ROS的影响，在这种情况下，我们要尽可能把原来ROS中的一些核心部件去ROS化。
+如果去不了的，就考虑怎么在不影响RobotFlow体系的情况下共存。
+首先下刀的，就是ROS最重要的库（可能没有）之一MoveIt。根据MoveIt Concepts，整个MoveIt框架里有大量的外层封装与ROS体系适配。因此我们要对MoveIt做切除，一个比较简单的策略是先把里面的规划核心库搬出来。然后参考MoveIt对ROS的封装，自己写一套封装。
+截至2021年1月，MoveIt引入了5种外部规划器插件，其中最重要的是OMPL，别的有CHOMP，SBPL，trajopt，pilz_industrial_motion_planner。
+主要的规划库 —— OMPL OMPL全称是The Open Motion Planning Library，是一个包含了大量sampling-based算法的运动规划库，典型的如RRT，PRM及其变种在里面都有。 OMPL也有大量的实践是不依赖于ROS的，比如有现成的流程和V-REP，OpenRAVE，MORSE等整合。
+OMPL目标是打造一个standalone的规划库，自己不带任何前端和collision detection，但官方的偏好是FCL和PQP。考虑到MoveIt也是用的FCL，那么这一套pipeline就保留下来。
+次要的规划库 —— SBPL SBPL的全称是Search-Based Planning Library，顾名思义，里面有大量search-based的算法，类似A*这样。这个库本身也可以独立于ROS编译。
+特有的规划算法 —— CHOMP CHOMP的论文很容易找到，就不说了，但是它的代码比较难找，因为to the best of my knowledge，论文作者并没有其官方实现，只有在MoveIt里有一个和ROS集成得很紧密的CHOMP实现。因此要把CHOMP拉出来，需要进一步地剥离ROS的痕迹。 这个算法自带碰撞检测，能规避掉障碍物，不过貌似调参可能有坑，可以看看这个issue。
+新加的规划算法 —— trajopt trajopt也是一个基于论文出来的规划算法，论文作者放出了代码，可以独立编译。据说速度比OMPL和CHOMP快。
+面向工业场景的规划库 —— pilz industrial motion planner 这个motion planner是最近加入MoveIt的规划器，不过从它的文档来看，更多的像是一个轨迹生成器。
+围绕planner的接口  仿真环境分为visual environment，以及collision environment。送入planner的是collision environment，这也就要求仿真器能把所有collision的状态都返回回来。 仿真器的规划需要一个规划组，这个规划组的定义可以参考moveit_config，或者直接用（毕竟那个assistent还是比较好用的，而且assistent有了之后也可以暂时不考虑kinematics solver） 有了collision state，机器人的规划组，我们就能使用规划算法了。  </description>
+    </item>
+    
+    <item>
+      <title>ROS Melodic支持python3</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/ros-melodic%E6%94%AF%E6%8C%81python3/</link>
+      <pubDate>Sun, 19 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/ros-melodic%E6%94%AF%E6%8C%81python3/</guid>
+      <description>ROS melodic支持python3 我们后来发现python2和python3是可以直接通信的，所以这一个兼容性的问题暂时不是很大了。关于MoveIt我们也可以用C++去调里面的库。
+背景 我们知道ROS1系列都是基于python2的，从Noetic开始（对应Ubuntu 20.04）能原生支持python3，因为2020年1月开始python的社区不再支持python2。
+但稍早一些的版本，还是基于python2的，这样如果我们想构建一个与通信架构无关的机器人应用工具包（比如robotflow），那还是要放在python3的环境下进行的。 鉴于现在ROS1拥有比较完整的生态，ROS2还有很多bug，我们还是尽可能适配ROS1。
+考虑目前最后一个python2的ROS1版本，melodic，其实它内部已经支持了python3，只不过pre-build的还是python2而已。因此，我们需要重新编译melodic。
+在网上找了很多方案，最后按照如下步骤，成功完成melodic python3的编译安装。
+Installation 我测试的时候是在虚拟机上，全新安装的Ubuntu 18.04的基础上做以下步骤的。所以前面有几步可能没有什么用，不过对于之前有安装过其他版本的情况，也不想重新安装的情况下，还是有点用的。
+# ensure there are no ros packagessudo apt-get remove --autoremove ros-*# 添加ros的源，否则下面会有几个包装不了# check for updatessudo apt update# ensure /etc/ros removalsudo rm -rf /etc/ros/# install the python3 librariessudo apt install -y python3 python3-dev python3-pip build-essential# Remove python2sudo apt purge -y python2.7*# link python -&amp;gt; python3sudo ln -s /usr/bin/python3 /usr/bin/python# Same for pipsudo ln -s /usr/bin/pip3 /usr/bin/pip# install the ros dependenciessudo -H pip3 install rosdep rospkg rosinstall_generator rosinstall wstool vcstools catkin_tools catkin_pkg# initialize catkin build environmentsudo rosdep init &amp;amp;&amp;amp; rosdep update# create catkin workspacemkdir -p ~/ros_catkin_ws/src &amp;amp;&amp;amp; cd &amp;quot;$_/.</description>
+    </item>
+    
+    <item>
+      <title>使用MoveIt控制UR5</title>
+      <link>http://mvig.sjtu.edu.cn/robotflow/article/%E4%BD%BF%E7%94%A8moveit%E6%8E%A7%E5%88%B6ur5/</link>
+      <pubDate>Thu, 28 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://mvig.sjtu.edu.cn/robotflow/article/%E4%BD%BF%E7%94%A8moveit%E6%8E%A7%E5%88%B6ur5/</guid>
+      <description>使用MoveIt控制UR5 MoveIt简介  MOVEit！是目前针对移动操作最先进的软件。 它结合了运动规划，操纵，三维感知，运动学，控制和导航的最新进展 它提供了一个易于使用的平台，开发先进的机器人应用程序，评估新的机器人设计和建筑集成的机器人产品 它广泛应用于工业，商业，研发和其他领域。 MOVEit！是最广泛使用的开源软件的操作，并已被用于超过65个机器人  该简介引用自MoveIt!入门教程-简介，详情见官方主页https://moveit.ros.org/。
+预备知识 学习 http://wiki.ros.org/ROS/Tutorials 的Core ROS Tutorials &amp;ndash; 1.1 Beignner Level &amp;ndash; 5~8节，对ROS node, topic, service, roslaunch等基本概念有了解。
+在RViz中操控UR5机器人 在带有Universal Robot的包的工作空间下，启动UR5的驱动程序。
+roslaunch ur_modern_driver ur5_bringup.launch robot_ip:=IP_OF_THE_ROBOT [reverse_port:=REVERSE_PORT] 然后执行以下命令。该launch文件主要配置了对应于UR5的参数，并启动了MoveIt包中的程序节点。
+roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch 最后，执行如下命令来启动RViz，便可在图形界面RViz中可视化地操控机器人。
+roslaunch ur5_moveit_config moveit_rviz.launch config:=true 使用代码运行MoveIt MoveIt提供了名为MoveItGroupInterface的类，它简洁易用地封装了MoveIt的主要功能，如：设定某joints position或end effector的position为目标，为此规划一个path；控制机械臂的运动；在场景中添加、删除物体，为机械臂attach、detach物体等。MoveIt是基于C++实现的，而这个interface支持C++、python、命令行三种语言的调用。
+该教程以python为例来使用该MoveItGroupInterface，参考了官方文档 https://ros-planning.github.io/moveit_tutorials/doc/move_group_python_interface/move_group_python_interface_tutorial.html ，但由于官方文档中使用了panda机械手的仿真，而我们希望操控UR5，所以在代码中planning_group的名称应当从&amp;quot;panda_arm&amp;quot;改为&amp;quot;manipulator&amp;rdquo;；在设置joints position为goal时，要注意UR5的joint数目比panda的少一个。
+按照官方文档中的示例编写了如下Python脚本，使用MoveItGroupInterface来控制机器人。可将该脚本放置在任意ROS package的scripts目录中，使用
+chmod +x [python_script_name] 来将该脚本变为可执行程序，再通过rosrun来使用它。
+rosrun [package_name] [python_script_name] 该脚本只是简单示例，可参阅MoveIt官方文档了解细节。
+#!/usr/bin/env python import rospy import moveit_commander import sys import moveit_msgs.</description>
+    </item>
+    
+  </channel>
+</rss>

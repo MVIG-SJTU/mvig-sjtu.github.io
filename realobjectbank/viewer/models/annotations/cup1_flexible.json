@@ -1,0 +1,14 @@
+{
+    "category":"cup",
+    "type": "flexible",
+    "model_path":"",
+    "modeling_method":"cad",
+    "semantic_mask":[],
+    "instance_mask":[],
+    "sparse_keypoint":[],
+    "dense_keypoint":[],
+    "center_of_mass":"",
+    "weight":"",
+    "inertial":"",
+    "control_points":[]
+}
