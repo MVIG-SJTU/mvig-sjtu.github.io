@@ -1,0 +1,7 @@
+@inproceedings{lv2022sagci,
+    title={SAGCI-System: Towards Sample-Efficient, Generalizable, Compositional, and Incremental Robot Learning},
+    author={Lv, Jun and Yu, Qiaojun and Shao, Lin and Liu, Wenhai and Xu, Wenqiang and Lu, Cewu},
+    booktitle={2022 IEEE International Conference on Robotics and Automation (ICRA)},
+    year={2022},
+    organization={IEEE}
+}
