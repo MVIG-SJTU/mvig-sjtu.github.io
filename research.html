@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>SJTU Machine Vision and Intelligence Group</title>
+    <title>Research | SJTU Machine Vision and Intelligence Group</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    
+
     <div class="container navbar">
         <h2>
             <a class="active" href="/index.html">Home</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
@@ -25,6 +25,86 @@
             <a href="/awards.html">Awards</a>
         </h2>
     </div>
+
+    <p style="text-align: center;">Cards are reshuffled at each time.</p>
+
+    <div id="content">
+        <!-- <p style="text-align: center;">Cards are reshuffled at each time.</p> -->
+        <div class="container">
+            <h2>
+                <li>General Object Grasping ｜ 通用物体抓取
+                </li>
+            </h2>
+            <!-- width=300 height=200-->
+            <br>
+            <div class="research_card_line">
+                <div class="research">
+                    <h3>GraspNet</h3>
+                    <!-- insert image here -->
+                    <a href="https://arxiv.org/abs/2002.11076">
+                        <img src="/img/research/obj_grasping/label_mini.gif" width="280">
+                    </a>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed mauris dapibus, posuere turpis vitae.</p>
+                </div>
+                <div class="research">
+                    <div class="research_name">
+                        <h3>AnyGrasp</h3>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="research_card_line">
+                <div class="research">
+                    <h3>GraspNet</h3>
+                    <!-- insert image here -->
+                    <a href="https://arxiv.org/abs/2002.11076">
+                        <img src="/img/research/obj_grasping/label_mini.gif" width="280">
+                    </a>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed mauris dapibus, posuere turpis vitae.</p>
+                </div>
+                <div class="research">
+                    <div class="research_name">
+                        <h3>AnyGrasp</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <h2>
+                <li>Human Activity Understanding ｜ 人类行为理解</li>
+            </h2>
+            <br>
+            <!-- here -->
+            <br>
+            <br>
+            <!-- here -->
+            <br>
+            <br>
+            <!-- here -->
+            <br>
+            <br>
+            <!-- here -->
+            <br>
+            <br>
+            <!-- here -->
+        </div>
+
+    </div>
+
+    <script>
+        window.onload = function () {
+            var content = document.getElementById('content');
+            var containers = Array.from(content.querySelectorAll('.container'));
+            // 随机打乱容器顺序
+            containers.sort(function () { return 0.5 - Math.random(); });
+            // 清空父容器内容
+            content.innerHTML = '';
+            // 重新添加打乱顺序后的容器
+            containers.forEach(function (div) {
+                content.appendChild(div);
+            });
+        }
+    </script>
 
 </body>
 

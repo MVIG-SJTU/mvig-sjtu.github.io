@@ -151,3 +151,26 @@ a:visited {
 .external a.first {
     margin: 0 10px 0 0;
 }
+
+.research_card_line {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.research {
+    display: inline-block;
+    vertical-align: top;
+
+    border: 2px solid #808080;
+    border-radius: 5px;
+    margin: 10px auto;
+    width: 320px;
+    height: 300px;
+    padding: 5px;
+
+    text-align: center;
+}
+
+.research p {
+    text-align: initial;
+}
