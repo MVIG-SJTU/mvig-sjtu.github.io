@@ -92,34 +92,58 @@ a:visited {
     color: #0050e7;
 }
 
-.publogo {
-    width: 100 px;
-    margin-right: 20px;
-    float: left;
-    border: 0;
-}
-
 .publication {
-    clear: left;
-    padding-bottom: 0px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+
+    border-radius: 5px;
 }
 
-.publication p {
-    height: 100px;
+.publication .pub_img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 30%;
+    border-radius: 5px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.publication .pub_desc {
     padding-top: 5px;
+    padding-bottom: 5px;
+
+    min-width: 510px;
 }
 
-.publication strong a {
+.publication .pub_desc .pub_title {
+    text-align: start;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.publication .pub_desc .pub_title a {
     color: #0000A0;
 }
 
-.publication .links {
-    position: relative;
-    top: 15px
+.publication .pub_desc .pub_author {
+    text-align: start;
+    font-style: italic;
 }
 
-.publication .links a {
-    margin-right: 20px;
+.publication .pub_desc .pub_author a {
+    color: #0000A0;
+}
+
+.publication .pub_desc .pub_links {
+    position: relative;
+}
+
+.publication .pub_desc .pub_links a {
+    margin-right: 0px;
+    color: #0000A0;
 }
 
 .codelogo {
