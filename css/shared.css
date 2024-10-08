@@ -71,7 +71,7 @@ body {
     border-radius: 10px;
 }
 
-#sidebar {
+#me {
     margin-left: 25px;
     margin-right: 100px;
     border: 0 solid black;
@@ -185,16 +185,16 @@ a:visited {
     display: inline-block;
     vertical-align: top;
 
-    border: 2px solid #808080;
+    border: 1px solid #f1ebeb;
     border-radius: 5px;
     margin: 10px auto;
     width: 320px;
-    height: 300px;
+    height: 350px;
     padding: 5px;
 
     text-align: center;
 }
 
 .research p {
-    text-align: initial;
+    text-align: center;
 }
