@@ -1,3 +1,20 @@
 .navbar {
     text-align: center;
 }
+
+.navbar a {
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+.navbar a,
+.navbar a:visited {
+    color: #ffffff;
+}
+
+.navbar .delimiter {
+    color: #ffffff;
+}

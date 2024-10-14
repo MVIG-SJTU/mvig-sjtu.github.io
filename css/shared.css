@@ -5,6 +5,8 @@
 }
 
 p {
+    text-align: justify;
+    text-justify: inter-word;
     font-size: 16px;
 }
 
@@ -33,17 +35,61 @@ body {
     background-color: rgb(255, 255, 255);
 }
 
+.bg_blue {
+    padding: 4px;
+    padding-left: 8px;
+    border-radius: 4px;
+    background-color: rgb(200, 200, 255);
+}
+
+.bg_red {
+    padding: 4px;
+    padding-left: 8px;
+    border-radius: 2px;
+    background-color: rgb(255, 200, 200);
+}
+
+.chinese {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 16px;
+}
+
 .title {
     width: 650px;
     margin: 20px auto;
 }
 
+hr {
+    border-color: rgb(146, 146, 146);
+    color: rgb(146, 146, 146);
+}
+
 .container {
     width: 750px;
     margin: 20px auto;
-    border: 2px solid black;
+    border: 2px solid rgb(146, 146, 146);
     border-radius: 10px;
     background-color: rgb(255, 255, 255);
+    padding: 20px;
+    clear: both;
+}
+
+.container_no_border {
+    width: 750px;
+    margin: 20px auto;
+    border: none;
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255);
+    padding: 20px;
+    clear: both;
+}
+
+.container_bg {
+    width: 750px;
+    margin: 20px auto;
+    border: none;
+    border-radius: 10px;
+    background-color: rgb(120, 120, 255);
     padding: 20px;
     clear: both;
 }
@@ -197,4 +243,14 @@ a:visited {
 
 .research p {
     text-align: center;
+}
+
+.image_line {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.image_line .img {
+    display: inline-block;
+    vertical-align: top;
 }
